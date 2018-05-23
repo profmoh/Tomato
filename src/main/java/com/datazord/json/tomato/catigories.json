@@ -1,0 +1,47 @@
+{
+	"success": 1,
+	"error": [],
+	"data": {
+		"431": [
+			{
+				"category_id": "431",
+				"name": "Accessories ",
+				"description": "&lt;p&gt;&lt;br&gt;&lt;\/p&gt;",
+				"sort_order": "0",
+				"meta_title": "Accessories ",
+				"meta_description": "",
+				"meta_keyword": "",
+				"language_id": "1",
+				"image": "",
+				"original_image": "",
+				"categories": []
+			},
+			{
+				"category_id": "431",
+				"name": "Aksesuarlar ",
+				"description": "&lt;p&gt;&lt;br&gt;&lt;\/p&gt;",
+				"sort_order": "0",
+				"meta_title": "Aksesuarlar ",
+				"meta_description": "",
+				"meta_keyword": "",
+				"language_id": "3",
+				"image": "",
+				"original_image": "",
+				"categories": []
+			},
+			{
+				"category_id": "431",
+				"name": "إكسسوارات",
+				"description": "&lt;p&gt;&lt;br&gt;&lt;\/p&gt;",
+				"sort_order": "0",
+				"meta_title": "إكسسوارات",
+				"meta_description": "",
+				"meta_keyword": "",
+				"language_id": "2",
+				"image": "",
+				"original_image": "",
+				"categories": []
+			}
+		]
+	}
+}
