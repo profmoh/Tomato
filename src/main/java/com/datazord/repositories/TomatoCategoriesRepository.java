@@ -1,9 +1,11 @@
 package com.datazord.repositories;
 
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
+import org.springframework.stereotype.Repository;
 
 import com.datazord.model.TomatoCategories;
 
+@Repository
 public interface TomatoCategoriesRepository extends ReactiveMongoRepository<TomatoCategories, String> {
 	
 	

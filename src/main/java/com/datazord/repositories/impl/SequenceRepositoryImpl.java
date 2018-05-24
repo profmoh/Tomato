@@ -19,7 +19,7 @@ public class SequenceRepositoryImpl implements SequenceRepository {
 	private MongoOperations mongoOperation;
 
 	@Override
-	public long getNextSequenceId(String key) throws SequenceException {
+	public String getNextSequenceId(String key) throws SequenceException {
 
 		// get sequence id
 		Query query = new Query(Criteria.where("_id").is(key));
@@ -41,7 +41,7 @@ public class SequenceRepositoryImpl implements SequenceRepository {
 			throw new SequenceException("Unable to get sequence id for key : " + key);
 		}
 
-		return seqId.getSeq();
+		return Long.toString(seqId.getSeq());
 
 	}
 }

@@ -3,6 +3,7 @@ package com.datazord.service.Impl;
 import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 
 import com.datazord.model.TomatoCategories;
 import com.datazord.repositories.SequenceRepository;
@@ -14,8 +15,6 @@ import reactor.core.publisher.Mono;
 
 public class TomatoCategoriesServiceImpl implements TomatoCategoriesService {
 
-	private static final String TOMATO_CATEGORIES_SEQ_KEY = "tomato_categories_seq";
-
 	@Autowired
 	private SequenceRepository sequenceRepositorys;
 
@@ -23,27 +22,47 @@ public class TomatoCategoriesServiceImpl implements TomatoCategoriesService {
 	private TomatoCategoriesRepository tomatoCategoriesRepository;
 
 	@Override
-	public Mono<TomatoCategories> create(TomatoCategories tomatoCategory) {
-		tomatoCategory.setId(sequenceRepositorys.getNextSequenceId(TOMATO_CATEGORIES_SEQ_KEY));
-
-		return tomatoCategoriesRepository.save(tomatoCategory);
+	public Flux<TomatoCategories> findAll() {
+		return tomatoCategoriesRepository.findAll();
 	}
 
 	@Override
-	public Flux<TomatoCategories> createAll(Collection<TomatoCategories> tomatoCategoryCollection) {
-		tomatoCategoryCollection.forEach(c -> c.setId(sequenceRepositorys.getNextSequenceId(TOMATO_CATEGORIES_SEQ_KEY)));
-
-		return tomatoCategoriesRepository.saveAll(tomatoCategoryCollection);
+	public Flux<TomatoCategories> findAll(Sort sort) {
+		return tomatoCategoriesRepository.findAll(sort);
 	}
 
 	@Override
-	public Mono<Void> delete(TomatoCategories tomatoCategory) {
-//		Mono<TomatoCategories> tomatoCategory = findById(id);
+	public Mono<TomatoCategories> findById(String id) {
+		return tomatoCategoriesRepository.findById(id);
+	}
 
-//		if (tomatoCategory != null)
-		return tomatoCategoriesRepository.delete(tomatoCategory);
+	@Override
+	public Mono<TomatoCategories> create(TomatoCategories t) {
+		t.setId(sequenceRepositorys.getNextSequenceId(TOMATO_CATEGORIES_SEQ_KEY));
 
-//		return tomatoCategory;
+		return tomatoCategoriesRepository.save(t);
+	}
+
+	@Override
+	public Mono<TomatoCategories> update(TomatoCategories t) {
+		return tomatoCategoriesRepository.save(t);
+	}
+
+	@Override
+	public Mono<Void> delete(TomatoCategories t) {
+		return tomatoCategoriesRepository.delete(t);
+
+////	Mono<TomatoCategories> tomatoCategory = findById(id);
+//
+////	if (tomatoCategory != null)
+//	return tomatoCategoriesRepository.delete(tomatoCategory);
+//
+////	return tomatoCategory;
+	}
+
+	@Override
+	public Mono<Void> deleteById(String id) {
+		return tomatoCategoriesRepository.deleteById(id);
 	}
 
 	@Override
@@ -52,22 +71,15 @@ public class TomatoCategoriesServiceImpl implements TomatoCategoriesService {
 	}
 
 	@Override
-	public Flux<TomatoCategories> findAll() {
-		return tomatoCategoriesRepository.findAll();
+	public Flux<TomatoCategories> createAll(Collection<TomatoCategories> tCollection) {
+		tCollection.forEach(c -> c.setId(sequenceRepositorys.getNextSequenceId(TOMATO_CATEGORIES_SEQ_KEY)));
+
+		return tomatoCategoriesRepository.saveAll(tCollection);
 	}
 
 	@Override
-	public Mono<TomatoCategories> findById(long id) {
-		return tomatoCategoriesRepository.findById("" + id);
+	public Flux<TomatoCategories> updateAll(Collection<TomatoCategories> tCollection) {
+		return tomatoCategoriesRepository.saveAll(tCollection);
 	}
 
-	@Override
-	public Mono<TomatoCategories> update(TomatoCategories tomatoCategory) {
-		return tomatoCategoriesRepository.save(tomatoCategory);
-	}
-
-	@Override
-	public Flux<TomatoCategories> updateAll(Collection<TomatoCategories> tomatoCategoryCollection) {
-		return tomatoCategoriesRepository.saveAll(tomatoCategoryCollection);
-	}
 }
