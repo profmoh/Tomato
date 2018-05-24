@@ -1,6 +1,9 @@
 .gradle
 /build/
 !gradle/wrapper/gradle-wrapper.jar
+/bin/
+*.yml
+*.log
 
 ### STS ###
 .apt_generated
@@ -26,3 +29,4 @@
 /nbdist/
 /.nb-gradle/
 *.yml
+*.log
