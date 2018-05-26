@@ -15,7 +15,7 @@ import com.datazord.service.OrdersHistoryService;
 import reactor.core.publisher.Flux;
 
 @RestController
-@RequestMapping({"/api/ordershistory"})
+@RequestMapping({ "/api/ordershistory" })
 public class OrdersHistoryController {
 
 	private static final int RESULTS_PER_PAGE = 20;
