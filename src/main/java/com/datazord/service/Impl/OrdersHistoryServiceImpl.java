@@ -5,6 +5,7 @@ import java.util.Collection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Component;
 
 import com.datazord.model.OrdersHistory;
 import com.datazord.repositories.OrdersHistoryRepository;
@@ -14,6 +15,7 @@ import com.datazord.service.OrdersHistoryService;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+@Component
 public class OrdersHistoryServiceImpl implements OrdersHistoryService {
 
 	@Autowired

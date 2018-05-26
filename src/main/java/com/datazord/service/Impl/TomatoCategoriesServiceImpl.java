@@ -4,6 +4,7 @@ import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Component;
 
 import com.datazord.model.TomatoCategories;
 import com.datazord.repositories.SequenceRepository;
@@ -13,6 +14,7 @@ import com.datazord.service.TomatoCategoriesService;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+@Component
 public class TomatoCategoriesServiceImpl implements TomatoCategoriesService {
 
 	@Autowired

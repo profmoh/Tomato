@@ -4,9 +4,13 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.mongodb.repository.config.EnableReactiveMongoRepositories;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.client.RestTemplate;
 
-@SpringBootApplication(scanBasePackages={"com.datazord.*"})
+@EnableReactiveMongoRepositories
+@SpringBootApplication(scanBasePackages = { "com.datazord.*" })
 public class TomatoApplication implements CommandLineRunner {
 
 	public static void main(String[] args) {
@@ -18,17 +22,22 @@ public class TomatoApplication implements CommandLineRunner {
 		return new RestTemplate();
 	}
 
+	@Bean
+	public PasswordEncoder passwordEncoder() {
+		return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+	}
+
 	@Override
 	public void run(String... args) throws Exception {
-//		final Person johnAoe = new Person("john", "aoe", LocalDateTime.now(), "loser", 0);
-//		final Person johnBoe = new Person("john", "boe", LocalDateTime.now(), "a bit of a loser", 10);
-//		final Person johnCoe = new Person("john", "coe", LocalDateTime.now(), "average", 100);
-//		final Person johnDoe = new Person("john", "doe", LocalDateTime.now(), "winner", 1000);
+//		log.info("start data initialization  ...");
+//		this.userRepository
+//		.deleteAll().thenMany(Flux.just("user", "admin").flatMap(username -> {
+//			List<String> roles = "user".equals(username) ? Arrays.asList("ROLE_USER")
+//					: Arrays.asList("ROLE_USER", "ROLE_ADMIN");
 //
-//		personRepository.saveAll(Flux.just(johnAoe, johnBoe, johnCoe, johnDoe)).subscribe();
-//
-//		personRepository.findByFirstName("john").log().map(Person::getSecondName).subscribe(System.out::println);
-//
-//		personRepository.findOneByFirstName("john").log().map(Person::getId).subscribe(System.out::println);
+//			com.datazord.model.User user = com.datazord.model.User.builder().roles(roles).username(username).password(passwordEncoder().encode("password"))
+//					.email(username + "@example.com").build();
+//			return this.userRepository.save(user);
+//		})).log().subscribe(null, null, () -> log.info("done users initialization..."));
 	}
 }
