@@ -1,4 +1,4 @@
-package com.datazord.api.tomatocart;
+package com.datazord.api.service;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -10,6 +10,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.datazord.json.tomato.pojo.ProductOptions.ProductOptions;
 import com.datazord.json.tomato.pojo.categories.Categories;
 import com.datazord.json.tomato.pojo.categories.Category;
 import com.datazord.utils.ApiUtils;
@@ -35,7 +36,7 @@ public class TomatoServiceImpl {
 	private String headerName;
 
 	public List<Category> findCategories() {
-		logger.warn("Getting Catigories ...");
+		logger.info("Getting Catigories ...");
 
 		String categoriesUrl = baseUrl.concat("/rest_admin/categories");
 
@@ -43,7 +44,7 @@ public class TomatoServiceImpl {
 			ResponseEntity<Categories> categoriesResult =
 					ApiUtils.doRequest(headerName, this.authorization, null, null, categoriesUrl, HttpMethod.GET, Categories.class);
 
-			logger.warn("Categories : " + categoriesResult.getBody().getData().getCategoriesMap().keySet());
+			logger.info("Categories : " + categoriesResult.getBody().getData().getCategoriesMap().keySet());
 
 			List<Category> categoriesList = 
 					categoriesResult.getBody().getData().getCategoriesMap()
@@ -54,7 +55,25 @@ public class TomatoServiceImpl {
 			return categoriesList;
 		} catch (Exception e) {
 			logger.error("Categories Read Error");
-			e.printStackTrace();
+			//e.printStackTrace();
+			return null;
+		}
+	}
+	
+	public ProductOptions findProductOptionsValue(String optionName){
+		String productOptUrl="";
+		if(optionName.equals("13"))
+		    productOptUrl = baseUrl.concat("/rest_admin/product_options/13");
+		else if(optionName.equals("11"))
+			productOptUrl = baseUrl.concat("/rest_admin/product_options/11");
+		try{
+			ProductOptions productOptions=new ProductOptions();
+			ResponseEntity<ProductOptions>responseEntity=ApiUtils.doRequest(headerName, this.authorization, null, null, productOptUrl, HttpMethod.GET, ProductOptions.class);
+			productOptions=responseEntity.getBody();
+			
+			return productOptions;
+		}catch (Exception e) {
+			logger.error("Categories Read Error");
 			return null;
 		}
 	}
