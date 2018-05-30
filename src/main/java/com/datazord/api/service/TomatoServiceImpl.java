@@ -70,7 +70,6 @@ public class TomatoServiceImpl {
 			ProductOptions productOptions=new ProductOptions();
 			ResponseEntity<ProductOptions>responseEntity=ApiUtils.doRequest(headerName, this.authorization, null, null, productOptUrl, HttpMethod.GET, ProductOptions.class);
 			productOptions=responseEntity.getBody();
-			
 			return productOptions;
 		}catch (Exception e) {
 			logger.error("Categories Read Error");
