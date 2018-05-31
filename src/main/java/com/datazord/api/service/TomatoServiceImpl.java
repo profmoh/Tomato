@@ -60,20 +60,18 @@ public class TomatoServiceImpl {
 		}
 	}
 	
-	public ProductOptions findProductOptionsValue(String optionName){
+	public ProductOptions findProductOptionsValue(String optionID){
 		String productOptUrl="";
-		if(optionName.equals("13"))
+		logger.info("calling production_Options with Id="+optionID);
+		if(optionID.equals("13"))
 		    productOptUrl = baseUrl.concat("/rest_admin/product_options/13");
-		else if(optionName.equals("11"))
+		else if(optionID.equals("11"))
 			productOptUrl = baseUrl.concat("/rest_admin/product_options/11");
-		try{
+		
 			ProductOptions productOptions=new ProductOptions();
 			ResponseEntity<ProductOptions>responseEntity=ApiUtils.doRequest(headerName, this.authorization, null, null, productOptUrl, HttpMethod.GET, ProductOptions.class);
 			productOptions=responseEntity.getBody();
 			return productOptions;
-		}catch (Exception e) {
-			logger.error("Categories Read Error");
-			return null;
-		}
+	
 	}
 }
