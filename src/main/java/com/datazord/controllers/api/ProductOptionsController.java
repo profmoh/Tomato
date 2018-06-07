@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.datazord.api.service.TomatoServiceImpl;
-import com.datazord.json.tomato.pojo.ProductOptions.Data;
 import com.datazord.json.tomato.pojo.ProductOptions.ProductOptions;
 import com.datazord.service.ProductOptionsService;
+import com.datazord.service.ProductService;
 
 @RestController
 @RequestMapping({"/productOptions"})
@@ -25,15 +25,20 @@ public class ProductOptionsController {
 	@Autowired
 	private ProductOptionsService  productOptionsService;
 	
+	@Autowired
+	private ProductService productService;
+	
 	@GetMapping("/{id}")
 	private ProductOptions findProductOptionsById(@PathVariable("id") String Id){
 		logger.info("Find ProductOptions By Id ="+Id);
 		try{
+		
 		ProductOptions productOptions=apiService.findProductOptionsValue(Id);
 		logger.info("response from findProductOptionsValue >>Success="+productOptions.getSuccess()+ " >> error="+productOptions.getError());
 		if(productOptions.getSuccess()==1)
 		 productOptionsService.saveProductOptions(productOptions);
 		return productOptions;
+			
 		}catch(Exception e){
 			logger.error("",e);
 			return null;

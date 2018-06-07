@@ -10,10 +10,14 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.datazord.api.reply.API_Reply;
 import com.datazord.json.tomato.pojo.ProductOptions.ProductOptions;
 import com.datazord.json.tomato.pojo.categories.Categories;
 import com.datazord.json.tomato.pojo.categories.Category;
+import com.datazord.json.tomato.pojo.product.Product;
 import com.datazord.utils.ApiUtils;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class TomatoServiceImpl {
@@ -73,5 +77,29 @@ public class TomatoServiceImpl {
 			productOptions=responseEntity.getBody();
 			return productOptions;
 	
+	}
+	
+	public API_Reply addProduct(Product product){
+		try {
+			logger.info("Insert Product Into Tomato ");
+			String addproductUrl = baseUrl.concat("/rest_admin/products");
+
+			API_Reply api_Reply=new API_Reply();
+			ObjectMapper mapper = new ObjectMapper();
+			String bodyJson;
+			bodyJson = mapper.writeValueAsString(product);
+
+			ResponseEntity<API_Reply> responseEntity = ApiUtils.doRequest(headerName, this.authorization, bodyJson,
+					null, addproductUrl, HttpMethod.POST, API_Reply.class);
+			api_Reply=responseEntity.getBody();
+
+			return api_Reply;
+		} catch (JsonProcessingException e) {
+			logger.error("JsonProcessingException : ", e);
+			return null;
+		}catch(Exception ex){
+			logger.error("Exception : ", ex);
+			return null;
+		}
 	}
 }
