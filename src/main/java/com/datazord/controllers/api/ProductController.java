@@ -30,7 +30,9 @@ public class ProductController {
 		
 		Product product=new Product();
 		
-		productService.getParamterPathFromObject();
+		//productService.getParamterPathFromObject();
+		productService.parseProductXml();
+		
 		//API_Reply api_Reply =apiService.addProduct(product);
 		
 		return product;
