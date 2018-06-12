@@ -1,4 +1,4 @@
-package com.datazord.controllers.api;
+package com.datazord.api.controllers;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +14,7 @@ import com.datazord.service.ProductOptionsService;
 import com.datazord.service.ProductService;
 
 @RestController
-@RequestMapping({"/productOptions"})
+@RequestMapping({"/api/productOptions"})
 public class ProductOptionsController {
 
 	private static final Logger logger = LoggerFactory.getLogger(ProductOptionsController.class);

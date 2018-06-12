@@ -1,4 +1,4 @@
-package com.datazord.controllers.api;
+package com.datazord.api.controllers;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,7 +13,7 @@ import com.datazord.json.tomato.pojo.product.Product;
 import com.datazord.service.ProductService;
 
 @RestController
-@RequestMapping({"/Products"})
+@RequestMapping({"/api/Products"})
 public class ProductController {
 
 	private static final Logger logger = LoggerFactory.getLogger(ProductController.class);

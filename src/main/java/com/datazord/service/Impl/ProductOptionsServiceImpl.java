@@ -9,6 +9,7 @@ import com.datazord.json.tomato.pojo.ProductOptions.OptionValue;
 import com.datazord.json.tomato.pojo.ProductOptions.ProductOptions;
 import com.datazord.model.ProductOptionsModel;
 import com.datazord.repositories.ProductOptionsRepository;
+import com.datazord.repositories.SequenceRepository;
 import com.datazord.service.ProductOptionsService;
 
 @Component
@@ -19,12 +20,16 @@ public class ProductOptionsServiceImpl implements ProductOptionsService{
 	@Autowired
 	ProductOptionsRepository productOptionsRepository;
 	
+	@Autowired
+	private SequenceRepository sequenceRepositorys;
+	
 	@Override
 	public void saveProductOptions(ProductOptions productOptions) {
 		ProductOptionsModel optionsModel;
 		logger.info("Insert product option to DB  with id ="+productOptions.getData().getOption_id());
 		for (OptionValue optionValue : productOptions.getData().getOption_values()) {
 			optionsModel=new ProductOptionsModel();
+			optionsModel.setId(sequenceRepositorys.getNextSequenceId(PRODUCT_OPTIONS_SEQ_KEY));
 			optionsModel.setOption_id(productOptions.getData().getOption_id());
 			optionsModel.setOption_value_id(optionValue.getOption_value_id());
 			optionsModel.getOptionValueDescriptions().addAll((optionValue.getOptionValueDescription().values()));

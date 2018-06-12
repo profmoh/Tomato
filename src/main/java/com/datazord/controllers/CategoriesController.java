@@ -21,8 +21,8 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @RestController
-@RequestMapping({ "/api/tomatocategories" })
-public class TomatoCategoriesController {
+@RequestMapping({ "/tomatocategories" })
+public class CategoriesController {
 
 	private static final Sort SORT_BY_CREATED_DATE = new Sort(Direction.DESC, "createdDate");
 

@@ -1,4 +1,4 @@
-package com.datazord.controllers.api;
+package com.datazord.api.controllers;
 
 import java.util.Collection;
 
@@ -12,8 +12,8 @@ import com.datazord.api.service.TomatoServiceImpl;
 import com.datazord.json.tomato.pojo.categories.Category;
 
 @RestController
-@RequestMapping({"/categories"})
-public class TomatoController {
+@RequestMapping({"/api/categories"})
+public class TomatoCategoriesController {
 
 	@Autowired
 	private TomatoServiceImpl apiService;
