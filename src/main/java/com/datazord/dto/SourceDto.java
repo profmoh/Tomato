@@ -14,6 +14,8 @@ public class SourceDto implements Serializable{
 	private String name;
 	private Integer id;
 	private List<DestinationDto>destinationMappingList=new ArrayList<>();
+	private DestinationDto destinationMappingObj;
+	
 	
 	public String getName() {
 		return name;
@@ -32,6 +34,12 @@ public class SourceDto implements Serializable{
 	}
 	public void setDestinationMappingList(List<DestinationDto> destinationMappingList) {
 		this.destinationMappingList = destinationMappingList;
+	}
+	public DestinationDto getDestinationMappingObj() {
+		return destinationMappingObj;
+	}
+	public void setDestinationMappingObj(DestinationDto destinationMappingObj) {
+		this.destinationMappingObj = destinationMappingObj;
 	}
 
 }
