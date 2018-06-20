@@ -1,8 +1,8 @@
-package com.datazord.model;
-
-import javax.validation.constraints.NotBlank;
+package com.datazord.model.destination;
 
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import com.datazord.model.BaseModel;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,14 +17,12 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-@Document(collection = "destination_color")
-public class DestinationColor extends BaseModel{
-
+@Document(collection = "destination_product")
+public class DestinationProduct extends BaseModel {
+	
 	private String id;
 	
-	@NotBlank
-	private String name;
+	private String name ;
 	
-	@NotBlank
-	private String languageId ;
+
 }

@@ -3,8 +3,8 @@ package com.datazord.service;
 import java.util.List;
 
 import com.datazord.json.tomato.pojo.ProductOptions.ProductOptions;
-import com.datazord.model.DestinationColor;
-import com.datazord.model.DestinationSize;
+import com.datazord.model.destination.DestinationColor;
+import com.datazord.model.destination.DestinationSize;
 
 public interface ProductOptionsService {
 

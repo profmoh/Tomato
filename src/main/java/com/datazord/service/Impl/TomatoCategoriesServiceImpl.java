@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 import com.datazord.enums.Language;
 import com.datazord.json.tomato.pojo.categories.Category;
-import com.datazord.model.DestinationCategories;
+import com.datazord.model.destination.DestinationCategories;
 import com.datazord.repositories.SequenceRepository;
 import com.datazord.repositories.TomatoCategoriesRepository;
 import com.datazord.service.TomatoCategoriesService;

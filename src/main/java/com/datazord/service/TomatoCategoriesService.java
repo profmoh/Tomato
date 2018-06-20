@@ -3,7 +3,7 @@ package com.datazord.service;
 import java.util.List;
 
 import com.datazord.json.tomato.pojo.categories.Category;
-import com.datazord.model.DestinationCategories;
+import com.datazord.model.destination.DestinationCategories;
 
 public interface TomatoCategoriesService extends BaseService<DestinationCategories> {
 

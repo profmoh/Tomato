@@ -26,7 +26,7 @@ import com.datazord.json.tomato.pojo.product.ProductOption;
 import com.datazord.json.tomato.pojo.product.ProductOptionValue;
 import com.datazord.json.tomato.pojo.product.ProductSeoUrl;
 import com.datazord.json.tomato.pojo.product.ProductSpecial;
-import com.datazord.model.DestinationProduct;
+import com.datazord.model.destination.DestinationProduct;
 import com.datazord.repositories.DestinationProductRepository;
 import com.datazord.repositories.SequenceRepository;
 import com.datazord.service.ProductService;

@@ -1,10 +1,11 @@
-package com.datazord.model;
+package com.datazord.model.destination;
 
 import javax.validation.constraints.NotBlank;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.datazord.enums.Language;
+import com.datazord.model.BaseModel;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

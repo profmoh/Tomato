@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.datazord.model.DestinationCategories;
+import com.datazord.model.destination.DestinationCategories;
 import com.datazord.service.TomatoCategoriesService;
 
 import reactor.core.publisher.Flux;

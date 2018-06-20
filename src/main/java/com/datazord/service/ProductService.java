@@ -2,7 +2,7 @@ package com.datazord.service;
 
 import java.util.List;
 
-import com.datazord.model.DestinationProduct;
+import com.datazord.model.destination.DestinationProduct;
 
 public interface ProductService {
 

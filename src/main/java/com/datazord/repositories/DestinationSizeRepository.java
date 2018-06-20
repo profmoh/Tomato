@@ -3,8 +3,8 @@ package com.datazord.repositories;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.stereotype.Repository;
 
-import com.datazord.model.DestinationColor;
-import com.datazord.model.DestinationSize;
+import com.datazord.model.destination.DestinationColor;
+import com.datazord.model.destination.DestinationSize;
 
 import reactor.core.publisher.Flux;
 
