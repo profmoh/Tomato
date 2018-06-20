@@ -1,6 +1,6 @@
 package com.datazord.api.controllers;
 
-import java.util.Collection;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.datazord.api.service.TomatoServiceImpl;
 import com.datazord.json.tomato.pojo.categories.Category;
+import com.datazord.service.TomatoCategoriesService;
+import com.datazord.utils.Utils;
 
 @RestController
 @RequestMapping({"/api/categories"})
@@ -17,9 +19,15 @@ public class TomatoCategoriesController {
 
 	@Autowired
 	private TomatoServiceImpl apiService;
+	
+	@Autowired
+	private TomatoCategoriesService categoriesService;
 
 	@GetMapping
-	public Collection<Category> findCategories(Model model) {
-		return apiService.findCategories();
+	public String findCategories(Model model) {
+		List<Category> categories=apiService.findCategories();
+		if(!Utils.isEmptyCollection(categories))
+			categoriesService.saveCategories(categories);
+		return "Success";
 	}
 }

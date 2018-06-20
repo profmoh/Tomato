@@ -28,8 +28,8 @@ public class ProductOptionsController {
 	@Autowired
 	private ProductService productService;
 	
-	@GetMapping("/{id}")
-	private ProductOptions findProductOptionsById(@PathVariable("id") String Id){
+	@GetMapping("/getProductOptionsParamters/{id}")
+	private String getProductOptionsParamters(@PathVariable("id") Integer Id){
 		logger.info("Find ProductOptions By Id ="+Id);
 		try{
 		
@@ -37,7 +37,7 @@ public class ProductOptionsController {
 		logger.info("response from findProductOptionsValue >>Success="+productOptions.getSuccess()+ " >> error="+productOptions.getError());
 		if(productOptions.getSuccess()==1)
 		 productOptionsService.saveProductOptions(productOptions);
-		return productOptions;
+		return "Success";
 			
 		}catch(Exception e){
 			logger.error("",e);

@@ -3,19 +3,12 @@ package com.datazord.repositories;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.stereotype.Repository;
 
-import com.datazord.model.TomatoCategories;
+import com.datazord.model.DestinationCategories;
+
+import reactor.core.publisher.Flux;
 
 @Repository
-public interface TomatoCategoriesRepository extends ReactiveMongoRepository<TomatoCategories, String> {
+public interface TomatoCategoriesRepository extends ReactiveMongoRepository<DestinationCategories, String> {
 	
-	
-	
-//    Flux<Product> findByName(String name);
-//
-//    Flux<Product> findByName(Mono<String> name);
-//
-//    Mono<Product> findByNameAndImageUrl(Mono<String> name, String imageUrl);
-//
-//    @Query("{ 'name': ?0, 'imageUrl': ?1}")
-//    Mono<Product> findByNameAndImageUrl(String name, String imageUrl);
+	  Flux<DestinationCategories>  findByLanguageId(String languageId);
 }

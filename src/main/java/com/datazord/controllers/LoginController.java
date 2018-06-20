@@ -14,17 +14,18 @@ import org.springframework.web.bind.annotation.RestController;
 import com.datazord.constants.TomatoConstants;
 import com.datazord.form.LoginForm;
 
+@CrossOrigin()
 @RestController
 @RequestMapping({ "/loginController" })
 public class LoginController {
 
 	private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
 	
-	@GetMapping("/login")
-	public ResponseEntity<?> login(){
 	
-		LoginForm loginForm=new LoginForm();
-		if(loginForm.getUsername().equals("Khaled"))
+	@PostMapping("/login")
+	public ResponseEntity<?> login(@RequestBody LoginForm loginForm){
+	
+		if(loginForm.getUsername().equals("khaled"))
 			loginForm.setErrorCode(TomatoConstants.ERROR_CODE_SUCCESS);
 		
 		return new ResponseEntity<LoginForm>(loginForm,HttpStatus.OK);

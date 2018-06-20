@@ -1,24 +1,15 @@
 package com.datazord.service;
 
-import com.datazord.model.TomatoCategories;
+import java.util.List;
 
-public interface TomatoCategoriesService extends BaseService<TomatoCategories> {
+import com.datazord.json.tomato.pojo.categories.Category;
+import com.datazord.model.DestinationCategories;
+
+public interface TomatoCategoriesService extends BaseService<DestinationCategories> {
 
 	static final String TOMATO_CATEGORIES_SEQ_KEY = "tomato_categories_seq";
-
-//	Mono<TomatoCategories> create(TomatoCategories tomatoCategory);
-//
-//	Mono<Void> delete(TomatoCategories tomatoCategory);
-//
-//	Flux<TomatoCategories> findAll();
-//
-//	Mono<Void> deleteAll();
-//
-//	Mono<TomatoCategories> findById(long id);
-//
-//	Mono<TomatoCategories> update(TomatoCategories tomatoCategory);
-//
-//	Flux<TomatoCategories> createAll(Collection<TomatoCategories> tomatoCategoryCollection);
-//
-//	Flux<TomatoCategories> updateAll(Collection<TomatoCategories> tomatoCategoryCollection);
+	
+    List<DestinationCategories>	getDestinationCategoryList();
+	
+	void saveCategories(List<Category> categories);
 }

@@ -131,4 +131,14 @@ public class Product {
 	
 	@JsonProperty("product_option")
 	private List<ProductOption>product_option=new ArrayList<>();
+	
+	@JsonProperty("cv_required")
+	private String cv_required;
+	
+	@JsonProperty("cv_color_option_id")
+	private String cv_color_option_id;
+	
+	@JsonProperty("cv_size_option_id")
+	private String cv_size_option_id;
+	
 }

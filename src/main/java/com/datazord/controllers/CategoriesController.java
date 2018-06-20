@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.datazord.model.TomatoCategories;
+import com.datazord.model.DestinationCategories;
 import com.datazord.service.TomatoCategoriesService;
 
 import reactor.core.publisher.Flux;
@@ -30,25 +30,25 @@ public class CategoriesController {
 	private TomatoCategoriesService service;
 
 	@GetMapping(value = "/findAll")
-	public Flux<TomatoCategories> findAll() {
+	public Flux<DestinationCategories> findAll() {
 		return service.findAll(SORT_BY_CREATED_DATE);
 	}
 
 	@GetMapping
-	public Flux<TomatoCategories> findCategories(Model model) {
+	public Flux<DestinationCategories> findCategories(Model model) {
 		return service.findAll(SORT_BY_CREATED_DATE);
 	}
 
 	@GetMapping("/{id}")
-	public Mono<TomatoCategories> get(@PathVariable("id") String id) {
+	public Mono<DestinationCategories> get(@PathVariable("id") String id) {
 		return service.findById(id);
 	}
 
 	@PutMapping("/{id}")
-	public Mono<TomatoCategories> update(@PathVariable("id") String id, @RequestBody TomatoCategories t) {
+	public Mono<DestinationCategories> update(@PathVariable("id") String id, @RequestBody DestinationCategories t) {
 		return service.findById(id).map(c -> {
 			c.setName(t.getName());
-			c.setDescription(t.getDescription());
+			//c.setDescription(t.getDescription());
 
 			return c;
 		}).flatMap(c -> service.update(c));

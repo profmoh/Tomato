@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.datazord.api.reply.API_Reply;
+import com.datazord.constants.TomatoConstants;
 import com.datazord.json.tomato.pojo.ProductOptions.ProductOptions;
 import com.datazord.json.tomato.pojo.categories.Categories;
 import com.datazord.json.tomato.pojo.categories.Category;
@@ -64,12 +65,12 @@ public class TomatoServiceImpl {
 		}
 	}
 	
-	public ProductOptions findProductOptionsValue(String optionID){
+	public ProductOptions findProductOptionsValue(Integer optionID){
 		String productOptUrl="";
 		logger.info("calling production_Options with Id="+optionID);
-		if(optionID.equals("13"))
+		if(optionID.equals(TomatoConstants.COLOR_PRODUCT_OPTION))
 		    productOptUrl = baseUrl.concat("/rest_admin/product_options/13");
-		else if(optionID.equals("11"))
+		else if(optionID.equals(TomatoConstants.SIZE_PRODUCT_OPTION))
 			productOptUrl = baseUrl.concat("/rest_admin/product_options/11");
 		
 			ProductOptions productOptions=new ProductOptions();

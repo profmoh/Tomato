@@ -1,0 +1,48 @@
+<div class="row">
+    <button ng-click="mapHome()" class="btn btn-default homeBtn">Back</button>
+    <div class="container">
+        <div class="row">
+            <div class="mappingContent" ng-controller="mappingController_single">
+                <div class="col-md-12">
+                    <h2 class="mappingContent_title">Size Mapping</h2>
+                </div>
+                <div class="col-md-6">
+                    <div class="mappingContent_list">
+                        <h3>Source</h3>
+                        <ul class="dragList_content">
+                            <li ng-repeat='item in sourceList'  data-drop="true"
+                                ng-model="item.children" jqyoui-droppable="{multiple:true}"
+                                data-jqyoui-options="{revert: 'invalid'}">
+                                {{item.name}}
+                                <ul class="nestedMappingList">
+                                    <li ng-repeat="itemC in item.children"> {{itemC.name}}
+                                        <i class="fa fa-times" ng-click="deleteItem(itemC,item)"></i>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+
+                </div>
+                <div class="col-md-6">
+                    <div class="mappingContent_list">
+                        <h3>Destination</h3>
+                        <ul class="dragList_content">
+                            <li ng-repeat='item in destinationList' ng-show="item.name" data-drag="true"
+                                data-jqyoui-options="{revert: 'invalid', helper: 'clone'}"
+                                ng-model="destinationList"
+                                jqyoui-draggable="{index: {{$index}}, animate: false, placeholder: 'keep'}">
+                                {{item.name}}
+                            </li>
+                        </ul>
+
+                    </div>
+
+                </div>
+                <div class="col-md-12 text-center mappingAction"  ng-show="showMe()">
+                    <button class="btn btn-default btn-lg" ng-click="mapping()">Map</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

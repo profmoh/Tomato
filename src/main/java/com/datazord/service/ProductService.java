@@ -1,9 +1,14 @@
 package com.datazord.service;
 
+import java.util.List;
+
+import com.datazord.model.DestinationProduct;
+
 public interface ProductService {
 
+	static final String DESTINATION_PRODUCT_SEQ_KEY="destination_product_seq";
+	
 	public void getParamterPathFromObject();
 	
-	public void parseProductXml();
+	public List<DestinationProduct> getDestinationProducts();
 }
-
