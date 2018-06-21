@@ -16,6 +16,10 @@ mapping.controller('loginController', function ($scope, mappingService,$state) {
 
 mapping.controller('mappingController_multi', function ($scope, mappingService,$state) {
     var i;
+    $scope.statusMessage = {};
+    $scope.statusMessage.code = 0 ;
+    $scope.statusMessage.message = "";
+    
     if ($state.current.name == 'mapping.category'){
         $scope.mappingType = 1;
     } else if ($state.current.name == 'mapping.product'){
@@ -54,16 +58,25 @@ mapping.controller('mappingController_multi', function ($scope, mappingService,$
         }
     }
     $scope.mapping = function () {
+        $scope.statusMessage.message = "Success";
+        $scope.statusMessage.code = 200;
         $scope.controllerNamePost = function () {
             mappingService.serviceNamePost($scope.sourceList).then(function (result) {
 
             });
         }
     }
+    $scope.statusClose = function(){
+        $('.notificationMessage').addClass('ng-hide');
+    }
 });
 
 mapping.controller('mappingController_single', function ($scope, mappingService,$state) {
     var i;
+    $scope.statusMessage = {};
+    $scope.statusMessage.code = 0 ;
+    $scope.statusMessage.message = "";
+    
     if ($state.current.name == 'mapping.color'){
         $scope.mappingType =2;
     }else if ($state.current.name == 'mapping.size'){
@@ -101,10 +114,15 @@ mapping.controller('mappingController_single', function ($scope, mappingService,
         }
     }
     $scope.mapping = function () {
+        $scope.statusMessage.message = "Success";
+        $scope.statusMessage.code = 200;
         $scope.controllerNamePost = function () {
             mappingService.serviceNamePost($scope.sourceList).then(function (result) {
 
             });
         }
+    }
+    $scope.statusClose = function(){
+        $('.notificationMessage').addClass('ng-hide');
     }
 });

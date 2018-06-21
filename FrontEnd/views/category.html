@@ -42,7 +42,10 @@
                 <div class="col-md-12 text-center mappingAction"  ng-show="showMe()">
                     <button class="btn btn-default btn-lg" ng-click="mapping()">Map</button>
                 </div>
-
+                <div class="alert notificationMessage" ng-show="statusMessage.code != 0">
+                    <a class="notificationMessage_close close" ng-click="statusClose()"><i class="fa fa-times"></i></a>
+                    <span class="notificationMessage_content">{{statusMessage.message}}</span>
+                </div>
             </div>
         </div>
     </div>
