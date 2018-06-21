@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.datazord.model.destination.DestinationCategories;
-import com.datazord.service.TomatoCategoriesService;
+import com.datazord.service.CategoriesService;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -27,7 +27,7 @@ public class CategoriesController {
 	private static final Sort SORT_BY_CREATED_DATE = new Sort(Direction.DESC, "createdDate");
 
 	@Autowired
-	private TomatoCategoriesService service;
+	private CategoriesService service;
 
 	@GetMapping(value = "/findAll")
 	public Flux<DestinationCategories> findAll() {

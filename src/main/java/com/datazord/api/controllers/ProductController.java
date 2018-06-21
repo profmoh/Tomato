@@ -22,7 +22,7 @@ public class ProductController {
 	private String getProductParamterPath(){
 		logger.info(">>> Start inserting Product Paramter Path into DB ");
 		
-		productService.getParamterPathFromObject();
+		productService.saveDestinationProduct();
 		
 		return "Success";
 		

@@ -5,6 +5,8 @@ import java.util.List;
 import com.datazord.json.tomato.pojo.ProductOptions.ProductOptions;
 import com.datazord.model.destination.DestinationColor;
 import com.datazord.model.destination.DestinationSize;
+import com.datazord.model.source.SourceColor;
+import com.datazord.model.source.SourceSize;
 
 public interface ProductOptionsService {
 
@@ -16,7 +18,11 @@ public interface ProductOptionsService {
 	
 	public List<DestinationColor> getDestinationColorList();
 	
+	public void saveDestinationProductOptions(ProductOptions productOptions);
+	
 	public List<DestinationSize>  getDestinationSizeList();
 	
-	public void saveProductOptions(ProductOptions productOptions);
+	public List<SourceColor> getSourceColorList();
+	
+	public List<SourceSize> getSourceSizeList();
 }

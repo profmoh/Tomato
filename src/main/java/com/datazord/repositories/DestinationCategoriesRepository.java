@@ -8,7 +8,7 @@ import com.datazord.model.destination.DestinationCategories;
 import reactor.core.publisher.Flux;
 
 @Repository
-public interface TomatoCategoriesRepository extends ReactiveMongoRepository<DestinationCategories, String> {
+public interface DestinationCategoriesRepository extends ReactiveMongoRepository<DestinationCategories, String> {
 	
-	  Flux<DestinationCategories>  findByLanguageId(String languageId);
+	Flux<DestinationCategories>  findByLanguageId(String languageId);
 }

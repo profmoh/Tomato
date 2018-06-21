@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.datazord.api.service.TomatoServiceImpl;
 import com.datazord.json.tomato.pojo.categories.Category;
-import com.datazord.service.TomatoCategoriesService;
+import com.datazord.service.CategoriesService;
 import com.datazord.utils.Utils;
 
 @RestController
@@ -21,13 +21,13 @@ public class TomatoCategoriesController {
 	private TomatoServiceImpl apiService;
 	
 	@Autowired
-	private TomatoCategoriesService categoriesService;
+	private CategoriesService categoriesService;
 
 	@GetMapping
 	public String findCategories(Model model) {
 		List<Category> categories=apiService.findCategories();
 		if(!Utils.isEmptyCollection(categories))
-			categoriesService.saveCategories(categories);
+			categoriesService.saveDestinationCategories(categories);
 		return "Success";
 	}
 }

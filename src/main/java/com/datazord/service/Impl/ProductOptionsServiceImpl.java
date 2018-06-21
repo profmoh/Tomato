@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.w3c.dom.stylesheets.LinkStyle;
 
 import com.datazord.constants.TomatoConstants;
 import com.datazord.enums.Language;
@@ -15,9 +16,13 @@ import com.datazord.json.tomato.pojo.ProductOptions.OptionValueDescription;
 import com.datazord.json.tomato.pojo.ProductOptions.ProductOptions;
 import com.datazord.model.destination.DestinationColor;
 import com.datazord.model.destination.DestinationSize;
+import com.datazord.model.source.SourceColor;
+import com.datazord.model.source.SourceSize;
 import com.datazord.repositories.DestinationColorRepository;
 import com.datazord.repositories.DestinationSizeRepository;
 import com.datazord.repositories.SequenceRepository;
+import com.datazord.repositories.SourceColorRepository;
+import com.datazord.repositories.SourceSizeRepository;
 import com.datazord.service.ProductOptionsService;
 
 import reactor.core.publisher.Flux;
@@ -36,8 +41,14 @@ public class ProductOptionsServiceImpl implements ProductOptionsService{
 	@Autowired
 	private DestinationColorRepository destinationColorRepository;
 	
+	@Autowired
+	private SourceColorRepository sourceColorRepository;
+	
+	@Autowired
+	private SourceSizeRepository sourceSizeRepository;
+	
 	@Override
-	public void saveProductOptions(ProductOptions productOptions) {
+	public void saveDestinationProductOptions(ProductOptions productOptions) {
 		DestinationColor color; DestinationSize size;
 		for (OptionValue optionValue : productOptions.getData().getOption_values()) {
 			for(Map.Entry<String, OptionValueDescription> entry : optionValue.getOptionValueDescription().entrySet()){
@@ -80,6 +91,30 @@ public class ProductOptionsServiceImpl implements ProductOptionsService{
 			Flux<DestinationSize>flux=destinationSizeRepository.findByLanguageId("en");
 			List<DestinationSize>destinationSizes=flux.collectList().block();
 			return destinationSizes;
+		} catch (Exception e) {
+			logger.error("", e);
+		}
+		return null;
+	}
+
+	@Override
+	public List<SourceColor> getSourceColorList() {
+		try {
+			Flux<SourceColor> flux = sourceColorRepository.findByLanguageId("en");
+			List<SourceColor> sourceColors = flux.collectList().block();
+			return sourceColors;
+		} catch (Exception e) {
+			logger.error("", e);
+		}
+		return null;
+	}
+
+	@Override
+	public List<SourceSize> getSourceSizeList() {
+		try {
+			Flux<SourceSize> flux = sourceSizeRepository.findByLanguageId("en");
+			List<SourceSize> sourceSizes = flux.collectList().block();
+			return sourceSizes;
 		} catch (Exception e) {
 			logger.error("", e);
 		}

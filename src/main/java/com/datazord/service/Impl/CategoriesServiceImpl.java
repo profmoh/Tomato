@@ -12,14 +12,16 @@ import org.springframework.stereotype.Component;
 import com.datazord.enums.Language;
 import com.datazord.json.tomato.pojo.categories.Category;
 import com.datazord.model.destination.DestinationCategories;
+import com.datazord.model.source.SourceCategories;
 import com.datazord.repositories.SequenceRepository;
-import com.datazord.repositories.TomatoCategoriesRepository;
-import com.datazord.service.TomatoCategoriesService;
+import com.datazord.repositories.SourceCategoriesRepository;
+import com.datazord.repositories.DestinationCategoriesRepository;
+import com.datazord.service.CategoriesService;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Component
-public class TomatoCategoriesServiceImpl implements TomatoCategoriesService {
+public class CategoriesServiceImpl implements CategoriesService {
 	
 	private static final Logger logger = LoggerFactory.getLogger(MappingServiceImpl.class);
 	
@@ -29,64 +31,67 @@ public class TomatoCategoriesServiceImpl implements TomatoCategoriesService {
 	private SequenceRepository sequenceRepositorys;
 
 	@Autowired
-	private TomatoCategoriesRepository tomatoCategoriesRepository;
+	private DestinationCategoriesRepository destinationCategoriesRepository;
+	
+	@Autowired
+	private SourceCategoriesRepository sourceCategoriesRepository;
 
 	@Override
 	public Flux<DestinationCategories> findAll() {
-		return tomatoCategoriesRepository.findAll();
+		return destinationCategoriesRepository.findAll();
 	}
 
 	@Override
 	public Flux<DestinationCategories> findAll(Sort sort) {
-		return tomatoCategoriesRepository.findAll(sort);
+		return destinationCategoriesRepository.findAll(sort);
 	}
 
 	@Override
 	public Mono<DestinationCategories> findById(String id) {
-		return tomatoCategoriesRepository.findById(id);
+		return destinationCategoriesRepository.findById(id);
 	}
 
 	@Override
 	public Mono<DestinationCategories> create(DestinationCategories t) {
 		t.setId(sequenceRepositorys.getNextSequenceId(TOMATO_CATEGORIES_SEQ_KEY));
 
-		return tomatoCategoriesRepository.save(t);
+		return destinationCategoriesRepository.save(t);
 	}
 
 	@Override
 	public Mono<DestinationCategories> update(DestinationCategories t) {
-		return tomatoCategoriesRepository.save(t);
+		return destinationCategoriesRepository.save(t);
 	}
 
 	@Override
 	public Mono<Void> delete(DestinationCategories t) {
-		return tomatoCategoriesRepository.delete(t);
+		return destinationCategoriesRepository.delete(t);
 	}
 
 	@Override
 	public Mono<Void> deleteById(String id) {
-		return tomatoCategoriesRepository.deleteById(id);
+		return destinationCategoriesRepository.deleteById(id);
 	}
 
 	@Override
 	public Mono<Void> deleteAll() {
-		return tomatoCategoriesRepository.deleteAll()/*.subscribe()*/;
+		return destinationCategoriesRepository.deleteAll()/*.subscribe()*/;
 	}
 
 	@Override
 	public Flux<DestinationCategories> createAll(Collection<DestinationCategories> tCollection) {
 		tCollection.forEach(c -> c.setId(sequenceRepositorys.getNextSequenceId(TOMATO_CATEGORIES_SEQ_KEY)));
 
-		return tomatoCategoriesRepository.saveAll(tCollection);
+		return destinationCategoriesRepository.saveAll(tCollection);
 	}
 
 	@Override
 	public Flux<DestinationCategories> updateAll(Collection<DestinationCategories> tCollection) {
-		return tomatoCategoriesRepository.saveAll(tCollection);
+		return destinationCategoriesRepository.saveAll(tCollection);
 	}
 
 	@Override
-	public void saveCategories(List<Category> categories) {
+	public void saveDestinationCategories(List<Category> categories) {
 		DestinationCategories destinationCategory;
 		for (Category category : categories) {
 			destinationCategory=new DestinationCategories();
@@ -95,14 +100,14 @@ public class TomatoCategoriesServiceImpl implements TomatoCategoriesService {
 			destinationCategory.setLanguageId(language.valueOf(Integer.parseInt(category.getLanguageId())).name());
 			destinationCategory.setId(sequenceRepositorys.getNextSequenceId(TOMATO_CATEGORIES_SEQ_KEY));
 			
-			tomatoCategoriesRepository.save(destinationCategory).subscribe();
+			destinationCategoriesRepository.save(destinationCategory).subscribe();
 		}
 	}
 
 	@Override
 	public List<DestinationCategories> getDestinationCategoryList() {
 		try {
-			Flux<DestinationCategories>flux=tomatoCategoriesRepository.findByLanguageId("en");
+			Flux<DestinationCategories>flux=destinationCategoriesRepository.findByLanguageId("en");
 			List<DestinationCategories>destinationCategories=flux.collectList().block();
 			return destinationCategories;
 		} catch (Exception e) {
@@ -112,6 +117,17 @@ public class TomatoCategoriesServiceImpl implements TomatoCategoriesService {
 		
 	}
 
+	@Override
+	public List<SourceCategories> getSourceCategoryList() {
+		try {
+			Flux<SourceCategories> flux = sourceCategoriesRepository.findByLanguageId("en");
+			List<SourceCategories> sourceCategories = flux.collectList().block();
+			return sourceCategories;
 
+		} catch (Exception e) {
+			logger.error("", e);
+		}
+		return null;
+	}
 
 }

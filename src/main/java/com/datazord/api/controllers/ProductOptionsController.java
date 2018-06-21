@@ -36,7 +36,7 @@ public class ProductOptionsController {
 		ProductOptions productOptions=apiService.findProductOptionsValue(Id);
 		logger.info("response from findProductOptionsValue >>Success="+productOptions.getSuccess()+ " >> error="+productOptions.getError());
 		if(productOptions.getSuccess()==1)
-		 productOptionsService.saveProductOptions(productOptions);
+		 productOptionsService.saveDestinationProductOptions(productOptions);
 		return "Success";
 			
 		}catch(Exception e){
