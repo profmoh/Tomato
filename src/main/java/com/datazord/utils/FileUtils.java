@@ -41,11 +41,10 @@ public class FileUtils {
 //				System.out.println(string);
 //			}
 
-			List<String> jpathList = new ArrayList<>(extractXPathList(doc));
+			List<String> xpathList = new ArrayList<>(extractXPathList(doc));
+			String objectMainPath = getXPathIntersection(xpathList);
 
-			String objectMainPath = getXPathIntersection(jpathList);
-
-			List<JsonObject> jsonObjectList = extractNodeMapByPathList(doc, jpathList, objectMainPath);
+			List<JsonObject> jsonObjectList = extractNodeMapByPathList(doc, xpathList, objectMainPath);
 
 			for(JsonObject jsonObject : jsonObjectList)
 				System.out.println("\n\n" + new GsonBuilder().setPrettyPrinting().create().toJson(jsonObject));
@@ -77,6 +76,8 @@ public class FileUtils {
 			throw new RuntimeException(err);
 		}
 
+		resultList.remove("#document :: DataTable :: diffgr:diffgram :: DocumentElement :: Items :: options");
+
 		return resultList;
 	}
 
@@ -97,6 +98,7 @@ public class FileUtils {
 			NodeList nodeList = (NodeList) xPath.evaluate("//*", doc, XPathConstants.NODESET);
 
 			JsonObject instanceObject = null;
+			List<String> usedXpathList = new ArrayList<>();
 
 			for (int i = 0; i < nodeList.getLength(); i++) {
 				String fullXPath = getFullPath(nodeList.item(i))/* + " :: " + nodeList.item(i).getTextContent())*/;
@@ -104,10 +106,11 @@ public class FileUtils {
 				if(! xpathList.contains(fullXPath))
 					continue;
 
-				if(fullXPath.equals(objectMainPath)) {
-					if(instanceObject != null)
-						jsonObjectList.add(rootObject);
+				if(instanceObject == null)
+					instanceObject = deepCopy(rootObject, JsonObject.class);
 
+				if(usedXpathList.contains(fullXPath)) {
+					jsonObjectList.add(instanceObject);
 					instanceObject = deepCopy(rootObject, JsonObject.class);
 
 					continue;
@@ -116,7 +119,7 @@ public class FileUtils {
 			}
 
 			if(instanceObject != null)
-				jsonObjectList.add(rootObject);
+				jsonObjectList.add(instanceObject);
 
 			return jsonObjectList;
 		} catch (Exception err) {
@@ -131,7 +134,7 @@ public class FileUtils {
 
 		JsonObject currentObject = instanceObject;
 
-		for(int i = 0; i < xpathArray.length - 2; i++)
+		for(int i = 0; i < xpathArray.length - 1; i++)
 			try {
 				currentObject = currentObject.getAsJsonObject(xpathArray[i]);
 			} catch (Exception e) {
