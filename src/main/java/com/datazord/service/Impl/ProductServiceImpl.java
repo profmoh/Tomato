@@ -17,6 +17,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import com.datazord.json.tomato.pojo.product.Child;
 import com.datazord.json.tomato.pojo.product.Product;
 import com.datazord.json.tomato.pojo.product.ProductAttribute;
 import com.datazord.json.tomato.pojo.product.ProductAttributeDescription;
@@ -26,6 +27,7 @@ import com.datazord.json.tomato.pojo.product.ProductOption;
 import com.datazord.json.tomato.pojo.product.ProductOptionValue;
 import com.datazord.json.tomato.pojo.product.ProductSeoUrl;
 import com.datazord.json.tomato.pojo.product.ProductSpecial;
+import com.datazord.json.tomato.pojo.product.productCustomOption;
 import com.datazord.model.destination.DestinationProduct;
 import com.datazord.model.source.SourceProduct;
 import com.datazord.repositories.DestinationProductRepository;
@@ -150,6 +152,28 @@ public class ProductServiceImpl implements ProductService{
 	        if (field.isAnnotationPresent(JsonProperty.class)) {
 	            String annotationValue = field.getAnnotation(JsonProperty.class).value();
 	            String parameterPath="Product.product_option.product_option_value."+annotationValue;
+	            productParmaeterPath.add(parameterPath);
+	            
+	        }
+	    }
+	    
+	    fields = productCustomOption.class.getDeclaredFields();
+	    for (Field field : fields) {
+	        if (field.isAnnotationPresent(JsonProperty.class)) {
+	            String annotationValue = field.getAnnotation(JsonProperty.class).value();
+	            if(annotationValue.equals("child"))
+	            	continue;
+	            String parameterPath="Product.product_custom_option."+annotationValue;
+	            productParmaeterPath.add(parameterPath);
+	            
+	        }
+	    }
+	    
+	    fields = Child.class.getDeclaredFields();
+	    for (Field field : fields) {
+	        if (field.isAnnotationPresent(JsonProperty.class)) {
+	            String annotationValue = field.getAnnotation(JsonProperty.class).value();
+	            String parameterPath="Product.product_custom_option.child."+annotationValue;
 	            productParmaeterPath.add(parameterPath);
 	            
 	        }

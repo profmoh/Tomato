@@ -30,7 +30,7 @@ public class Product {
 	@JsonProperty("sku")
 	private String sku;
 	
-	@JsonProperty("product_seo_url")
+	@JsonProperty("product_seo_url") //
 	private List<ProductSeoUrl>product_seo_url=new ArrayList<>();
 	
 	@JsonProperty("keyword")
@@ -120,16 +120,16 @@ public class Product {
 	@JsonProperty("product_category")
 	private List<String> product_category=new ArrayList<>();
 	
-	@JsonProperty("product_special")
+	@JsonProperty("product_special")//
 	private List<ProductSpecial>product_special=new ArrayList<>();
 	
-	@JsonProperty("product_discount")
+	@JsonProperty("product_discount")//
 	private List<ProductDiscount>product_discount=new ArrayList<>(); 
 	
-	@JsonProperty("product_attribute")
+	@JsonProperty("product_attribute")//
 	private List<ProductAttribute>product_attribute=new ArrayList<>();
 	
-	@JsonProperty("product_option")
+	@JsonProperty("product_option")//
 	private List<ProductOption>product_option=new ArrayList<>();
 	
 	@JsonProperty("cv_required")
@@ -140,5 +140,8 @@ public class Product {
 	
 	@JsonProperty("cv_size_option_id")
 	private String cv_size_option_id;
+	
+	@JsonProperty("product_custom_option")
+	private List<productCustomOption>product_custom_option=new ArrayList<>();
 	
 }
