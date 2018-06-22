@@ -30,9 +30,6 @@ public class Product {
 	@JsonProperty("sku")
 	private String sku;
 	
-	@JsonProperty("product_seo_url") //
-	private List<ProductSeoUrl>product_seo_url=new ArrayList<>();
-	
 	@JsonProperty("keyword")
 	private String keyword;
 	
@@ -119,18 +116,6 @@ public class Product {
 	
 	@JsonProperty("product_category")
 	private List<String> product_category=new ArrayList<>();
-	
-	@JsonProperty("product_special")//
-	private List<ProductSpecial>product_special=new ArrayList<>();
-	
-	@JsonProperty("product_discount")//
-	private List<ProductDiscount>product_discount=new ArrayList<>(); 
-	
-	@JsonProperty("product_attribute")//
-	private List<ProductAttribute>product_attribute=new ArrayList<>();
-	
-	@JsonProperty("product_option")//
-	private List<ProductOption>product_option=new ArrayList<>();
 	
 	@JsonProperty("cv_required")
 	private String cv_required;
