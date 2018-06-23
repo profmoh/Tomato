@@ -54,17 +54,15 @@ public class ProductOptionsServiceImpl implements ProductOptionsService{
 			for(Map.Entry<String, OptionValueDescription> entry : optionValue.getOptionValueDescription().entrySet()){
 				if(productOptions.getData().getOption_id().equals(TomatoConstants.COLOR_PRODUCT_OPTION)){
 					color=new DestinationColor();
-					Language language = null;
 					color.setName(entry.getValue().getName());
-					color.setLanguageId(language.valueOf(Integer.parseInt(entry.getValue().getLanguage_id())).name());
+					color.setLanguageId(Language.valueOf(Integer.parseInt(entry.getValue().getLanguage_id())).name());
 					color.setId(sequenceRepositorys.getNextSequenceId(DESTINATION_COLOR_SEQ_KEY));
 					
 					destinationColorRepository.save(color).subscribe();
 				}else if(productOptions.getData().getOption_id().equals(TomatoConstants.SIZE_PRODUCT_OPTION)){
 					size=new DestinationSize();
 					size.setName(entry.getValue().getName());
-					Language language = null;
-					size.setLanguageId(language.valueOf(Integer.parseInt(entry.getValue().getLanguage_id())).name());
+					size.setLanguageId(Language.valueOf(Integer.parseInt(entry.getValue().getLanguage_id())).name());
 					size.setId(sequenceRepositorys.getNextSequenceId(DESTINATION_SIZE_SEQ_KEY));
 					
 					destinationSizeRepository.save(size).subscribe();
