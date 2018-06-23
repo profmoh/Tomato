@@ -68,10 +68,11 @@ public class TomatoServiceImpl {
 	public ProductOptions findProductOptionsValue(Integer optionID){
 		String productOptUrl="";
 		logger.info("calling production_Options with Id="+optionID);
+
 		if(optionID.equals(TomatoConstants.COLOR_PRODUCT_OPTION))
-		    productOptUrl = baseUrl.concat("/rest_admin/product_options/13");
+		    productOptUrl = baseUrl.concat("/rest_admin/product_options/" + TomatoConstants.COLOR_PRODUCT_OPTION);
 		else if(optionID.equals(TomatoConstants.SIZE_PRODUCT_OPTION))
-			productOptUrl = baseUrl.concat("/rest_admin/product_options/11");
+			productOptUrl = baseUrl.concat("/rest_admin/product_options/" + TomatoConstants.SIZE_PRODUCT_OPTION);
 		
 			ProductOptions productOptions=new ProductOptions();
 			ResponseEntity<ProductOptions>responseEntity=ApiUtils.doRequest(headerName, this.authorization, null, null, productOptUrl, HttpMethod.GET, ProductOptions.class);
