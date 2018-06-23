@@ -113,9 +113,13 @@ public class FileUtils {
 					jsonObjectList.add(instanceObject);
 					instanceObject = deepCopy(rootObject, JsonObject.class);
 
+					usedXpathList.clear();
+
 					continue;
-				} else
+				} else {
 					setObjectValue(instanceObject, fullXPath, nodeList.item(i).getTextContent());
+					usedXpathList.add(fullXPath);
+				}
 			}
 
 			if(instanceObject != null)
