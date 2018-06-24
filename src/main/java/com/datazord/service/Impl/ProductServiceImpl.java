@@ -26,6 +26,7 @@ import com.datazord.repositories.SequenceRepository;
 import com.datazord.repositories.SourceProductRepository;
 import com.datazord.service.ProductService;
 import com.datazord.utils.FileUtils;
+import com.datazord.utils.Utils;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import reactor.core.publisher.Flux;
@@ -144,12 +145,33 @@ public class ProductServiceImpl implements ProductService {
 			Flux<SourceProduct> flux = sourceProductRepository.findAll();
 			List<SourceProduct> sourceProducts = flux.collectList().block();
 
+			List<String> distinctPath = Utils.getDistinctFieldByGetterName(sourceProducts, "getName")
+					.stream()
+					.map(p -> (String) p)
+					.collect(Collectors.toList());
+
+			String intersectionPath = FileUtils.getXPathIntersection(distinctPath);
+
+			sourceProducts = sourceProducts
+					.stream()
+					.map(p -> new SourceProduct(p.getId(), replaceIntersection(p.getName(), intersectionPath)))
+					.collect(Collectors.toList());
+
 			return sourceProducts;
 		} catch (Exception e) {
 			logger.error("", e);
 		}
 
 		return null;
+	}
+
+	private String replaceIntersection(String path, String intersection) {
+		path = path.replaceFirst(intersection, "");
+
+		if(path.startsWith(" :: "))
+			path = path.replaceFirst(" :: ", "");
+
+		return path;
 	}
 
 	@Override
