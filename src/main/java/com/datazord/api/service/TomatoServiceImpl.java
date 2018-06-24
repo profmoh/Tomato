@@ -128,7 +128,7 @@ public class TomatoServiceImpl {
 		}
 	}
 
-	public List<String> findSourceCategories() {
+	public List<String> saveSourceCategories() {
 		logger.info("Getting Source Catigories ...");
 
 		List<JsonObject> jsonObjectList = null;

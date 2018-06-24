@@ -34,8 +34,8 @@ public class TomatoCategoriesController {
 	}
 
 	@GetMapping("/Source")
-	public String findSourceCategories(Model model) {
-		apiService.findSourceCategories();
+	public String saveSourceCategories(Model model) {
+		apiService.saveSourceCategories();
 
 		return "Success";
 	}
