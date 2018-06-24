@@ -1,7 +1,12 @@
 package com.datazord.api.service;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
+
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,6 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.xml.sax.SAXException;
 
 import com.datazord.api.reply.API_Reply;
 import com.datazord.constants.TomatoConstants;
@@ -17,8 +23,11 @@ import com.datazord.json.tomato.pojo.categories.Categories;
 import com.datazord.json.tomato.pojo.categories.Category;
 import com.datazord.json.tomato.pojo.product.Product;
 import com.datazord.utils.ApiUtils;
+import com.datazord.utils.FileUtils;
+import com.datazord.utils.Utils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.JsonObject;
 
 @Service
 public class TomatoServiceImpl {
@@ -51,57 +60,111 @@ public class TomatoServiceImpl {
 
 			logger.info("Categories : " + categoriesResult.getBody().getData().getCategoriesMap().keySet());
 
-			List<Category> categoriesList = 
-					categoriesResult.getBody().getData().getCategoriesMap()
-					.values().stream()
-				        .flatMap(List::stream)
-				        .collect(Collectors.toList());
+			List<Category> categoriesList = categoriesResult.getBody().getData().getCategoriesMap().values().stream()
+					.flatMap(List::stream).collect(Collectors.toList());
 
 			return categoriesList;
 		} catch (Exception e) {
 			logger.error("Categories Read Error");
-			//e.printStackTrace();
 			return null;
 		}
 	}
-	
-	public ProductOptions findProductOptionsValue(Integer optionID){
-		String productOptUrl="";
-		logger.info("calling production_Options with Id="+optionID);
 
-		if(optionID.equals(TomatoConstants.COLOR_PRODUCT_OPTION))
-		    productOptUrl = baseUrl.concat("/rest_admin/product_options/" + TomatoConstants.COLOR_PRODUCT_OPTION);
-		else if(optionID.equals(TomatoConstants.SIZE_PRODUCT_OPTION))
+	public ProductOptions findProductOptionsValue(Integer optionID) {
+		String productOptUrl = "";
+
+		logger.info("calling production_Options with Id=" + optionID);
+
+		if (optionID.equals(TomatoConstants.COLOR_PRODUCT_OPTION))
+			productOptUrl = baseUrl.concat("/rest_admin/product_options/" + TomatoConstants.COLOR_PRODUCT_OPTION);
+		else if (optionID.equals(TomatoConstants.SIZE_PRODUCT_OPTION))
 			productOptUrl = baseUrl.concat("/rest_admin/product_options/" + TomatoConstants.SIZE_PRODUCT_OPTION);
-		
-			ProductOptions productOptions=new ProductOptions();
-			ResponseEntity<ProductOptions>responseEntity=ApiUtils.doRequest(headerName, this.authorization, null, null, productOptUrl, HttpMethod.GET, ProductOptions.class);
-			productOptions=responseEntity.getBody();
-			return productOptions;
-	
+
+		ProductOptions productOptions = new ProductOptions();
+
+		ResponseEntity<ProductOptions> responseEntity =
+				ApiUtils.doRequest(headerName, this.authorization, null, null, productOptUrl, HttpMethod.GET, ProductOptions.class);
+
+		productOptions = responseEntity.getBody();
+
+		return productOptions;
 	}
-	
-	public API_Reply addProduct(Product product){
+
+	public API_Reply addProduct(Product product) {
 		try {
 			logger.info("Insert Product Into Tomato ");
+
 			String addproductUrl = baseUrl.concat("/rest_admin/products");
 
-			API_Reply api_Reply=new API_Reply();
-			ObjectMapper mapper = new ObjectMapper();
 			String bodyJson;
+			API_Reply api_Reply = new API_Reply();
+			ObjectMapper mapper = new ObjectMapper();
+
 			bodyJson = mapper.writeValueAsString(product);
 
-			ResponseEntity<API_Reply> responseEntity = ApiUtils.doRequest(headerName, this.authorization, bodyJson,
-					null, addproductUrl, HttpMethod.POST, API_Reply.class);
-			api_Reply=responseEntity.getBody();
+			ResponseEntity<API_Reply> responseEntity = 
+					ApiUtils.doRequest(headerName, this.authorization, bodyJson, null, addproductUrl, HttpMethod.POST, API_Reply.class);
+
+			api_Reply = responseEntity.getBody();
 
 			return api_Reply;
 		} catch (JsonProcessingException e) {
 			logger.error("JsonProcessingException : ", e);
 			return null;
-		}catch(Exception ex){
+		} catch (Exception ex) {
 			logger.error("Exception : ", ex);
 			return null;
 		}
+	}
+
+	public List<String> findSourceCategories() {
+		logger.info("Getting Source Catigories ...");
+
+		List<JsonObject> jsonObjectList = null;
+
+		try {
+			jsonObjectList = FileUtils.readJsonObjectsFormXML(TomatoConstants.xmlFilePath);
+		} catch (SAXException | IOException | ParserConfigurationException e) {
+			e.printStackTrace();
+			return null;
+		}
+
+		Set<String> categoriesList = Utils.getDistinctFieldByFieldNameInJson(jsonObjectList, "#document :: DataTable :: diffgr:diffgram :: DocumentElement :: Items :: item_name");
+
+		return new ArrayList<>(categoriesList);
+	}
+
+	public List<String> findSourceProductOptionColors() {
+		logger.info("calling Source product option colors");
+
+		List<JsonObject> jsonObjectList = null;
+
+		try {
+			jsonObjectList = FileUtils.readJsonObjectsFormXML(TomatoConstants.xmlFilePath);
+		} catch (SAXException | IOException | ParserConfigurationException e) {
+			e.printStackTrace();
+			return null;
+		}
+
+		Set<String> colorList = Utils.getDistinctFieldByFieldNameInJson(jsonObjectList, "#document :: DataTable :: diffgr:diffgram :: DocumentElement :: Items :: color_name");
+
+		return new ArrayList<>(colorList);
+	}
+
+	public List<String> findSourceProductOptionSizes() {
+		logger.info("calling Source product option sizes");
+
+		List<JsonObject> jsonObjectList = null;
+
+		try {
+			jsonObjectList = FileUtils.readJsonObjectsFormXML(TomatoConstants.xmlFilePath);
+		} catch (SAXException | IOException | ParserConfigurationException e) {
+			e.printStackTrace();
+			return null;
+		}
+
+		Set<String> sizeList = Utils.getDistinctFieldByFieldNameInJson(jsonObjectList, "#document :: DataTable :: diffgr:diffgram :: DocumentElement :: Items :: SIZE_NAME");
+
+		return new ArrayList<>(sizeList);
 	}
 }

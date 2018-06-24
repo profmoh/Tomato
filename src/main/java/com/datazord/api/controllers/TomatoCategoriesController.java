@@ -14,20 +14,32 @@ import com.datazord.service.CategoriesService;
 import com.datazord.utils.Utils;
 
 @RestController
-@RequestMapping({"/api/categories"})
+@RequestMapping({ "/api/categories" })
 public class TomatoCategoriesController {
 
 	@Autowired
 	private TomatoServiceImpl apiService;
-	
+
 	@Autowired
 	private CategoriesService categoriesService;
 
 	@GetMapping
 	public String findCategories(Model model) {
-		List<Category> categories=apiService.findCategories();
-		if(!Utils.isEmptyCollection(categories))
+		List<Category> categories = apiService.findCategories();
+
+		if (!Utils.isEmptyCollection(categories))
 			categoriesService.saveDestinationCategories(categories);
+
+		return "Success";
+	}
+
+	@GetMapping("/Source")
+	public String findSourceCategories(Model model) {
+		List<String> categoriesList = apiService.findSourceCategories();
+
+		if (! Utils.isEmptyCollection(categoriesList))
+			categoriesService.saveSourceCategories(categoriesList);
+
 		return "Success";
 	}
 }

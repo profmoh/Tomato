@@ -39,6 +39,7 @@ dependencies {
 	compileOnly('org.projectlombok:lombok')
 
 	compile group: 'cglib', name: 'cglib', version: '3.2.6'
+	compile group: 'com.google.guava', name: 'guava', version: '11.0.2'
 
 	testCompile('io.projectreactor:reactor-test')
 	testCompile('org.springframework.boot:spring-boot-starter-test')

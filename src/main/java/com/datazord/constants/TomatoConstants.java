@@ -12,4 +12,6 @@ public class TomatoConstants {
 
 	public static final Integer SIZE_PRODUCT_OPTION = 1;
 	public static final Integer COLOR_PRODUCT_OPTION = 13;
+
+	public static String xmlFilePath = "C:\\Users\\Mohamed\\Desktop\\Items.xml";
 }

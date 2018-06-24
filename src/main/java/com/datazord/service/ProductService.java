@@ -7,12 +7,15 @@ import com.datazord.model.source.SourceProduct;
 
 public interface ProductService {
 
-	static final String DESTINATION_PRODUCT_SEQ_KEY="destination_product_seq";
-	
+	static final String DESTINATION_PRODUCT_SEQ_KEY = "destination_product_seq";
+
+	static final String SOURCE_PRODUCT_PATH_SEQ_KEY = "source_product_path_seq";
+
 	public void saveDestinationProduct();
-	
+
 	public List<DestinationProduct> getDestinationProductList();
-	
+
 	public List<SourceProduct> getSourceProductList();
-		
+
+	void saveSourceProductPath();
 }

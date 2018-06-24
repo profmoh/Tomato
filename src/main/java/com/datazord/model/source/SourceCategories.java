@@ -5,7 +5,6 @@ import javax.validation.constraints.NotBlank;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.datazord.model.BaseModel;
-import com.datazord.model.source.SourceColor.SourceColorBuilder;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

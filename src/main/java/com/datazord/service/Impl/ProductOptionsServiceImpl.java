@@ -2,12 +2,12 @@ package com.datazord.service.Impl;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.w3c.dom.stylesheets.LinkStyle;
 
 import com.datazord.constants.TomatoConstants;
 import com.datazord.enums.Language;
@@ -119,6 +119,27 @@ public class ProductOptionsServiceImpl implements ProductOptionsService{
 		return null;
 	}
 
+	@Override
+	public void saveSourceProductOptionColors(List<String> colorsList) {
+		List<SourceColor> sourceColorsList =
+				colorsList
+				.stream()
+				.map(color -> new SourceColor(sequenceRepositorys.getNextSequenceId(SOURCE_SIZE_SEQ_KEY), color, "1"))
+				.collect(Collectors.toList());
 
-	
+		sourceColorRepository.deleteAll().subscribe();
+		sourceColorRepository.saveAll(sourceColorsList).subscribe();
+	}
+
+	@Override
+	public void saveSourceProductOptionSizes(List<String> sizesList) {
+		List<SourceSize> sourceSizesList =
+				sizesList
+				.stream()
+				.map(size -> new SourceSize(sequenceRepositorys.getNextSequenceId(SOURCE_SIZE_SEQ_KEY), size, "1"))
+				.collect(Collectors.toList());
+
+		sourceSizeRepository.deleteAll().subscribe();
+		sourceSizeRepository.saveAll(sourceSizesList).subscribe();
+	}
 }

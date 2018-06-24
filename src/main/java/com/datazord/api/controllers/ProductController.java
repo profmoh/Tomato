@@ -28,4 +28,13 @@ public class ProductController {
 		
 	}
 
+	@GetMapping("/Source/getParamterPath")
+	private String getSourceProductParamterPath(){
+		logger.info(">>> Start inserting Source Product Paramter Path into DB ");
+		
+		productService.saveSourceProductPath();
+		
+		return "Success";
+		
+	}
 }

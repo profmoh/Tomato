@@ -2,6 +2,7 @@ package com.datazord.utils;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -15,6 +16,7 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 
+import org.apache.commons.lang3.StringUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -22,42 +24,65 @@ import org.xml.sax.SAXException;
 
 import com.datazord.comparators.JpathComparator;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
 public class FileUtils {
 
 	public static void main(String[] args) {
+		List<JsonObject> jsonObjectList = null;
+
 		try {
-			DocumentBuilderFactory dbfac = DocumentBuilderFactory.newInstance();
-			dbfac.setValidating(false);
-
-			DocumentBuilder docBuilder = dbfac.newDocumentBuilder();
-			Document doc = docBuilder.parse(new FileInputStream(new File("C:\\Users\\Mohamed\\Desktop\\Items.xml")));
-
-//			Set<String> resultList = extractXPathList(doc);
-//			
-//			for (String string : resultList) {
-//				System.out.println(string);
-//			}
-
-			List<String> xpathList = new ArrayList<>(extractXPathList(doc));
-			String objectMainPath = getXPathIntersection(xpathList);
-
-			List<JsonObject> jsonObjectList = extractNodeMapByPathList(doc, xpathList, objectMainPath);
-
-			for(JsonObject jsonObject : jsonObjectList)
-				System.out.println("\n\n" + new GsonBuilder().setPrettyPrinting().create().toJson(jsonObject));
-		} catch (SAXException e) {
+			jsonObjectList = readJsonObjectsFormXML("C:\\Users\\Mohamed\\Desktop\\Items.xml");
+		} catch (SAXException | IOException | ParserConfigurationException e) {
 			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (ParserConfigurationException e) {
-			e.printStackTrace();
+			return;
 		}
+
+		Set<String> colorList = Utils.getDistinctFieldByFieldNameInJson(jsonObjectList, "#document :: DataTable :: diffgr:diffgram :: DocumentElement :: Items :: color_name");
+		colorList.forEach(System.out::println);
+
+		Set<String> sizeList = Utils.getDistinctFieldByFieldNameInJson(jsonObjectList, "#document :: DataTable :: diffgr:diffgram :: DocumentElement :: Items :: SIZE_NAME");
+		sizeList.forEach(System.out::println);
+	
+		Set<String> categoriesList = Utils.getDistinctFieldByFieldNameInJson(jsonObjectList, "#document :: DataTable :: diffgr:diffgram :: DocumentElement :: Items :: item_name");
+		categoriesList.forEach(System.out::println);
+
+//		for (JsonObject jsonObject : jsonObjectList)
+//			System.out.println("\n\n" + new GsonBuilder().setPrettyPrinting().create().toJson(jsonObject));
 	}
 
-	public static Set<String> extractXPathList(Document doc) {
+	public static List<JsonObject> readJsonObjectsFormXML(String path) throws FileNotFoundException, SAXException, IOException, ParserConfigurationException {
+		Document doc = readXMLfileToDocument(path);
+
+		List<String> xpathList = extractXPathList(doc);
+//		xpathList.forEach(System.out::println);
+
+//		String objectMainPath = getXPathIntersection(xpathList);
+
+		return extractNodeMapByPathList(doc, xpathList);
+	}
+
+	public static Document readXMLfileToDocument(String path)
+			throws FileNotFoundException, SAXException, IOException, ParserConfigurationException {
+
+		if(StringUtils.isBlank(path))
+			return null;
+
+		File file = new File(path);
+
+		if(! file.exists())
+			return null;
+
+		DocumentBuilderFactory dbfac = DocumentBuilderFactory.newInstance();
+		dbfac.setValidating(false);
+
+		DocumentBuilder docBuilder = dbfac.newDocumentBuilder();
+		Document doc = docBuilder.parse(new FileInputStream(file));
+
+		return doc;
+	}
+
+	public static List<String> extractXPathList(Document doc) {
 		Set<String> resultList = new HashSet<>();
 
 		try {
@@ -78,10 +103,10 @@ public class FileUtils {
 
 		resultList.remove("#document :: DataTable :: diffgr:diffgram :: DocumentElement :: Items :: options");
 
-		return resultList;
+		return new ArrayList<>(resultList);
 	}
 
-	public static List<JsonObject> extractNodeMapByPathList(Document doc, List<String> xpathList, String objectMainPath) {
+	public static List<JsonObject> extractNodeMapByPathList(Document doc, List<String> xpathList) {
 		xpathList.sort(new JpathComparator());
 
 		JsonObject rootObject = new JsonObject();
@@ -89,7 +114,7 @@ public class FileUtils {
 		for(String xpath : xpathList)
 			generateJsonObjectFromXPath(rootObject, xpath);
 
-		System.out.println(new GsonBuilder().setPrettyPrinting().create().toJson(rootObject));
+//		System.out.println(new GsonBuilder().setPrettyPrinting().create().toJson(rootObject));
 
 		try {
 			List<JsonObject> jsonObjectList = new ArrayList<>();
@@ -180,7 +205,7 @@ public class FileUtils {
 		}
 	}
 
-	private static String getXPathIntersection(List<String> xpathList) {
+	public static String getXPathIntersection(List<String> xpathList) {
 		if(Utils.isEmptyCollection(xpathList))
 			return null;
 
