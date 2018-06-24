@@ -45,11 +45,13 @@ mapping.controller('mappingController_multi', function ($scope, mappingService,$
         $scope.destinationList.push(item)
     }
     $scope.showMe = function () {
+        if($scope.sourceList !== undefined){
         for (i = 0; i < $scope.sourceList.length; i++) {
             if ($scope.sourceList[i].childrenList.length > 0) {
                 return true;
             }
         }
+      }
     }
     $scope.mapping = function () {
         $scope.statusMessage.message = "Success";
@@ -94,11 +96,13 @@ mapping.controller('mappingController_single', function ($scope, mappingService,
         $scope.destinationList.push(item)
     }
     $scope.showMe = function () {
+        if($scope.sourceList !== undefined){
         for (i = 0; i < $scope.sourceList.length; i++) {
             if ($scope.sourceList[i].children != null) {
                 return true;
             }
         }
+      }
     }
     $scope.mapping = function () {
         $scope.statusMessage.message = "Success";
