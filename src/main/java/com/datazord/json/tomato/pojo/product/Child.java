@@ -16,14 +16,14 @@ public class Child {
 	private String quantity;
 	
 	@JsonProperty("subtract")
-	private String subtract;
+	private String subtract = "1";
 	
 	@JsonProperty("price_prefix")
-	private String price_prefix;
+	private String price_prefix = "+";
 	
 	@JsonProperty("price")
 	private String price;
 	
 	@JsonProperty("sort_order")
-	private String sort_order;
+	private String sort_order = "0";
 }

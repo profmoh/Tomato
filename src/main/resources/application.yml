@@ -1,9 +1,9 @@
 resource:
   url: http://shop.tomatostores.com/api
-  username: 
-  password: 
-  headerName: 
-  authorization: 
+  username: modaapimolo
+  password: kS#n+m6sy7
+  headerName: X-Oc-Restadmin-Id
+  authorization: CXAaZmtcDSop1u80esyarB0HMpaNo7i2
 
 logging:
   level:

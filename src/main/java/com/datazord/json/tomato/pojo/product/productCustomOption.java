@@ -19,7 +19,7 @@ public class productCustomOption {
 	private String image;
 	
 	@JsonProperty("sort_order")
-	private String sort_order;
+	private String sort_order = "0";
 	
 	@JsonProperty("child")
 	private List<Child>child=new ArrayList<>();

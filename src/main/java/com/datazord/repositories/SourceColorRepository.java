@@ -6,7 +6,7 @@ import com.datazord.model.source.SourceColor;
 
 import reactor.core.publisher.Flux;
 
-public interface SourceColorRepository extends ReactiveMongoRepository<SourceColor,String> {
+public interface SourceColorRepository extends ReactiveMongoRepository<SourceColor, String> {
 
-	Flux<SourceColor>  findByLanguageId(String languageId);
+	Flux<SourceColor> findByLanguageId(String languageId);
 }

@@ -19,10 +19,9 @@ import lombok.ToString;
 @EqualsAndHashCode(callSuper = false)
 @Document(collection = "destination_product")
 public class DestinationProduct extends BaseModel {
-	
+
 	private String id;
-	
-	private String name ;
-	
+
+	private String name;
 
 }

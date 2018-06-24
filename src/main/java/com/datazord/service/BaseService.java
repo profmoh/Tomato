@@ -9,7 +9,7 @@ import com.datazord.model.BaseModel;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-public interface BaseService <T extends BaseModel> {
+public interface BaseService<T extends BaseModel> {
 
 	Flux<T> findAll();
 

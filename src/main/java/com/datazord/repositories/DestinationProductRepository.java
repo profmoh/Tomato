@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import com.datazord.model.destination.DestinationProduct;
 
 @Repository
-public interface DestinationProductRepository extends ReactiveMongoRepository<DestinationProduct,String> {
+public interface DestinationProductRepository extends ReactiveMongoRepository<DestinationProduct, String> {
 
 }

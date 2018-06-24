@@ -48,7 +48,7 @@ public class CategoriesController {
 	public Mono<DestinationCategories> update(@PathVariable("id") String id, @RequestBody DestinationCategories t) {
 		return service.findById(id).map(c -> {
 			c.setName(t.getName());
-			//c.setDescription(t.getDescription());
+			// c.setDescription(t.getDescription());
 
 			return c;
 		}).flatMap(c -> service.update(c));

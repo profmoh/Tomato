@@ -2,6 +2,7 @@ package com.datazord.service.Impl;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +29,7 @@ import com.datazord.service.ProductOptionsService;
 import reactor.core.publisher.Flux;
 
 @Component
-public class ProductOptionsServiceImpl implements ProductOptionsService{
+public class ProductOptionsServiceImpl implements ProductOptionsService {
 
 	private static final Logger logger = LoggerFactory.getLogger(ProductOptionsServiceImpl.class);
 	
@@ -37,19 +38,19 @@ public class ProductOptionsServiceImpl implements ProductOptionsService{
 	
 	@Autowired
 	private SequenceRepository sequenceRepositorys;
-	
+
 	@Autowired
 	private DestinationSizeRepository destinationSizeRepository;
-	
+
 	@Autowired
 	private DestinationColorRepository destinationColorRepository;
-	
+
 	@Autowired
 	private SourceColorRepository sourceColorRepository;
-	
+
 	@Autowired
 	private SourceSizeRepository sourceSizeRepository;
-	
+
 	@Override
 	public void saveDestinationProductOptions(Integer optionID) {
 		DestinationColor color;
@@ -85,32 +86,37 @@ public class ProductOptionsServiceImpl implements ProductOptionsService{
 					}
 				}
 			}
-		} catch (Exception e) {
-			logger.error("", e);
+		}catch (Exception e) {
+			logger.error("",e);
 		}
-}
+	}
+		
 
 	@Override
 	public List<DestinationColor> getDestinationColorList() {
-	   try{
-		   Flux<DestinationColor>flux=destinationColorRepository.findByLanguageId("en");
-		   List<DestinationColor>destinationColors=flux.collectList().block();
-		   return destinationColors;
-	   }catch(Exception e){
-		   logger.error("",e);
-	   }
+		try {
+			Flux<DestinationColor> flux = destinationColorRepository.findByLanguageId("en");
+			List<DestinationColor> destinationColors = flux.collectList().block();
+
+			return destinationColors;
+		} catch (Exception e) {
+			logger.error("", e);
+		}
+
 		return null;
 	}
 
 	@Override
 	public List<DestinationSize> getDestinationSizeList() {
 		try {
-			Flux<DestinationSize>flux=destinationSizeRepository.findByLanguageId("en");
-			List<DestinationSize>destinationSizes=flux.collectList().block();
+			Flux<DestinationSize> flux = destinationSizeRepository.findByLanguageId("en");
+			List<DestinationSize> destinationSizes = flux.collectList().block();
+
 			return destinationSizes;
 		} catch (Exception e) {
 			logger.error("", e);
 		}
+
 		return null;
 	}
 
@@ -119,10 +125,12 @@ public class ProductOptionsServiceImpl implements ProductOptionsService{
 		try {
 			Flux<SourceColor> flux = sourceColorRepository.findByLanguageId("en");
 			List<SourceColor> sourceColors = flux.collectList().block();
+
 			return sourceColors;
 		} catch (Exception e) {
 			logger.error("", e);
 		}
+
 		return null;
 	}
 
@@ -138,9 +146,30 @@ public class ProductOptionsServiceImpl implements ProductOptionsService{
 		return null;
 	}
 
+	@Override
+	public void saveSourceProductOptionColors(List<String> colorsList) {
+		List<SourceColor> sourceColorsList = colorsList
+				.stream()
+				.map(color -> new SourceColor(sequenceRepositorys.getNextSequenceId(SOURCE_SIZE_SEQ_KEY), color, "1"))
+				.collect(Collectors.toList());	
+	
+		sourceColorRepository.deleteAll().subscribe();
+		sourceColorRepository.saveAll(sourceColorsList).subscribe();
+	}
+
+	@Override
+	public void saveSourceProductOptionSizes(List<String> sizesList) {
+		List<SourceSize> sourceSizesList = sizesList
+				.stream()
+				.map(size -> new SourceSize(sequenceRepositorys.getNextSequenceId(SOURCE_SIZE_SEQ_KEY), size, "1"))
+				.collect(Collectors.toList());
+
+		sourceSizeRepository.deleteAll().subscribe();
+		sourceSizeRepository.saveAll(sourceSizesList).subscribe();
+	}
 
 	private ProductOptions findProductOptionsValue(Integer optionID){
 		return apiService.findProductOptionsValue(optionID);
 	}
-	
+
 }

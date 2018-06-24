@@ -5,7 +5,6 @@
 // Generated on: 2018.06.04 at 01:30:41 AM GMT+02:00 
 //
 
-
 package com.datazord.xml.tomat.pojo.product;
 
 import java.util.ArrayList;
@@ -16,11 +15,13 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for anonymous complex type.
+ * <p>
+ * Java class for anonymous complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within
+ * this class.
  * 
  * <pre>
  * &lt;complexType>
@@ -56,325 +57,295 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = {
-    "items"
-})
+@XmlType(name = "", propOrder = { "items" })
 @XmlRootElement(name = "DocumentElement")
 public class DocumentElement {
 
-    @XmlElement(name = "Items")
-    protected List<DocumentElement.Items> items;
+	@XmlElement(name = "Items")
+	protected List<DocumentElement.Items> items;
 
-    /**
-     * Gets the value of the items property.
-     * 
-     * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the items property.
-     * 
-     * <p>
-     * For example, to add a new item, do as follows:
-     * <pre>
-     *    getItems().add(newItem);
-     * </pre>
-     * 
-     * 
-     * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link DocumentElement.Items }
-     * 
-     * 
-     */
-    public List<DocumentElement.Items> getItems() {
-        if (items == null) {
-            items = new ArrayList<DocumentElement.Items>();
-        }
-        return this.items;
-    }
+	/**
+	 * Gets the value of the items property.
+	 * 
+	 * <p>
+	 * This accessor method returns a reference to the live list, not a snapshot.
+	 * Therefore any modification you make to the returned list will be present
+	 * inside the JAXB object. This is why there is not a <CODE>set</CODE> method
+	 * for the items property.
+	 * 
+	 * <p>
+	 * For example, to add a new item, do as follows:
+	 * 
+	 * <pre>
+	 * getItems().add(newItem);
+	 * </pre>
+	 * 
+	 * 
+	 * <p>
+	 * Objects of the following type(s) are allowed in the list
+	 * {@link DocumentElement.Items }
+	 * 
+	 * 
+	 */
+	public List<DocumentElement.Items> getItems() {
+		if (items == null) {
+			items = new ArrayList<DocumentElement.Items>();
+		}
+		return this.items;
+	}
 
+	/**
+	 * <p>
+	 * Java class for anonymous complex type.
+	 * 
+	 * <p>
+	 * The following schema fragment specifies the expected content contained within
+	 * this class.
+	 * 
+	 * <pre>
+	 * &lt;complexType>
+	 *   &lt;complexContent>
+	 *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+	 *       &lt;sequence>
+	 *         &lt;element name="item_id" type="{http://www.w3.org/2001/XMLSchema}string"/>
+	 *         &lt;element name="item_name" type="{http://www.w3.org/2001/XMLSchema}string"/>
+	 *         &lt;element name="art" type="{http://www.w3.org/2001/XMLSchema}string"/>
+	 *         &lt;element name="SIZE_NAME" type="{http://www.w3.org/2001/XMLSchema}string"/>
+	 *         &lt;element name="sale_price" type="{http://www.w3.org/2001/XMLSchema}short"/>
+	 *         &lt;element name="color_name" type="{http://www.w3.org/2001/XMLSchema}string"/>
+	 *         &lt;element name="QTY" type="{http://www.w3.org/2001/XMLSchema}byte"/>
+	 *         &lt;element name="season_id" type="{http://www.w3.org/2001/XMLSchema}byte"/>
+	 *         &lt;element name="group_name" type="{http://www.w3.org/2001/XMLSchema}string"/>
+	 *         &lt;element name="dept_name" type="{http://www.w3.org/2001/XMLSchema}string"/>
+	 *       &lt;/sequence>
+	 *     &lt;/restriction>
+	 *   &lt;/complexContent>
+	 * &lt;/complexType>
+	 * </pre>
+	 * 
+	 * 
+	 */
+	@XmlAccessorType(XmlAccessType.FIELD)
+	@XmlType(name = "", propOrder = { "itemId", "itemName", "art", "sizename", "salePrice", "colorName", "qty",
+			"seasonId", "groupName", "deptName" })
+	public static class Items {
 
-    /**
-     * <p>Java class for anonymous complex type.
-     * 
-     * <p>The following schema fragment specifies the expected content contained within this class.
-     * 
-     * <pre>
-     * &lt;complexType>
-     *   &lt;complexContent>
-     *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-     *       &lt;sequence>
-     *         &lt;element name="item_id" type="{http://www.w3.org/2001/XMLSchema}string"/>
-     *         &lt;element name="item_name" type="{http://www.w3.org/2001/XMLSchema}string"/>
-     *         &lt;element name="art" type="{http://www.w3.org/2001/XMLSchema}string"/>
-     *         &lt;element name="SIZE_NAME" type="{http://www.w3.org/2001/XMLSchema}string"/>
-     *         &lt;element name="sale_price" type="{http://www.w3.org/2001/XMLSchema}short"/>
-     *         &lt;element name="color_name" type="{http://www.w3.org/2001/XMLSchema}string"/>
-     *         &lt;element name="QTY" type="{http://www.w3.org/2001/XMLSchema}byte"/>
-     *         &lt;element name="season_id" type="{http://www.w3.org/2001/XMLSchema}byte"/>
-     *         &lt;element name="group_name" type="{http://www.w3.org/2001/XMLSchema}string"/>
-     *         &lt;element name="dept_name" type="{http://www.w3.org/2001/XMLSchema}string"/>
-     *       &lt;/sequence>
-     *     &lt;/restriction>
-     *   &lt;/complexContent>
-     * &lt;/complexType>
-     * </pre>
-     * 
-     * 
-     */
-    @XmlAccessorType(XmlAccessType.FIELD)
-    @XmlType(name = "", propOrder = {
-        "itemId",
-        "itemName",
-        "art",
-        "sizename",
-        "salePrice",
-        "colorName",
-        "qty",
-        "seasonId",
-        "groupName",
-        "deptName"
-    })
-    public static class Items {
+		@XmlElement(name = "item_id", required = true)
+		protected String itemId;
+		@XmlElement(name = "item_name", required = true)
+		protected String itemName;
+		@XmlElement(required = true)
+		protected String art;
+		@XmlElement(name = "SIZE_NAME", required = true)
+		protected String sizename;
+		@XmlElement(name = "sale_price")
+		protected short salePrice;
+		@XmlElement(name = "color_name", required = true)
+		protected String colorName;
+		@XmlElement(name = "QTY")
+		protected byte qty;
+		@XmlElement(name = "season_id")
+		protected byte seasonId;
+		@XmlElement(name = "group_name", required = true)
+		protected String groupName;
+		@XmlElement(name = "dept_name", required = true)
+		protected String deptName;
 
-        @XmlElement(name = "item_id", required = true)
-        protected String itemId;
-        @XmlElement(name = "item_name", required = true)
-        protected String itemName;
-        @XmlElement(required = true)
-        protected String art;
-        @XmlElement(name = "SIZE_NAME", required = true)
-        protected String sizename;
-        @XmlElement(name = "sale_price")
-        protected short salePrice;
-        @XmlElement(name = "color_name", required = true)
-        protected String colorName;
-        @XmlElement(name = "QTY")
-        protected byte qty;
-        @XmlElement(name = "season_id")
-        protected byte seasonId;
-        @XmlElement(name = "group_name", required = true)
-        protected String groupName;
-        @XmlElement(name = "dept_name", required = true)
-        protected String deptName;
+		/**
+		 * Gets the value of the itemId property.
+		 * 
+		 * @return possible object is {@link String }
+		 * 
+		 */
+		public String getItemId() {
+			return itemId;
+		}
 
-        /**
-         * Gets the value of the itemId property.
-         * 
-         * @return
-         *     possible object is
-         *     {@link String }
-         *     
-         */
-        public String getItemId() {
-            return itemId;
-        }
+		/**
+		 * Sets the value of the itemId property.
+		 * 
+		 * @param value
+		 *            allowed object is {@link String }
+		 * 
+		 */
+		public void setItemId(String value) {
+			this.itemId = value;
+		}
 
-        /**
-         * Sets the value of the itemId property.
-         * 
-         * @param value
-         *     allowed object is
-         *     {@link String }
-         *     
-         */
-        public void setItemId(String value) {
-            this.itemId = value;
-        }
+		/**
+		 * Gets the value of the itemName property.
+		 * 
+		 * @return possible object is {@link String }
+		 * 
+		 */
+		public String getItemName() {
+			return itemName;
+		}
 
-        /**
-         * Gets the value of the itemName property.
-         * 
-         * @return
-         *     possible object is
-         *     {@link String }
-         *     
-         */
-        public String getItemName() {
-            return itemName;
-        }
+		/**
+		 * Sets the value of the itemName property.
+		 * 
+		 * @param value
+		 *            allowed object is {@link String }
+		 * 
+		 */
+		public void setItemName(String value) {
+			this.itemName = value;
+		}
 
-        /**
-         * Sets the value of the itemName property.
-         * 
-         * @param value
-         *     allowed object is
-         *     {@link String }
-         *     
-         */
-        public void setItemName(String value) {
-            this.itemName = value;
-        }
+		/**
+		 * Gets the value of the art property.
+		 * 
+		 * @return possible object is {@link String }
+		 * 
+		 */
+		public String getArt() {
+			return art;
+		}
 
-        /**
-         * Gets the value of the art property.
-         * 
-         * @return
-         *     possible object is
-         *     {@link String }
-         *     
-         */
-        public String getArt() {
-            return art;
-        }
+		/**
+		 * Sets the value of the art property.
+		 * 
+		 * @param value
+		 *            allowed object is {@link String }
+		 * 
+		 */
+		public void setArt(String value) {
+			this.art = value;
+		}
 
-        /**
-         * Sets the value of the art property.
-         * 
-         * @param value
-         *     allowed object is
-         *     {@link String }
-         *     
-         */
-        public void setArt(String value) {
-            this.art = value;
-        }
+		/**
+		 * Gets the value of the sizename property.
+		 * 
+		 * @return possible object is {@link String }
+		 * 
+		 */
+		public String getSIZENAME() {
+			return sizename;
+		}
 
-        /**
-         * Gets the value of the sizename property.
-         * 
-         * @return
-         *     possible object is
-         *     {@link String }
-         *     
-         */
-        public String getSIZENAME() {
-            return sizename;
-        }
+		/**
+		 * Sets the value of the sizename property.
+		 * 
+		 * @param value
+		 *            allowed object is {@link String }
+		 * 
+		 */
+		public void setSIZENAME(String value) {
+			this.sizename = value;
+		}
 
-        /**
-         * Sets the value of the sizename property.
-         * 
-         * @param value
-         *     allowed object is
-         *     {@link String }
-         *     
-         */
-        public void setSIZENAME(String value) {
-            this.sizename = value;
-        }
+		/**
+		 * Gets the value of the salePrice property.
+		 * 
+		 */
+		public short getSalePrice() {
+			return salePrice;
+		}
 
-        /**
-         * Gets the value of the salePrice property.
-         * 
-         */
-        public short getSalePrice() {
-            return salePrice;
-        }
+		/**
+		 * Sets the value of the salePrice property.
+		 * 
+		 */
+		public void setSalePrice(short value) {
+			this.salePrice = value;
+		}
 
-        /**
-         * Sets the value of the salePrice property.
-         * 
-         */
-        public void setSalePrice(short value) {
-            this.salePrice = value;
-        }
+		/**
+		 * Gets the value of the colorName property.
+		 * 
+		 * @return possible object is {@link String }
+		 * 
+		 */
+		public String getColorName() {
+			return colorName;
+		}
 
-        /**
-         * Gets the value of the colorName property.
-         * 
-         * @return
-         *     possible object is
-         *     {@link String }
-         *     
-         */
-        public String getColorName() {
-            return colorName;
-        }
+		/**
+		 * Sets the value of the colorName property.
+		 * 
+		 * @param value
+		 *            allowed object is {@link String }
+		 * 
+		 */
+		public void setColorName(String value) {
+			this.colorName = value;
+		}
 
-        /**
-         * Sets the value of the colorName property.
-         * 
-         * @param value
-         *     allowed object is
-         *     {@link String }
-         *     
-         */
-        public void setColorName(String value) {
-            this.colorName = value;
-        }
+		/**
+		 * Gets the value of the qty property.
+		 * 
+		 */
+		public byte getQTY() {
+			return qty;
+		}
 
-        /**
-         * Gets the value of the qty property.
-         * 
-         */
-        public byte getQTY() {
-            return qty;
-        }
+		/**
+		 * Sets the value of the qty property.
+		 * 
+		 */
+		public void setQTY(byte value) {
+			this.qty = value;
+		}
 
-        /**
-         * Sets the value of the qty property.
-         * 
-         */
-        public void setQTY(byte value) {
-            this.qty = value;
-        }
+		/**
+		 * Gets the value of the seasonId property.
+		 * 
+		 */
+		public byte getSeasonId() {
+			return seasonId;
+		}
 
-        /**
-         * Gets the value of the seasonId property.
-         * 
-         */
-        public byte getSeasonId() {
-            return seasonId;
-        }
+		/**
+		 * Sets the value of the seasonId property.
+		 * 
+		 */
+		public void setSeasonId(byte value) {
+			this.seasonId = value;
+		}
 
-        /**
-         * Sets the value of the seasonId property.
-         * 
-         */
-        public void setSeasonId(byte value) {
-            this.seasonId = value;
-        }
+		/**
+		 * Gets the value of the groupName property.
+		 * 
+		 * @return possible object is {@link String }
+		 * 
+		 */
+		public String getGroupName() {
+			return groupName;
+		}
 
-        /**
-         * Gets the value of the groupName property.
-         * 
-         * @return
-         *     possible object is
-         *     {@link String }
-         *     
-         */
-        public String getGroupName() {
-            return groupName;
-        }
+		/**
+		 * Sets the value of the groupName property.
+		 * 
+		 * @param value
+		 *            allowed object is {@link String }
+		 * 
+		 */
+		public void setGroupName(String value) {
+			this.groupName = value;
+		}
 
-        /**
-         * Sets the value of the groupName property.
-         * 
-         * @param value
-         *     allowed object is
-         *     {@link String }
-         *     
-         */
-        public void setGroupName(String value) {
-            this.groupName = value;
-        }
+		/**
+		 * Gets the value of the deptName property.
+		 * 
+		 * @return possible object is {@link String }
+		 * 
+		 */
+		public String getDeptName() {
+			return deptName;
+		}
 
-        /**
-         * Gets the value of the deptName property.
-         * 
-         * @return
-         *     possible object is
-         *     {@link String }
-         *     
-         */
-        public String getDeptName() {
-            return deptName;
-        }
+		/**
+		 * Sets the value of the deptName property.
+		 * 
+		 * @param value
+		 *            allowed object is {@link String }
+		 * 
+		 */
+		public void setDeptName(String value) {
+			this.deptName = value;
+		}
 
-        /**
-         * Sets the value of the deptName property.
-         * 
-         * @param value
-         *     allowed object is
-         *     {@link String }
-         *     
-         */
-        public void setDeptName(String value) {
-            this.deptName = value;
-        }
-
-    }
+	}
 
 }

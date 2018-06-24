@@ -1,11 +1,8 @@
 package com.datazord.controllers;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,15 +16,14 @@ import com.datazord.form.LoginForm;
 @RequestMapping({ "/loginController" })
 public class LoginController {
 
-	private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
-	
-	
+//	private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
+
 	@PostMapping("/login")
-	public ResponseEntity<?> login(@RequestBody LoginForm loginForm){
-	
-		if(loginForm.getUsername().equals("khaled"))
+	public ResponseEntity<?> login(@RequestBody LoginForm loginForm) {
+
+		if (loginForm.getUsername().equals("khaled"))
 			loginForm.setErrorCode(TomatoConstants.ERROR_CODE_SUCCESS);
-		
-		return new ResponseEntity<LoginForm>(loginForm,HttpStatus.OK);
+
+		return new ResponseEntity<LoginForm>(loginForm, HttpStatus.OK);
 	}
 }

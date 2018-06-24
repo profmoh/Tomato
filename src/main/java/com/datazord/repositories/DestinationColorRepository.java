@@ -7,9 +7,8 @@ import com.datazord.model.destination.DestinationColor;
 
 import reactor.core.publisher.Flux;
 
-
 @Repository
-public interface DestinationColorRepository extends ReactiveMongoRepository<DestinationColor,String> {
+public interface DestinationColorRepository extends ReactiveMongoRepository<DestinationColor, String> {
 
 	public Flux<DestinationColor> findByLanguageId(String languageId);
 }

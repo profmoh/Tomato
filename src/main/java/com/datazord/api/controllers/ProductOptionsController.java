@@ -8,13 +8,17 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.datazord.api.service.TomatoServiceImpl;
 import com.datazord.service.ProductOptionsService;
 
 @RestController
-@RequestMapping({"/api/productOptions"})
+@RequestMapping({ "/api/productOptions" })
 public class ProductOptionsController {
 
 	private static final Logger logger = LoggerFactory.getLogger(ProductOptionsController.class);
+
+	@Autowired
+	private TomatoServiceImpl apiService;
 	
 	@Autowired
 	private ProductOptionsService  productOptionsService;
@@ -30,6 +34,36 @@ public class ProductOptionsController {
 			
 		}catch(Exception e){
 			logger.error("",e);
+			return null;
+		}
+	}
+
+	@GetMapping("/Source/getProductOptionColors")
+	private String getSourceProductOptionColors() {
+		logger.info("Save Source Colors");
+
+		try {
+			apiService.saveSourceProductOptionColors();
+
+			return "Success";
+
+		} catch (Exception e) {
+			logger.error("", e);
+			return null;
+		}
+	}
+
+	@GetMapping("/Source/getProductOptionSizes")
+	private String getSourceProductOptionSizes() {
+		logger.info("Save Source Sizes");
+
+		try {
+			apiService.saveSourceProductOptionSizes();
+
+			return "Success";
+
+		} catch (Exception e) {
+			logger.error("", e);
 			return null;
 		}
 	}
