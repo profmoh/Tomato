@@ -1,7 +1,5 @@
 package com.datazord.api.controllers;
 
-import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.datazord.api.service.TomatoServiceImpl;
 import com.datazord.json.tomato.pojo.ProductOptions.ProductOptions;
 import com.datazord.service.ProductOptionsService;
-import com.datazord.utils.Utils;
 
 @RestController
 @RequestMapping({ "/api/productOptions" })
@@ -49,13 +46,10 @@ public class ProductOptionsController {
 
 	@GetMapping("/Source/getProductOptionColors")
 	private String getSourceProductOptionColors() {
-		logger.info("Find Source Colors");
+		logger.info("Save Source Colors");
 
 		try {
-			List<String> colorsList = apiService.findSourceProductOptionColors();
-
-			if(! Utils.isEmptyCollection(colorsList))
-				productOptionsService.saveSourceProductOptionColors(colorsList);
+			apiService.saveSourceProductOptionColors();
 
 			return "Success";
 
@@ -67,13 +61,10 @@ public class ProductOptionsController {
 
 	@GetMapping("/Source/getProductOptionSizes")
 	private String getSourceProductOptionSizes() {
-		logger.info("Find Source Sizes");
+		logger.info("Save Source Sizes");
 
 		try {
-			List<String> sizesList = apiService.findSourceProductOptionSizes();
-
-			if(! Utils.isEmptyCollection(sizesList))
-				productOptionsService.saveSourceProductOptionSizes(sizesList);
+			apiService.saveSourceProductOptionSizes();
 
 			return "Success";
 

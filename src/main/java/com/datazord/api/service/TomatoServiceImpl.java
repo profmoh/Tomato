@@ -10,6 +10,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +23,8 @@ import com.datazord.json.tomato.pojo.ProductOptions.ProductOptions;
 import com.datazord.json.tomato.pojo.categories.Categories;
 import com.datazord.json.tomato.pojo.categories.Category;
 import com.datazord.json.tomato.pojo.product.Product;
+import com.datazord.service.CategoriesService;
+import com.datazord.service.ProductOptionsService;
 import com.datazord.utils.ApiUtils;
 import com.datazord.utils.FileUtils;
 import com.datazord.utils.Utils;
@@ -33,6 +36,12 @@ import com.google.gson.JsonObject;
 public class TomatoServiceImpl {
 
 	private static final Logger logger = LoggerFactory.getLogger(TomatoServiceImpl.class);
+
+	@Autowired
+	private ProductOptionsService productOptionsService;
+
+	@Autowired
+	private CategoriesService categoriesService;
 
 	@Value("${resource.url}")
 	private String baseUrl;
@@ -131,10 +140,13 @@ public class TomatoServiceImpl {
 
 		Set<String> categoriesList = Utils.getDistinctFieldByFieldNameInJson(jsonObjectList, "#document :: DataTable :: diffgr:diffgram :: DocumentElement :: Items :: item_name");
 
+		if (! Utils.isEmptyCollection(categoriesList))
+			categoriesService.saveSourceCategories(new ArrayList<>(categoriesList));
+
 		return new ArrayList<>(categoriesList);
 	}
 
-	public List<String> findSourceProductOptionColors() {
+	public List<String> saveSourceProductOptionColors() {
 		logger.info("calling Source product option colors");
 
 		List<JsonObject> jsonObjectList = null;
@@ -146,12 +158,15 @@ public class TomatoServiceImpl {
 			return null;
 		}
 
-		Set<String> colorList = Utils.getDistinctFieldByFieldNameInJson(jsonObjectList, "#document :: DataTable :: diffgr:diffgram :: DocumentElement :: Items :: color_name");
+		Set<String> colorsList = Utils.getDistinctFieldByFieldNameInJson(jsonObjectList, "#document :: DataTable :: diffgr:diffgram :: DocumentElement :: Items :: color_name");
 
-		return new ArrayList<>(colorList);
+		if(! Utils.isEmptyCollection(colorsList))
+			productOptionsService.saveSourceProductOptionColors(new ArrayList<>(colorsList));
+
+		return new ArrayList<>(colorsList);
 	}
 
-	public List<String> findSourceProductOptionSizes() {
+	public List<String> saveSourceProductOptionSizes() {
 		logger.info("calling Source product option sizes");
 
 		List<JsonObject> jsonObjectList = null;
@@ -163,8 +178,11 @@ public class TomatoServiceImpl {
 			return null;
 		}
 
-		Set<String> sizeList = Utils.getDistinctFieldByFieldNameInJson(jsonObjectList, "#document :: DataTable :: diffgr:diffgram :: DocumentElement :: Items :: SIZE_NAME");
+		Set<String> sizesList = Utils.getDistinctFieldByFieldNameInJson(jsonObjectList, "#document :: DataTable :: diffgr:diffgram :: DocumentElement :: Items :: SIZE_NAME");
 
-		return new ArrayList<>(sizeList);
+		if(! Utils.isEmptyCollection(sizesList))
+			productOptionsService.saveSourceProductOptionSizes( new ArrayList<>(sizesList));
+
+		return new ArrayList<>(sizesList);
 	}
 }

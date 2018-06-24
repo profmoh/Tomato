@@ -35,10 +35,7 @@ public class TomatoCategoriesController {
 
 	@GetMapping("/Source")
 	public String findSourceCategories(Model model) {
-		List<String> categoriesList = apiService.findSourceCategories();
-
-		if (! Utils.isEmptyCollection(categoriesList))
-			categoriesService.saveSourceCategories(categoriesList);
+		apiService.findSourceCategories();
 
 		return "Success";
 	}
