@@ -11,8 +11,8 @@ public class SourceDto implements Serializable {
 	private Integer id;
 	private String name;
 
-	private DestinationDto destinationMappingObj;
-	private List<DestinationDto> destinationMappingList = new ArrayList<>();
+	private DestinationDto children;
+	private List<DestinationDto> childrenList = new ArrayList<>();
 
 	public String getName() {
 		return name;
@@ -30,20 +30,22 @@ public class SourceDto implements Serializable {
 		this.id = id;
 	}
 
-	public List<DestinationDto> getDestinationMappingList() {
-		return destinationMappingList;
+
+
+	public List<DestinationDto> getChildrenList() {
+		return childrenList;
 	}
 
-	public void setDestinationMappingList(List<DestinationDto> destinationMappingList) {
-		this.destinationMappingList = destinationMappingList;
+	public void setChildrenList(List<DestinationDto> childrenList) {
+		this.childrenList = childrenList;
 	}
 
-	public DestinationDto getDestinationMappingObj() {
-		return destinationMappingObj;
+	public DestinationDto getChildren() {
+		return children;
 	}
 
-	public void setDestinationMappingObj(DestinationDto destinationMappingObj) {
-		this.destinationMappingObj = destinationMappingObj;
+	public void setChildren(DestinationDto children) {
+		this.children = children;
 	}
 
 }

@@ -32,27 +32,21 @@ mapping.controller('mappingController_multi', function ($scope, mappingService,$
             }else {
                 $scope.mappingForm=result;
                 $scope.destinationList=$scope.mappingForm.destinationList;
+                $scope.sourceList=$scope.mappingForm.sourceList;
             }
         });
     }
     $scope.loadMappingList();
-    $scope.sourceList = [{'name': 'Category 1', 'id': "1", children: []},
-        {'name': 'Category 2', 'id': "2", children: []},
-        {'name': 'Category 3', 'id': "3", children: []},
-        {'name': 'Category 4', 'id': "4", children: []},
-        {'name': 'Category 5', 'id': "5", children: []},
-        {'name': 'Category 6', 'id': "6", children: []},
-        {'name': 'Category 7', 'id': "7", children: []}];
 
     $scope.deleteItem = function (item, parent) {
         var parentIndex = $scope.sourceList.indexOf(parent);
-        var itemIndex = $scope.sourceList[parentIndex].children.indexOf(item);
-        $scope.sourceList[parentIndex].children.splice(itemIndex, 1);
+        var itemIndex = $scope.sourceList[parentIndex].childrenList.indexOf(item);
+        $scope.sourceList[parentIndex].childrenList.splice(itemIndex, 1);
         $scope.destinationList.push(item)
     }
     $scope.showMe = function () {
         for (i = 0; i < $scope.sourceList.length; i++) {
-            if ($scope.sourceList[i].children.length > 0) {
+            if ($scope.sourceList[i].childrenList.length > 0) {
                 return true;
             }
         }
@@ -89,18 +83,11 @@ mapping.controller('mappingController_single', function ($scope, mappingService,
             }else {
                 $scope.mappingForm=result;
                 $scope.destinationList=$scope.mappingForm.destinationList;
+                $scope.sourceList=$scope.mappingForm.sourceList;
             }
         });
     }
     $scope.loadMappingList();
-    $scope.sourceList = [{'name': 'Category 1', 'id': "1", children: null},
-        {'name': 'Category 2', 'id': "2", children: null},
-        {'name': 'Category 3', 'id': "3", children: null},
-        {'name': 'Category 4', 'id': "4", children: null},
-        {'name': 'Category 5', 'id': "5", children: null},
-        {'name': 'Category 6', 'id': "6", children: null},
-        {'name': 'Category 7', 'id': "7", children: null}];
-
     $scope.deleteItem = function (item, parent) {
         var parentIndex = $scope.sourceList.indexOf(parent);
         $scope.sourceList[parentIndex].children = null;

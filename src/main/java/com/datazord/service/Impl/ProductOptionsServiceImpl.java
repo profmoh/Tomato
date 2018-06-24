@@ -123,7 +123,7 @@ public class ProductOptionsServiceImpl implements ProductOptionsService {
 	@Override
 	public List<SourceColor> getSourceColorList() {
 		try {
-			Flux<SourceColor> flux = sourceColorRepository.findByLanguageId("en");
+			Flux<SourceColor> flux = sourceColorRepository.findAll();
 			List<SourceColor> sourceColors = flux.collectList().block();
 
 			return sourceColors;
@@ -137,7 +137,7 @@ public class ProductOptionsServiceImpl implements ProductOptionsService {
 	@Override
 	public List<SourceSize> getSourceSizeList() {
 		try {
-			Flux<SourceSize> flux = sourceSizeRepository.findByLanguageId("en");
+			Flux<SourceSize> flux = sourceSizeRepository.findAll();
 			List<SourceSize> sourceSizes = flux.collectList().block();
 			return sourceSizes;
 		} catch (Exception e) {

@@ -11,11 +11,11 @@
                         <h3>Source</h3>
                         <ul class="dragList_content">
                             <li ng-repeat='item in sourceList'  data-drop="true"
-                                ng-model="item.children" jqyoui-droppable="{multiple:true}"
+                                ng-model="item.childrenList" jqyoui-droppable="{multiple:true}"
                                 data-jqyoui-options="{revert: 'invalid'}" >
                                 {{item.name}}
                                 <ul class="nestedMappingList">
-                                    <li ng-repeat="itemC in item.children track by $index"> {{itemC.name}}
+                                    <li ng-repeat="itemC in item.childrenList track by $index"> {{itemC.name}}
                                         <i class="fa fa-times" ng-click="deleteItem(itemC,item)"></i>
                                     </li>
                                 </ul>

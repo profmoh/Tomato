@@ -122,7 +122,7 @@ public class CategoriesServiceImpl implements CategoriesService {
 	@Override
 	public List<SourceCategories> getSourceCategoryList() {
 		try {
-			Flux<SourceCategories> flux = sourceCategoriesRepository.findByLanguageId("en");
+			Flux<SourceCategories> flux = sourceCategoriesRepository.findAll();
 			List<SourceCategories> sourceCategories = flux.collectList().block();
 
 			return sourceCategories;
