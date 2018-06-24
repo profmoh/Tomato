@@ -7,8 +7,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.w3c.dom.stylesheets.LinkStyle;
 
+import com.datazord.api.service.TomatoServiceImpl;
 import com.datazord.constants.TomatoConstants;
 import com.datazord.enums.Language;
 import com.datazord.json.tomato.pojo.ProductOptions.OptionValue;
@@ -31,7 +31,10 @@ import reactor.core.publisher.Flux;
 public class ProductOptionsServiceImpl implements ProductOptionsService{
 
 	private static final Logger logger = LoggerFactory.getLogger(ProductOptionsServiceImpl.class);
-		
+	
+	@Autowired
+	private TomatoServiceImpl apiService;
+	
 	@Autowired
 	private SequenceRepository sequenceRepositorys;
 	
@@ -48,30 +51,44 @@ public class ProductOptionsServiceImpl implements ProductOptionsService{
 	private SourceSizeRepository sourceSizeRepository;
 	
 	@Override
-	public void saveDestinationProductOptions(ProductOptions productOptions) {
-		DestinationColor color; DestinationSize size;
-		for (OptionValue optionValue : productOptions.getData().getOption_values()) {
-			for(Map.Entry<String, OptionValueDescription> entry : optionValue.getOptionValueDescription().entrySet()){
-				if(productOptions.getData().getOption_id().equals(TomatoConstants.COLOR_PRODUCT_OPTION)){
-					color=new DestinationColor();
-					Language language = null;
-					color.setName(entry.getValue().getName());
-					color.setLanguageId(language.valueOf(Integer.parseInt(entry.getValue().getLanguage_id())).name());
-					color.setId(sequenceRepositorys.getNextSequenceId(DESTINATION_COLOR_SEQ_KEY));
-					
-					destinationColorRepository.save(color).subscribe();
-				}else if(productOptions.getData().getOption_id().equals(TomatoConstants.SIZE_PRODUCT_OPTION)){
-					size=new DestinationSize();
-					size.setName(entry.getValue().getName());
-					Language language = null;
-					size.setLanguageId(language.valueOf(Integer.parseInt(entry.getValue().getLanguage_id())).name());
-					size.setId(sequenceRepositorys.getNextSequenceId(DESTINATION_SIZE_SEQ_KEY));
-					
-					destinationSizeRepository.save(size).subscribe();
-				}	
+	public void saveDestinationProductOptions(Integer optionID) {
+		DestinationColor color;
+		DestinationSize size;
+		try {
+			ProductOptions productOptions = findProductOptionsValue(optionID);
+			logger.info("response from findProductOptionsValue >>Success=" + productOptions.getSuccess() + " >> error="
+					+ productOptions.getError());
+			if (productOptions.getSuccess() == 1) {
+				for (OptionValue optionValue : productOptions.getData().getOption_values()) {
+					for (Map.Entry<String, OptionValueDescription> entry : optionValue.getOptionValueDescription()
+							.entrySet()) {
+						if (productOptions.getData().getOption_id().equals(TomatoConstants.COLOR_PRODUCT_OPTION)) {
+							color = new DestinationColor();
+							Language language = null;
+							color.setName(entry.getValue().getName());
+							color.setLanguageId(
+									language.valueOf(Integer.parseInt(entry.getValue().getLanguage_id())).name());
+							color.setId(sequenceRepositorys.getNextSequenceId(DESTINATION_COLOR_SEQ_KEY));
+
+							destinationColorRepository.save(color).subscribe();
+						} else if (productOptions.getData().getOption_id()
+								.equals(TomatoConstants.SIZE_PRODUCT_OPTION)) {
+							size = new DestinationSize();
+							size.setName(entry.getValue().getName());
+							Language language = null;
+							size.setLanguageId(
+									language.valueOf(Integer.parseInt(entry.getValue().getLanguage_id())).name());
+							size.setId(sequenceRepositorys.getNextSequenceId(DESTINATION_SIZE_SEQ_KEY));
+
+							destinationSizeRepository.save(size).subscribe();
+						}
+					}
+				}
 			}
+		} catch (Exception e) {
+			logger.error("", e);
 		}
-	}
+}
 
 	@Override
 	public List<DestinationColor> getDestinationColorList() {
@@ -122,5 +139,8 @@ public class ProductOptionsServiceImpl implements ProductOptionsService{
 	}
 
 
+	private ProductOptions findProductOptionsValue(Integer optionID){
+		return apiService.findProductOptionsValue(optionID);
+	}
 	
 }

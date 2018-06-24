@@ -104,7 +104,7 @@ public class ProductServiceImpl implements ProductService{
 	        }
 	    }
 	    
-	   // productParmaeterPath.forEach(param->System.out.println(param));
+	    productParmaeterPath.forEach(param->System.out.println(param));
 	    
 	    return productParmaeterPath;
 		}catch(Exception e){

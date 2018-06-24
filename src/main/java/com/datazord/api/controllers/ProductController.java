@@ -18,8 +18,8 @@ public class ProductController {
 	@Autowired
 	private ProductService productService;
 	
-	@GetMapping("/getParamterPath")
-	private String getProductParamterPath(){
+	@GetMapping("/saveDestinationProduct")
+	private String saveDestinationProduct(){
 		logger.info(">>> Start inserting Product Paramter Path into DB ");
 		
 		productService.saveDestinationProduct();

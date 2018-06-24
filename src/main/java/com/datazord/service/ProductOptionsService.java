@@ -18,7 +18,7 @@ public interface ProductOptionsService {
 	
 	public List<DestinationColor> getDestinationColorList();
 	
-	public void saveDestinationProductOptions(ProductOptions productOptions);
+	public void saveDestinationProductOptions(Integer optionID);
 	
 	public List<DestinationSize>  getDestinationSizeList();
 	
