@@ -23,8 +23,11 @@ import com.datazord.json.tomato.pojo.ProductOptions.ProductOptions;
 import com.datazord.json.tomato.pojo.categories.Categories;
 import com.datazord.json.tomato.pojo.categories.Category;
 import com.datazord.json.tomato.pojo.product.Product;
+import com.datazord.model.destination.DestinationProduct;
+import com.datazord.model.source.SourceProduct;
 import com.datazord.service.CategoriesService;
 import com.datazord.service.ProductOptionsService;
+import com.datazord.service.ProductService;
 import com.datazord.utils.ApiUtils;
 import com.datazord.utils.FileUtils;
 import com.datazord.utils.Utils;
@@ -42,6 +45,9 @@ public class TomatoServiceImpl {
 
 	@Autowired
 	private CategoriesService categoriesService;
+
+	@Autowired
+	private ProductService productService;
 
 	@Value("${resource.url}")
 	private String baseUrl;
@@ -189,5 +195,31 @@ public class TomatoServiceImpl {
 			productOptionsService.saveSourceProductOptionSizes(new ArrayList<>(sizesList));
 
 		return new ArrayList<>(sizesList);
+	}
+
+	public void saveProductListToAPI() {
+		logger.info("calling Source product option sizes");
+
+		List<JsonObject> jsonObjectList = null;
+
+		try {
+			jsonObjectList = FileUtils.readJsonObjectsFormXML(TomatoConstants.xmlFilePath);
+		} catch (SAXException | IOException | ParserConfigurationException e) {
+			e.printStackTrace();
+			return;
+		}
+
+		List<SourceProduct> xpathObjectList = productService.getSourceProductList();
+		List<DestinationProduct> jsonPathObjectList = productService.getDestinationProductList();
+
+
+		if(Utils.isEmptyCollection(xpathObjectList) || Utils.isEmptyCollection(jsonPathObjectList))
+			return;
+
+		Set<Object> xpathList = Utils.getDistinctFieldByFieldName(xpathObjectList, "name");
+		Set<Object> jsonPathList = Utils.getDistinctFieldByFieldName(jsonPathObjectList, "name");
+
+
+//		for (JsonObject jsonObject : jsonObjectList)
 	}
 }

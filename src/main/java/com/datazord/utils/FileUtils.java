@@ -50,9 +50,8 @@ public class FileUtils {
 				"#document :: DataTable :: diffgr:diffgram :: DocumentElement :: Items :: item_name");
 		categoriesList.forEach(System.out::println);
 
-		// for (JsonObject jsonObject : jsonObjectList)
-		// System.out.println("\n\n" + new
-		// GsonBuilder().setPrettyPrinting().create().toJson(jsonObject));
+//		for (JsonObject jsonObject : jsonObjectList)
+//			System.out.println("\n\n" + new GsonBuilder().setPrettyPrinting().create().toJson(jsonObject));
 	}
 
 	public static List<JsonObject> readJsonObjectsFormXML(String path)
