@@ -40,6 +40,26 @@ public class Utils {
 		}));
 	}
 
+	public static <T, O> Set<O> getDistinctFieldByGetterName(final List<T> objList, final String getterName) {
+		if(objList == null || objList.size() == 0 || StringUtils.isBlank(getterName))
+			return Sets.newHashSet();
+
+		final Class<?> tClass = objList.get(0).getClass();
+
+		return Sets.newHashSet(
+				Lists.transform(objList, new Function<T, O>() {
+					@SuppressWarnings("unchecked")
+					public O apply(T t) {
+						try {
+							return (O) tClass.getDeclaredMethod(getterName).invoke(t);
+						} catch (Exception e) {
+							e.printStackTrace();
+							return null;
+						}
+					}
+				}));
+	}
+
 	public static Set<String> getDistinctFieldByFieldNameInJson(final List<JsonObject> objList, final String fieldPath) {
 		if (isEmptyCollection(objList) || StringUtils.isBlank(fieldPath))
 			return Sets.newHashSet();
