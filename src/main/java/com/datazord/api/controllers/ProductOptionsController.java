@@ -23,7 +23,7 @@ public class ProductOptionsController {
 	@Autowired
 	private ProductOptionsService  productOptionsService;
 	
-	@GetMapping("/saveDestinationProductOptions/{id}")
+	@GetMapping("/Destination/getProductOption/{id}")
 	private String saveDestinationProductOptions(@PathVariable("id") Integer Id){
 		logger.info("Find ProductOptions By Id ="+Id);
 		try{

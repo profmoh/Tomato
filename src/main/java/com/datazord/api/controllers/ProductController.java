@@ -18,7 +18,7 @@ public class ProductController {
 	@Autowired
 	private ProductService productService;
 
-	@GetMapping("/getParamterPath")
+	@GetMapping("/Destination/getParamterPath")
 	private String getProductParamterPath() {
 		logger.info(">>> Start inserting Product Paramter Path into DB ");
 
