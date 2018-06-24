@@ -10,31 +10,31 @@ import org.springframework.web.bind.annotation.RestController;
 import com.datazord.service.ProductService;
 
 @RestController
-@RequestMapping({"/api/Products"})
+@RequestMapping({ "/api/Products" })
 public class ProductController {
 
 	private static final Logger logger = LoggerFactory.getLogger(ProductController.class);
-	
+
 	@Autowired
 	private ProductService productService;
-	
+
 	@GetMapping("/getParamterPath")
-	private String getProductParamterPath(){
+	private String getProductParamterPath() {
 		logger.info(">>> Start inserting Product Paramter Path into DB ");
-		
+
 		productService.saveDestinationProduct();
-		
+
 		return "Success";
-		
+
 	}
 
 	@GetMapping("/Source/getParamterPath")
-	private String getSourceProductParamterPath(){
+	private String getSourceProductParamterPath() {
 		logger.info(">>> Start inserting Source Product Paramter Path into DB ");
-		
+
 		productService.saveSourceProductPath();
-		
+
 		return "Success";
-		
+
 	}
 }

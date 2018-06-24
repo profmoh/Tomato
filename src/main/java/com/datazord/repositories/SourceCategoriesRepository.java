@@ -6,7 +6,7 @@ import com.datazord.model.source.SourceCategories;
 
 import reactor.core.publisher.Flux;
 
-public interface SourceCategoriesRepository extends ReactiveMongoRepository<SourceCategories,String> {
+public interface SourceCategoriesRepository extends ReactiveMongoRepository<SourceCategories, String> {
 
 	Flux<SourceCategories> findByLanguageId(String languageId);
 }

@@ -9,6 +9,6 @@ import reactor.core.publisher.Flux;
 
 @Repository
 public interface DestinationCategoriesRepository extends ReactiveMongoRepository<DestinationCategories, String> {
-	
-	Flux<DestinationCategories>  findByLanguageId(String languageId);
+
+	Flux<DestinationCategories> findByLanguageId(String languageId);
 }

@@ -20,14 +20,13 @@ import lombok.ToString;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @Document(collection = "source_categories")
-public class SourceCategories extends BaseModel{
+public class SourceCategories extends BaseModel {
 
 	String id;
-	
+
 	@NotBlank
 	private String name;
-	
+
 	@NotBlank
 	private String languageId;
 }
-

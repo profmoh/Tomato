@@ -28,70 +28,78 @@ import com.datazord.service.ProductOptionsService;
 import reactor.core.publisher.Flux;
 
 @Component
-public class ProductOptionsServiceImpl implements ProductOptionsService{
+public class ProductOptionsServiceImpl implements ProductOptionsService {
 
 	private static final Logger logger = LoggerFactory.getLogger(ProductOptionsServiceImpl.class);
-		
+
 	@Autowired
 	private SequenceRepository sequenceRepositorys;
-	
+
 	@Autowired
 	private DestinationSizeRepository destinationSizeRepository;
-	
+
 	@Autowired
 	private DestinationColorRepository destinationColorRepository;
-	
+
 	@Autowired
 	private SourceColorRepository sourceColorRepository;
-	
+
 	@Autowired
 	private SourceSizeRepository sourceSizeRepository;
-	
+
 	@Override
 	public void saveDestinationProductOptions(ProductOptions productOptions) {
-		DestinationColor color; DestinationSize size;
+		DestinationColor color;
+		DestinationSize size;
+
 		for (OptionValue optionValue : productOptions.getData().getOption_values()) {
-			for(Map.Entry<String, OptionValueDescription> entry : optionValue.getOptionValueDescription().entrySet()){
-				if(productOptions.getData().getOption_id().equals(TomatoConstants.COLOR_PRODUCT_OPTION)){
-					color=new DestinationColor();
+			for (Map.Entry<String, OptionValueDescription> entry : optionValue.getOptionValueDescription().entrySet()) {
+				if (productOptions.getData().getOption_id().equals(TomatoConstants.COLOR_PRODUCT_OPTION)) {
+					color = new DestinationColor();
+
 					color.setName(entry.getValue().getName());
 					color.setLanguageId(Language.valueOf(Integer.parseInt(entry.getValue().getLanguage_id())).name());
 					color.setId(sequenceRepositorys.getNextSequenceId(DESTINATION_COLOR_SEQ_KEY));
-					
+
 					destinationColorRepository.save(color).subscribe();
-				}else if(productOptions.getData().getOption_id().equals(TomatoConstants.SIZE_PRODUCT_OPTION)){
-					size=new DestinationSize();
+				} else if (productOptions.getData().getOption_id().equals(TomatoConstants.SIZE_PRODUCT_OPTION)) {
+					size = new DestinationSize();
+
 					size.setName(entry.getValue().getName());
 					size.setLanguageId(Language.valueOf(Integer.parseInt(entry.getValue().getLanguage_id())).name());
 					size.setId(sequenceRepositorys.getNextSequenceId(DESTINATION_SIZE_SEQ_KEY));
-					
+
 					destinationSizeRepository.save(size).subscribe();
-				}	
+				}
 			}
 		}
 	}
 
 	@Override
 	public List<DestinationColor> getDestinationColorList() {
-	   try{
-		   Flux<DestinationColor>flux=destinationColorRepository.findByLanguageId("en");
-		   List<DestinationColor>destinationColors=flux.collectList().block();
-		   return destinationColors;
-	   }catch(Exception e){
-		   logger.error("",e);
-	   }
+		try {
+			Flux<DestinationColor> flux = destinationColorRepository.findByLanguageId("en");
+			List<DestinationColor> destinationColors = flux.collectList().block();
+
+			return destinationColors;
+		} catch (Exception e) {
+			logger.error("", e);
+		}
+
 		return null;
 	}
 
 	@Override
 	public List<DestinationSize> getDestinationSizeList() {
 		try {
-			Flux<DestinationSize>flux=destinationSizeRepository.findByLanguageId("en");
-			List<DestinationSize>destinationSizes=flux.collectList().block();
+			Flux<DestinationSize> flux = destinationSizeRepository.findByLanguageId("en");
+			List<DestinationSize> destinationSizes = flux.collectList().block();
+
 			return destinationSizes;
 		} catch (Exception e) {
 			logger.error("", e);
 		}
+
 		return null;
 	}
 
@@ -100,10 +108,12 @@ public class ProductOptionsServiceImpl implements ProductOptionsService{
 		try {
 			Flux<SourceColor> flux = sourceColorRepository.findByLanguageId("en");
 			List<SourceColor> sourceColors = flux.collectList().block();
+
 			return sourceColors;
 		} catch (Exception e) {
 			logger.error("", e);
 		}
+
 		return null;
 	}
 
@@ -121,8 +131,7 @@ public class ProductOptionsServiceImpl implements ProductOptionsService{
 
 	@Override
 	public void saveSourceProductOptionColors(List<String> colorsList) {
-		List<SourceColor> sourceColorsList =
-				colorsList
+		List<SourceColor> sourceColorsList = colorsList
 				.stream()
 				.map(color -> new SourceColor(sequenceRepositorys.getNextSequenceId(SOURCE_SIZE_SEQ_KEY), color, "1"))
 				.collect(Collectors.toList());
@@ -133,8 +142,7 @@ public class ProductOptionsServiceImpl implements ProductOptionsService{
 
 	@Override
 	public void saveSourceProductOptionSizes(List<String> sizesList) {
-		List<SourceSize> sourceSizesList =
-				sizesList
+		List<SourceSize> sourceSizesList = sizesList
 				.stream()
 				.map(size -> new SourceSize(sequenceRepositorys.getNextSequenceId(SOURCE_SIZE_SEQ_KEY), size, "1"))
 				.collect(Collectors.toList());

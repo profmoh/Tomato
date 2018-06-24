@@ -67,6 +67,7 @@ public class ProductServiceImpl implements ProductService {
 				if (field.isAnnotationPresent(JsonProperty.class)) {
 					String annotationValue = field.getAnnotation(JsonProperty.class).value();
 					String parameterPath = "Product.product_description." + annotationValue;
+
 					productParmaeterPath.add(parameterPath);
 				}
 			}
@@ -92,8 +93,8 @@ public class ProductServiceImpl implements ProductService {
 				if (field.isAnnotationPresent(JsonProperty.class)) {
 					String annotationValue = field.getAnnotation(JsonProperty.class).value();
 					String parameterPath = "Product.product_custom_option.child." + annotationValue;
-					productParmaeterPath.add(parameterPath);
 
+					productParmaeterPath.add(parameterPath);
 				}
 			}
 
@@ -115,6 +116,7 @@ public class ProductServiceImpl implements ProductService {
 
 			for (String param : productParmaeterPath) {
 				destinationProduct = new DestinationProduct();
+
 				destinationProduct.setName(param);
 				destinationProduct.setId(sequenceRepositorys.getNextSequenceId(DESTINATION_PRODUCT_SEQ_KEY));
 
@@ -166,8 +168,7 @@ public class ProductServiceImpl implements ProductService {
 			return;
 		}
 
-		List<SourceProduct> sourceProductsList =
-				xpathList
+		List<SourceProduct> sourceProductsList = xpathList
 				.stream()
 				.map(product -> new SourceProduct(sequenceRepositorys.getNextSequenceId(SOURCE_PRODUCT_PATH_SEQ_KEY), product))
 				.collect(Collectors.toList());

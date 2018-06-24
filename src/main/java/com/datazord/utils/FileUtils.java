@@ -38,26 +38,31 @@ public class FileUtils {
 			return;
 		}
 
-		Set<String> colorList = Utils.getDistinctFieldByFieldNameInJson(jsonObjectList, "#document :: DataTable :: diffgr:diffgram :: DocumentElement :: Items :: color_name");
+		Set<String> colorList = Utils.getDistinctFieldByFieldNameInJson(jsonObjectList,
+				"#document :: DataTable :: diffgr:diffgram :: DocumentElement :: Items :: color_name");
 		colorList.forEach(System.out::println);
 
-		Set<String> sizeList = Utils.getDistinctFieldByFieldNameInJson(jsonObjectList, "#document :: DataTable :: diffgr:diffgram :: DocumentElement :: Items :: SIZE_NAME");
+		Set<String> sizeList = Utils.getDistinctFieldByFieldNameInJson(jsonObjectList,
+				"#document :: DataTable :: diffgr:diffgram :: DocumentElement :: Items :: SIZE_NAME");
 		sizeList.forEach(System.out::println);
-	
-		Set<String> categoriesList = Utils.getDistinctFieldByFieldNameInJson(jsonObjectList, "#document :: DataTable :: diffgr:diffgram :: DocumentElement :: Items :: item_name");
+
+		Set<String> categoriesList = Utils.getDistinctFieldByFieldNameInJson(jsonObjectList,
+				"#document :: DataTable :: diffgr:diffgram :: DocumentElement :: Items :: item_name");
 		categoriesList.forEach(System.out::println);
 
-//		for (JsonObject jsonObject : jsonObjectList)
-//			System.out.println("\n\n" + new GsonBuilder().setPrettyPrinting().create().toJson(jsonObject));
+		// for (JsonObject jsonObject : jsonObjectList)
+		// System.out.println("\n\n" + new
+		// GsonBuilder().setPrettyPrinting().create().toJson(jsonObject));
 	}
 
-	public static List<JsonObject> readJsonObjectsFormXML(String path) throws FileNotFoundException, SAXException, IOException, ParserConfigurationException {
+	public static List<JsonObject> readJsonObjectsFormXML(String path)
+			throws FileNotFoundException, SAXException, IOException, ParserConfigurationException {
 		Document doc = readXMLfileToDocument(path);
 
 		List<String> xpathList = extractXPathList(doc);
-//		xpathList.forEach(System.out::println);
+		// xpathList.forEach(System.out::println);
 
-//		String objectMainPath = getXPathIntersection(xpathList);
+		// String objectMainPath = getXPathIntersection(xpathList);
 
 		return extractNodeMapByPathList(doc, xpathList);
 	}
@@ -65,12 +70,12 @@ public class FileUtils {
 	public static Document readXMLfileToDocument(String path)
 			throws FileNotFoundException, SAXException, IOException, ParserConfigurationException {
 
-		if(StringUtils.isBlank(path))
+		if (StringUtils.isBlank(path))
 			return null;
 
 		File file = new File(path);
 
-		if(! file.exists())
+		if (!file.exists())
 			return null;
 
 		DocumentBuilderFactory dbfac = DocumentBuilderFactory.newInstance();
@@ -91,10 +96,10 @@ public class FileUtils {
 			NodeList nodeList = (NodeList) xPath.evaluate("//*", doc, XPathConstants.NODESET);
 
 			for (int i = 0; i < nodeList.getLength(); i++)
-				if(! nodeList.item(i).hasChildNodes() || nodeList.item(i).getFirstChild().getNodeType() == Node.TEXT_NODE) {
-					String fullXPath = getFullPath(nodeList.item(i))/* + " :: " + nodeList.item(i).getTextContent())*/;
-					
-					if(fullXPath.contains(":: Items ::"))
+				if (!nodeList.item(i).hasChildNodes() || nodeList.item(i).getFirstChild().getNodeType() == Node.TEXT_NODE) {
+					String fullXPath = getFullPath(nodeList.item(i))/* + " :: " + nodeList.item(i).getTextContent()) */;
+
+					if (fullXPath.contains(":: Items ::"))
 						resultList.add(fullXPath);
 				}
 		} catch (Exception err) {
@@ -111,10 +116,11 @@ public class FileUtils {
 
 		JsonObject rootObject = new JsonObject();
 
-		for(String xpath : xpathList)
+		for (String xpath : xpathList)
 			generateJsonObjectFromXPath(rootObject, xpath);
 
-//		System.out.println(new GsonBuilder().setPrettyPrinting().create().toJson(rootObject));
+		// System.out.println(new
+		// GsonBuilder().setPrettyPrinting().create().toJson(rootObject));
 
 		try {
 			List<JsonObject> jsonObjectList = new ArrayList<>();
@@ -126,15 +132,15 @@ public class FileUtils {
 			List<String> usedXpathList = new ArrayList<>();
 
 			for (int i = 0; i < nodeList.getLength(); i++) {
-				String fullXPath = getFullPath(nodeList.item(i))/* + " :: " + nodeList.item(i).getTextContent())*/;
+				String fullXPath = getFullPath(nodeList.item(i))/* + " :: " + nodeList.item(i).getTextContent()) */;
 
-				if(! xpathList.contains(fullXPath))
+				if (!xpathList.contains(fullXPath))
 					continue;
 
-				if(instanceObject == null)
+				if (instanceObject == null)
 					instanceObject = deepCopy(rootObject, JsonObject.class);
 
-				if(usedXpathList.contains(fullXPath)) {
+				if (usedXpathList.contains(fullXPath)) {
 					jsonObjectList.add(instanceObject);
 					instanceObject = deepCopy(rootObject, JsonObject.class);
 
@@ -147,7 +153,7 @@ public class FileUtils {
 				}
 			}
 
-			if(instanceObject != null)
+			if (instanceObject != null)
 				jsonObjectList.add(instanceObject);
 
 			return jsonObjectList;
@@ -163,14 +169,14 @@ public class FileUtils {
 
 		JsonObject currentObject = instanceObject;
 
-		for(int i = 0; i < xpathArray.length - 1; i++)
+		for (int i = 0; i < xpathArray.length - 1; i++)
 			try {
 				currentObject = currentObject.getAsJsonObject(xpathArray[i]);
 			} catch (Exception e) {
 				System.out.println(xpath + "   ^^^^^^^^^^^   " + textContent);
 				return;
 			}
-//			currentObject = currentObject.getAsJsonObject(xpathArray[i]);
+		// currentObject = currentObject.getAsJsonObject(xpathArray[i]);
 
 		currentObject.addProperty(propertyName, textContent);
 	}
@@ -180,11 +186,11 @@ public class FileUtils {
 
 		JsonObject parentJsonObject = rootObject;
 
-		for(int i = 0; i < xpathArray.length; i++) {
+		for (int i = 0; i < xpathArray.length; i++) {
 			String itemName = xpathArray[i];
 
-			if(i == xpathArray.length - 1) {
-				parentJsonObject.addProperty(itemName, "");						
+			if (i == xpathArray.length - 1) {
+				parentJsonObject.addProperty(itemName, "");
 			} else {
 				JsonObject jsonObject;
 
@@ -194,39 +200,39 @@ public class FileUtils {
 					parentJsonObject.remove(itemName);
 					jsonObject = null;
 				}
-				
-				if(jsonObject == null) {
+
+				if (jsonObject == null) {
 					parentJsonObject.add(itemName, new JsonObject());
 					jsonObject = parentJsonObject.getAsJsonObject(itemName);
 				}
-				
+
 				parentJsonObject = jsonObject;
 			}
 		}
 	}
 
 	public static String getXPathIntersection(List<String> xpathList) {
-		if(Utils.isEmptyCollection(xpathList))
+		if (Utils.isEmptyCollection(xpathList))
 			return null;
 
 		String firstString = xpathList.get(0);
 		String[] firstStringSplit = firstString.split(" :: ");
 
-		if(xpathList.size() == 1) {
+		if (xpathList.size() == 1) {
 			String[] result = removeLastElementOfArray(firstStringSplit);
 			return getPathFromArray(result);
 		}
 
 		String[] result = firstStringSplit;
 
-		for(int i = 1; i < xpathList.size(); i++) {
+		for (int i = 1; i < xpathList.size(); i++) {
 			String string = xpathList.get(i);
 			String[] stringSplit = string.split(" :: ");
 
 			List<String> currentResult = new ArrayList<>();
 
-			for(int j = 0; j < stringSplit.length; j++) {
-				if(j >= result.length || ! result[j].equals(stringSplit[j]))
+			for (int j = 0; j < stringSplit.length; j++) {
+				if (j >= result.length || !result[j].equals(stringSplit[j]))
 					break;
 
 				currentResult.add(stringSplit[j]);
@@ -242,7 +248,7 @@ public class FileUtils {
 	private static String getPathFromArray(String[] pathArray) {
 		StringBuilder sb = new StringBuilder();
 
-		for(int i = 0; i < pathArray.length - 1; i++)
+		for (int i = 0; i < pathArray.length - 1; i++)
 			sb.append(pathArray[i] + " :: ");
 
 		sb.append(pathArray[pathArray.length - 1]);
@@ -253,26 +259,26 @@ public class FileUtils {
 	public static String[] removeLastElementOfArray(String[] array) {
 		String[] result = new String[array.length - 1];
 
-		for(int i = 0; i < result.length; i++)
+		for (int i = 0; i < result.length; i++)
 			result[i] = array[i];
 
 		return result;
 	}
 
 	private static String getFullPath(Node node) {
-		if(node.getParentNode() == null)
+		if (node.getParentNode() == null)
 			return node.getNodeName();
 
 		return getFullPath(node.getParentNode()) + " :: " + node.getNodeName();
 	}
 
 	public static <T> T deepCopy(T object, Class<T> type) {
-	    try {
-	        Gson gson = new Gson();
-	        return gson.fromJson(gson.toJson(object, type), type);
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	        return null;
-	    }
+		try {
+			Gson gson = new Gson();
+			return gson.fromJson(gson.toJson(object, type), type);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 }

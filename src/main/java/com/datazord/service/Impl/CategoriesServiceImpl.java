@@ -135,8 +135,7 @@ public class CategoriesServiceImpl implements CategoriesService {
 
 	@Override
 	public void saveSourceCategories(List<String> categoriesList) {
-		List<SourceCategories> sourceCategoriesList =
-				categoriesList
+		List<SourceCategories> sourceCategoriesList = categoriesList
 				.stream()
 				.map(category -> new SourceCategories(sequenceRepositorys.getNextSequenceId(SOURCE_CATEGORIES_SEQ_KEY), category, "1"))
 				.collect(Collectors.toList());

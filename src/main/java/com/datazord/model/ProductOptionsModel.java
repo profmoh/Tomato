@@ -22,20 +22,20 @@ import lombok.ToString;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @Document(collection = "product_options")
-public class ProductOptionsModel extends BaseModel implements Serializable{
- 
+public class ProductOptionsModel extends BaseModel implements Serializable {
 
 	private static final long serialVersionUID = -1766250022947976415L;
 
 	private Integer option_id;
-	
+
 	private Integer option_value_id;
-	
-	private List<OptionValueDescription>optionValueDescriptions=new ArrayList<>();
-	
-    private String image;
-	
+
+	@Builder.Default
+	private List<OptionValueDescription> optionValueDescriptions = new ArrayList<>();
+
+	private String image;
+
 	private String thumb;
-	 
+
 	private Integer sort_order;
 }

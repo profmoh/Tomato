@@ -2,13 +2,10 @@ package com.datazord.form;
 
 public class LoginForm extends BaseForm {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -3053002992223779523L;
-	
+
 	private String username;
-	
+
 	private String password;
 
 	public String getUsername() {
@@ -26,7 +23,5 @@ public class LoginForm extends BaseForm {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	
-	
 
 }

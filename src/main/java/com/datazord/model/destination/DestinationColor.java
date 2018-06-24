@@ -20,13 +20,13 @@ import lombok.ToString;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @Document(collection = "destination_color")
-public class DestinationColor extends BaseModel{
+public class DestinationColor extends BaseModel {
 
 	private String id;
-	
+
 	@NotBlank
 	private String name;
-	
+
 	@NotBlank
-	private String languageId ;
+	private String languageId;
 }

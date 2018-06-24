@@ -52,10 +52,10 @@ public class Utils {
 				try {
 					JsonObject currentObject = jsonObject;
 
-					for(int i = 0; i < pathArray.length - 1; i++)
+					for (int i = 0; i < pathArray.length - 1; i++)
 						currentObject = currentObject.getAsJsonObject(pathArray[i]);
 
-//					currentObject.addProperty(propertyName, textContent);
+					// currentObject.addProperty(propertyName, textContent);
 
 					return currentObject.get(propertyName).getAsString().trim().toLowerCase();
 				} catch (Exception e) {

@@ -4,5 +4,5 @@ import com.datazord.form.MappingForm;
 
 public interface MappingService {
 
-	 MappingForm getMappingLists(Integer MappingType);
+	MappingForm getMappingLists(Integer MappingType);
 }

@@ -18,10 +18,10 @@ import lombok.ToString;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @Document(collection = "source_product")
-public class SourceProduct  extends BaseModel {
-	
+public class SourceProduct extends BaseModel {
+
 	private String id;
-	
-	private String name ;
+
+	private String name;
 
 }

@@ -64,13 +64,15 @@ public class TomatoServiceImpl {
 		String categoriesUrl = baseUrl.concat("/rest_admin/categories");
 
 		try {
-			ResponseEntity<Categories> categoriesResult =
-					ApiUtils.doRequest(headerName, this.authorization, null, null, categoriesUrl, HttpMethod.GET, Categories.class);
+			ResponseEntity<Categories> categoriesResult = ApiUtils.doRequest(
+					headerName, this.authorization, null, null, categoriesUrl, HttpMethod.GET, Categories.class);
 
 			logger.info("Categories : " + categoriesResult.getBody().getData().getCategoriesMap().keySet());
 
-			List<Category> categoriesList = categoriesResult.getBody().getData().getCategoriesMap().values().stream()
-					.flatMap(List::stream).collect(Collectors.toList());
+			List<Category> categoriesList = categoriesResult.getBody().getData().getCategoriesMap().values()
+					.stream()
+					.flatMap(List::stream)
+					.collect(Collectors.toList());
 
 			return categoriesList;
 		} catch (Exception e) {
@@ -91,8 +93,8 @@ public class TomatoServiceImpl {
 
 		ProductOptions productOptions = new ProductOptions();
 
-		ResponseEntity<ProductOptions> responseEntity =
-				ApiUtils.doRequest(headerName, this.authorization, null, null, productOptUrl, HttpMethod.GET, ProductOptions.class);
+		ResponseEntity<ProductOptions> responseEntity = ApiUtils.doRequest(
+				headerName, this.authorization, null, null, productOptUrl, HttpMethod.GET, ProductOptions.class);
 
 		productOptions = responseEntity.getBody();
 
@@ -111,8 +113,8 @@ public class TomatoServiceImpl {
 
 			bodyJson = mapper.writeValueAsString(product);
 
-			ResponseEntity<API_Reply> responseEntity = 
-					ApiUtils.doRequest(headerName, this.authorization, bodyJson, null, addproductUrl, HttpMethod.POST, API_Reply.class);
+			ResponseEntity<API_Reply> responseEntity = ApiUtils.doRequest(
+					headerName, this.authorization, bodyJson, null, addproductUrl, HttpMethod.POST, API_Reply.class);
 
 			api_Reply = responseEntity.getBody();
 
@@ -138,9 +140,10 @@ public class TomatoServiceImpl {
 			return null;
 		}
 
-		Set<String> categoriesList = Utils.getDistinctFieldByFieldNameInJson(jsonObjectList, "#document :: DataTable :: diffgr:diffgram :: DocumentElement :: Items :: item_name");
+		Set<String> categoriesList = Utils.getDistinctFieldByFieldNameInJson(jsonObjectList,
+				"#document :: DataTable :: diffgr:diffgram :: DocumentElement :: Items :: item_name");
 
-		if (! Utils.isEmptyCollection(categoriesList))
+		if (!Utils.isEmptyCollection(categoriesList))
 			categoriesService.saveSourceCategories(new ArrayList<>(categoriesList));
 
 		return new ArrayList<>(categoriesList);
@@ -158,9 +161,10 @@ public class TomatoServiceImpl {
 			return null;
 		}
 
-		Set<String> colorsList = Utils.getDistinctFieldByFieldNameInJson(jsonObjectList, "#document :: DataTable :: diffgr:diffgram :: DocumentElement :: Items :: color_name");
+		Set<String> colorsList = Utils.getDistinctFieldByFieldNameInJson(jsonObjectList,
+				"#document :: DataTable :: diffgr:diffgram :: DocumentElement :: Items :: color_name");
 
-		if(! Utils.isEmptyCollection(colorsList))
+		if (!Utils.isEmptyCollection(colorsList))
 			productOptionsService.saveSourceProductOptionColors(new ArrayList<>(colorsList));
 
 		return new ArrayList<>(colorsList);
@@ -178,10 +182,11 @@ public class TomatoServiceImpl {
 			return null;
 		}
 
-		Set<String> sizesList = Utils.getDistinctFieldByFieldNameInJson(jsonObjectList, "#document :: DataTable :: diffgr:diffgram :: DocumentElement :: Items :: SIZE_NAME");
+		Set<String> sizesList = Utils.getDistinctFieldByFieldNameInJson(jsonObjectList,
+				"#document :: DataTable :: diffgr:diffgram :: DocumentElement :: Items :: SIZE_NAME");
 
-		if(! Utils.isEmptyCollection(sizesList))
-			productOptionsService.saveSourceProductOptionSizes( new ArrayList<>(sizesList));
+		if (!Utils.isEmptyCollection(sizesList))
+			productOptionsService.saveSourceProductOptionSizes(new ArrayList<>(sizesList));
 
 		return new ArrayList<>(sizesList);
 	}
