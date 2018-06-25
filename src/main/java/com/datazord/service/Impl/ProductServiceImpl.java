@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPathExpressionException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -182,7 +183,7 @@ public class ProductServiceImpl implements ProductService {
 
 		try {
 			xpathList = FileUtils.extractXPathList(FileUtils.readXMLfileToDocument(TomatoConstants.xmlFilePath));
-		} catch (SAXException | IOException | ParserConfigurationException e) {
+		} catch (SAXException | IOException | ParserConfigurationException | XPathExpressionException e) {
 			e.printStackTrace();
 			return;
 		}

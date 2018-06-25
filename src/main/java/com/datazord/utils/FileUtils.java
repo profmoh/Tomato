@@ -14,6 +14,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
 import org.apache.commons.lang3.StringUtils;
@@ -24,6 +25,7 @@ import org.xml.sax.SAXException;
 
 import com.datazord.comparators.JpathComparator;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
 public class FileUtils {
@@ -33,29 +35,29 @@ public class FileUtils {
 
 		try {
 			jsonObjectList = readJsonObjectsFormXML("C:\\Users\\Mohamed\\Desktop\\Items.xml");
-		} catch (SAXException | IOException | ParserConfigurationException e) {
+		} catch (SAXException | IOException | ParserConfigurationException | XPathExpressionException e) {
 			e.printStackTrace();
 			return;
 		}
 
-		Set<String> colorList = Utils.getDistinctFieldByFieldNameInJson(jsonObjectList,
-				"#document :: DataTable :: diffgr:diffgram :: DocumentElement :: Items :: color_name");
-		colorList.forEach(System.out::println);
-
-		Set<String> sizeList = Utils.getDistinctFieldByFieldNameInJson(jsonObjectList,
-				"#document :: DataTable :: diffgr:diffgram :: DocumentElement :: Items :: SIZE_NAME");
-		sizeList.forEach(System.out::println);
-
-		Set<String> categoriesList = Utils.getDistinctFieldByFieldNameInJson(jsonObjectList,
-				"#document :: DataTable :: diffgr:diffgram :: DocumentElement :: Items :: item_name");
-		categoriesList.forEach(System.out::println);
-
-//		for (JsonObject jsonObject : jsonObjectList)
-//			System.out.println("\n\n" + new GsonBuilder().setPrettyPrinting().create().toJson(jsonObject));
+//		Set<String> colorList = Utils.getDistinctFieldByFieldNameInJson(jsonObjectList,
+//				"#document :: DataTable :: diffgr:diffgram :: DocumentElement :: Items :: color_name");
+//		colorList.forEach(System.out::println);
+//
+//		Set<String> sizeList = Utils.getDistinctFieldByFieldNameInJson(jsonObjectList,
+//				"#document :: DataTable :: diffgr:diffgram :: DocumentElement :: Items :: SIZE_NAME");
+//		sizeList.forEach(System.out::println);
+//
+//		Set<String> categoriesList = Utils.getDistinctFieldByFieldNameInJson(jsonObjectList,
+//				"#document :: DataTable :: diffgr:diffgram :: DocumentElement :: Items :: item_name");
+//		categoriesList.forEach(System.out::println);
+//
+		for (JsonObject jsonObject : jsonObjectList)
+			System.out.println("\n\n" + new GsonBuilder().setPrettyPrinting().create().toJson(jsonObject));
 	}
 
 	public static List<JsonObject> readJsonObjectsFormXML(String path)
-			throws FileNotFoundException, SAXException, IOException, ParserConfigurationException {
+			throws FileNotFoundException, SAXException, IOException, ParserConfigurationException, XPathExpressionException {
 		Document doc = readXMLfileToDocument(path);
 
 		List<String> xpathList = extractXPathList(doc);
@@ -86,31 +88,31 @@ public class FileUtils {
 		return doc;
 	}
 
-	public static List<String> extractXPathList(Document doc) {
+	public static List<String> extractXPathList(Document doc) throws XPathExpressionException {
 		Set<String> resultList = new HashSet<>();
 
-		try {
-			XPath xPath = XPathFactory.newInstance().newXPath();
+//		try {
+		XPath xPath = XPathFactory.newInstance().newXPath();
 
-			NodeList nodeList = (NodeList) xPath.evaluate("//*", doc, XPathConstants.NODESET);
+		NodeList nodeList = (NodeList) xPath.evaluate("//*", doc, XPathConstants.NODESET);
 
-			for (int i = 0; i < nodeList.getLength(); i++)
-				if (!nodeList.item(i).hasChildNodes() || nodeList.item(i).getFirstChild().getNodeType() == Node.TEXT_NODE) {
-					String fullXPath = getFullPath(nodeList.item(i))/* + " :: " + nodeList.item(i).getTextContent()) */;
+		for (int i = 0; i < nodeList.getLength(); i++)
+			if (!nodeList.item(i).hasChildNodes() || nodeList.item(i).getFirstChild().getNodeType() == Node.TEXT_NODE) {
+				String fullXPath = getFullPath(nodeList.item(i))/* + " :: " + nodeList.item(i).getTextContent()) */;
 
-					if (fullXPath.contains(":: Items ::"))
-						resultList.add(fullXPath);
-				}
-		} catch (Exception err) {
-			throw new RuntimeException(err);
-		}
+				if (fullXPath.contains(":: Items ::"))
+					resultList.add(fullXPath);
+			}
+//		} catch (Exception err) {
+//			throw new RuntimeException(err);
+//		}
 
 		resultList.remove("#document :: DataTable :: diffgr:diffgram :: DocumentElement :: Items :: options");
 
 		return new ArrayList<>(resultList);
 	}
 
-	public static List<JsonObject> extractNodeMapByPathList(Document doc, List<String> xpathList) {
+	public static List<JsonObject> extractNodeMapByPathList(Document doc, List<String> xpathList) throws XPathExpressionException {
 		xpathList.sort(new JpathComparator());
 
 		JsonObject rootObject = new JsonObject();
@@ -121,45 +123,45 @@ public class FileUtils {
 		// System.out.println(new
 		// GsonBuilder().setPrettyPrinting().create().toJson(rootObject));
 
-		try {
-			List<JsonObject> jsonObjectList = new ArrayList<>();
-			XPath xPath = XPathFactory.newInstance().newXPath();
+//		try {
+		List<JsonObject> jsonObjectList = new ArrayList<>();
+		XPath xPath = XPathFactory.newInstance().newXPath();
 
-			NodeList nodeList = (NodeList) xPath.evaluate("//*", doc, XPathConstants.NODESET);
+		NodeList nodeList = (NodeList) xPath.evaluate("//*", doc, XPathConstants.NODESET);
 
-			JsonObject instanceObject = null;
-			List<String> usedXpathList = new ArrayList<>();
+		JsonObject instanceObject = null;
+		List<String> usedXpathList = new ArrayList<>();
 
-			for (int i = 0; i < nodeList.getLength(); i++) {
-				String fullXPath = getFullPath(nodeList.item(i))/* + " :: " + nodeList.item(i).getTextContent()) */;
+		for (int i = 0; i < nodeList.getLength(); i++) {
+			String fullXPath = getFullPath(nodeList.item(i))/* + " :: " + nodeList.item(i).getTextContent()) */;
 
-				if (!xpathList.contains(fullXPath))
-					continue;
+			if (!xpathList.contains(fullXPath))
+				continue;
 
-				if (instanceObject == null)
-					instanceObject = deepCopy(rootObject, JsonObject.class);
+			if (instanceObject == null)
+				instanceObject = deepCopy(rootObject, JsonObject.class);
 
-				if (usedXpathList.contains(fullXPath)) {
-					jsonObjectList.add(instanceObject);
-					instanceObject = deepCopy(rootObject, JsonObject.class);
-
-					usedXpathList.clear();
-
-					continue;
-				} else {
-					setObjectValue(instanceObject, fullXPath, nodeList.item(i).getTextContent());
-					usedXpathList.add(fullXPath);
-				}
-			}
-
-			if (instanceObject != null)
+			if (usedXpathList.contains(fullXPath)) {
 				jsonObjectList.add(instanceObject);
+				instanceObject = deepCopy(rootObject, JsonObject.class);
 
-			return jsonObjectList;
-		} catch (Exception err) {
-			err.printStackTrace();
-			throw new RuntimeException(err);
+				usedXpathList.clear();
+
+				continue;
+			} else {
+				setObjectValue(instanceObject, fullXPath, nodeList.item(i).getTextContent());
+				usedXpathList.add(fullXPath);
+			}
 		}
+
+		if (instanceObject != null)
+			jsonObjectList.add(instanceObject);
+
+		return jsonObjectList;
+//		} catch (Exception err) {
+//			err.printStackTrace();
+//			throw new RuntimeException(err);
+//		}
 	}
 
 	private static void setObjectValue(JsonObject instanceObject, String xpath, String textContent) {
