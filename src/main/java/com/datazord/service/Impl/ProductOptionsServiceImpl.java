@@ -65,10 +65,9 @@ public class ProductOptionsServiceImpl implements ProductOptionsService {
 							.entrySet()) {
 						if (productOptions.getData().getOption_id().equals(TomatoConstants.COLOR_PRODUCT_OPTION)) {
 							color = new DestinationColor();
-							Language language = null;
 							color.setName(entry.getValue().getName());
 							color.setLanguageId(
-									language.valueOf(Integer.parseInt(entry.getValue().getLanguage_id())).name());
+									Language.valueOf(Integer.parseInt(entry.getValue().getLanguage_id())).name());
 							color.setId(sequenceRepositorys.getNextSequenceId(DESTINATION_COLOR_SEQ_KEY));
 
 							destinationColorRepository.save(color).subscribe();
@@ -76,9 +75,8 @@ public class ProductOptionsServiceImpl implements ProductOptionsService {
 								.equals(TomatoConstants.SIZE_PRODUCT_OPTION)) {
 							size = new DestinationSize();
 							size.setName(entry.getValue().getName());
-							Language language = null;
 							size.setLanguageId(
-									language.valueOf(Integer.parseInt(entry.getValue().getLanguage_id())).name());
+									Language.valueOf(Integer.parseInt(entry.getValue().getLanguage_id())).name());
 							size.setId(sequenceRepositorys.getNextSequenceId(DESTINATION_SIZE_SEQ_KEY));
 
 							destinationSizeRepository.save(size).subscribe();
@@ -172,4 +170,71 @@ public class ProductOptionsServiceImpl implements ProductOptionsService {
 		return apiService.findProductOptionsValue(optionID);
 	}
 
+	@Override
+	public Map<String, String> getSourceColorMap() {
+		try {
+			List<SourceColor> sourceColorsList = getSourceColorList();
+
+			Map<String, String> sourceColorsMap = sourceColorsList
+					.stream()
+					.collect(Collectors.toMap(SourceColor::getId, SourceColor::getName));
+
+			return sourceColorsMap;
+		} catch (Exception e) {
+			logger.error("", e);
+		}
+
+		return null;
+	}
+
+	@Override
+	public Map<String, String> getSourceSizeMap() {
+		try {
+			List<SourceSize> sourceSizesList = getSourceSizeList();
+
+			Map<String, String> sourceSizesMap = sourceSizesList
+					.stream()
+					.collect(Collectors.toMap(SourceSize::getId, SourceSize::getName));
+
+			return sourceSizesMap;
+		} catch (Exception e) {
+			logger.error("", e);
+		}
+
+		return null;
+	}
+
+	@Override
+	public Map<String, String> getDestinationColorMap() {
+		try {
+			List<DestinationColor> destinationColorsList = getDestinationColorList();
+
+			Map<String, String> destinationColorsMap = destinationColorsList
+					.stream()
+					.collect(Collectors.toMap(DestinationColor::getId, DestinationColor::getName));
+
+			return destinationColorsMap;
+		} catch (Exception e) {
+			logger.error("", e);
+		}
+
+		return null;
+	}
+
+	@Override
+	public Map<String, String> getDestinationSizeMap() {
+		try {
+			List<DestinationSize> destinationSizesList = getDestinationSizeList();
+
+			Map<String, String> destinationSizesMap = destinationSizesList
+					.stream()
+					.collect(Collectors.toMap(DestinationSize::getId, DestinationSize::getName));
+
+			return destinationSizesMap;
+		} catch (Exception e) {
+			logger.error("", e);
+		}
+
+		return null;
+	}
 }

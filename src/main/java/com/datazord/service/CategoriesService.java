@@ -1,6 +1,7 @@
 package com.datazord.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.datazord.json.tomato.pojo.categories.Category;
 import com.datazord.model.destination.DestinationCategories;
@@ -19,4 +20,8 @@ public interface CategoriesService extends BaseService<DestinationCategories> {
 	List<SourceCategories> getSourceCategoryList();
 
 	void saveSourceCategories(List<String> categoriesList);
+
+	public Map<String, String> getSourceCategoriesMap();
+
+	public Map<String, String> getDestinationCategoriesMap();
 }

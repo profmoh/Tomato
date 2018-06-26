@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -195,5 +196,39 @@ public class ProductServiceImpl implements ProductService {
 
 		sourceProductRepository.deleteAll().subscribe();
 		sourceProductRepository.saveAll(sourceProductsList).subscribe();
+	}
+
+	@Override
+	public Map<String, String> getSourceProductPathMap() {
+		try {
+			List<SourceProduct> sourceProductPathList = sourceProductRepository.findAll().collectList().block();
+
+			Map<String, String> sourceProductPathMap = sourceProductPathList
+					.stream()
+					.collect(Collectors.toMap(SourceProduct::getId, SourceProduct::getName));
+
+			return sourceProductPathMap;
+		} catch (Exception e) {
+			logger.error("", e);
+		}
+
+		return null;
+	}
+
+	@Override
+	public Map<String, String> getDestinationProductPathMap() {
+		try {
+			List<DestinationProduct> destinationProductPathList = getDestinationProductList();
+
+			Map<String, String> destinationProductPathMap = destinationProductPathList
+					.stream()
+					.collect(Collectors.toMap(DestinationProduct::getId, DestinationProduct::getName));
+
+			return destinationProductPathMap;
+		} catch (Exception e) {
+			logger.error("", e);
+		}
+
+		return null;
 	}
 }

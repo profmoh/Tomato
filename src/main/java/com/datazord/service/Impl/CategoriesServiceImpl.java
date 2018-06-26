@@ -2,6 +2,7 @@ package com.datazord.service.Impl;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -142,5 +143,39 @@ public class CategoriesServiceImpl implements CategoriesService {
 
 		sourceCategoriesRepository.deleteAll().subscribe();
 		sourceCategoriesRepository.saveAll(sourceCategoriesList).subscribe();
+	}
+
+	@Override
+	public Map<String, String> getSourceCategoriesMap() {
+		try {
+			List<SourceCategories> sourceCategoriesList = getSourceCategoryList();
+
+			Map<String, String> sourceCategoriesMap = sourceCategoriesList
+					.stream()
+					.collect(Collectors.toMap(SourceCategories::getId, SourceCategories::getName));
+
+			return sourceCategoriesMap;
+		} catch (Exception e) {
+			logger.error("", e);
+		}
+
+		return null;
+	}
+
+	@Override
+	public Map<String, String> getDestinationCategoriesMap() {
+		try {
+			List<DestinationCategories> destinationCategoriesList = getDestinationCategoryList();
+
+			Map<String, String> destinationCategoriesMap = destinationCategoriesList
+					.stream()
+					.collect(Collectors.toMap(DestinationCategories::getId, DestinationCategories::getName));
+
+			return destinationCategoriesMap;
+		} catch (Exception e) {
+			logger.error("", e);
+		}
+
+		return null;
 	}
 }

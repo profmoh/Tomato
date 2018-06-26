@@ -14,4 +14,10 @@ public class TomatoConstants {
 	public static final Integer COLOR_PRODUCT_OPTION = 13;
 
 	public static String xmlFilePath = "E:\\my private Work\\TomatoWorkSpace\\Items.xml";
+
+	public static String MissedMappingExceptionMessage = "Please Check Mapping to continue";
+
+	public static String DESTINATION_SIZE_JSON_PATH = "";
+	public static String DESTINATION_COLOR_JSON_PATH = "";
+	public static String DESTINATION_CATEGORY_JSON_PATH = "";
 }

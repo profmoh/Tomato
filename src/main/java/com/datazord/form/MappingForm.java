@@ -10,9 +10,10 @@ public class MappingForm extends BaseForm {
 
 	private static final long serialVersionUID = -7416324809633524833L;
 
+	private Integer mappingType;
+
 	private List<SourceDto> sourceList = new ArrayList<>();
 	private List<DestinationDto> destinationList = new ArrayList<>();
-	private Integer mappingType;
 
 	public List<SourceDto> getSourceList() {
 		return sourceList;

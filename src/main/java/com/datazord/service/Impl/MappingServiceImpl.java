@@ -1,8 +1,11 @@
 package com.datazord.service.Impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -13,6 +16,7 @@ import com.datazord.constants.TomatoConstants;
 import com.datazord.dto.DestinationDto;
 import com.datazord.dto.SourceDto;
 import com.datazord.enums.MappingFlag;
+import com.datazord.exceptions.MissedMappingException;
 import com.datazord.form.MappingForm;
 import com.datazord.model.MappingResult;
 import com.datazord.repositories.MappingResultRepository;
@@ -21,7 +25,6 @@ import com.datazord.service.CategoriesService;
 import com.datazord.service.MappingService;
 import com.datazord.service.ProductOptionsService;
 import com.datazord.service.ProductService;
-import com.datazord.utils.Utils;
 
 @Component
 public class MappingServiceImpl implements MappingService {
@@ -168,4 +171,58 @@ public class MappingServiceImpl implements MappingService {
 		}
 	}
 
+	@Override
+	public Map<MappingFlag, Map<String, String>> getMappingMap() throws MissedMappingException {
+		List<MappingResult> mappingResultList = mappingResultRepository.findAll().collectList().block();
+
+		Map<String, String> sourceSizeMap = productOptionsService.getSourceSizeMap();
+		Map<String, String> sourceColorMap = productOptionsService.getSourceColorMap();
+		Map<String, String> sourceCategoryMap = categoriesService.getSourceCategoriesMap();
+		Map<String, String> sourceProductPathMap = productService.getSourceProductPathMap();
+
+		Map<String, String> destinationSizeMap = productOptionsService.getDestinationSizeMap();
+		Map<String, String> destinationColorMap = productOptionsService.getDestinationColorMap();
+		Map<String, String> destinationCategoryMap = categoriesService.getDestinationCategoriesMap();
+		Map<String, String> destinationProductPathMap = productService.getDestinationProductPathMap();
+
+		Map<MappingFlag, Map<String, String>> resultMapping = new HashMap<>();
+
+		for(MappingResult mappingResult : mappingResultList) {
+			MappingFlag mappingFlag = MappingFlag.valueOf(mappingResult.getMappingType());
+
+			if(resultMapping.get(mappingFlag) == null)
+				resultMapping.put(mappingFlag, new HashMap<>());
+
+			String sourceValue = null;
+			String destinationValue = null;
+
+			switch (mappingFlag) {
+			case size:
+				sourceValue = sourceSizeMap.get(mappingResult.getSourceId());
+				destinationValue = destinationSizeMap.get(mappingResult.getDestinationId());
+				break;
+			case color:
+				sourceValue = sourceColorMap.get(mappingResult.getSourceId());
+				destinationValue = destinationColorMap.get(mappingResult.getDestinationId());
+				break;
+			case category:
+				sourceValue = sourceCategoryMap.get(mappingResult.getSourceId());
+				destinationValue = destinationCategoryMap.get(mappingResult.getDestinationId());
+				break;
+			case productPath:
+				sourceValue = sourceProductPathMap.get(mappingResult.getSourceId());
+				destinationValue = destinationProductPathMap.get(mappingResult.getDestinationId());
+				break;
+			default:
+				throw new MissedMappingException(TomatoConstants.MissedMappingExceptionMessage);
+			}
+
+			if(StringUtils.isBlank(sourceValue) || StringUtils.isBlank(destinationValue))
+				throw new MissedMappingException(TomatoConstants.MissedMappingExceptionMessage);
+
+			resultMapping.get(mappingFlag).put(sourceValue, destinationValue);
+		}
+
+		return resultMapping;
+	}
 }

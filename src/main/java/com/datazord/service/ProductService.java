@@ -1,6 +1,7 @@
 package com.datazord.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.datazord.model.destination.DestinationProduct;
 import com.datazord.model.source.SourceProduct;
@@ -18,4 +19,8 @@ public interface ProductService {
 	public List<SourceProduct> getSourceProductList();
 
 	void saveSourceProductPath();
+
+	public Map<String, String> getSourceProductPathMap();
+
+	public Map<String, String> getDestinationProductPathMap();
 }
