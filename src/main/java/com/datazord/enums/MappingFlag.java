@@ -14,9 +14,9 @@ public enum MappingFlag {
 		case 1:
 			return category;
 		case 2:
-			return size;
-		case 3:
 			return color;
+		case 3:
+			return size;
 		case 4:
 			return productPath;
 		default:

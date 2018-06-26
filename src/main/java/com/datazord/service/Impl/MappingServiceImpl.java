@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import com.datazord.constants.TomatoConstants;
 import com.datazord.dto.DestinationDto;
 import com.datazord.dto.SourceDto;
+import com.datazord.enums.MappingFlag;
 import com.datazord.form.MappingForm;
 import com.datazord.model.MappingResult;
 import com.datazord.repositories.MappingResultRepository;
@@ -139,7 +140,7 @@ public class MappingServiceImpl implements MappingService {
 					mappingResult.setId(sequenceRepositorys.getNextSequenceId(MAPPING_RESULT_SEQ_KEY));
 					mappingResult.setSourceId(sourceDto.getId());
 					mappingResult.setDestinationId(destinationDto.getId());
-					mappingResult.setMappingType(mappingType);
+					mappingResult.setMappingType(MappingFlag.valueOf(mappingType).name());
 					
 					mappingResultRepository.save(mappingResult).subscribe();
 				}
@@ -158,9 +159,9 @@ public class MappingServiceImpl implements MappingService {
 				mappingResult.setId(sequenceRepositorys.getNextSequenceId(MAPPING_RESULT_SEQ_KEY));
 				mappingResult.setSourceId(sourceDto.getId());
 				mappingResult.setDestinationId(sourceDto.getChildren().getId());
-				mappingResult.setMappingType(mappingType);
+				mappingResult.setMappingType(MappingFlag.valueOf(mappingType).name());
 				mappingResultRepository.save(mappingResult).subscribe();
-				}else throw new NullPointerException("destination obj is null");
+				}
 			}
 		} catch (Exception e) {
 			logger.error("",e);

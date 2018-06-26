@@ -33,5 +33,5 @@ public class MappingResult extends BaseModel  {
 	private String destinationId;
 	
 	@NotBlank
-	private Integer mappingType;
+	private String mappingType;
 }

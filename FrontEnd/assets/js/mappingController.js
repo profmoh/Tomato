@@ -60,9 +60,8 @@ mapping.controller('mappingController_multi', function ($scope, mappingService,$
             if(result.errorCode !=200){
                 alert("Failed to Save");
             }else {
-                $scope.statusMessage.message = "Success";
-                $scope.statusMessage.code = 200;
-                alert("Done");               
+                $scope.statusMessage.message = "Mapping Saved Successfully";
+                $scope.statusMessage.code = 200;           
             }
         });
     }
@@ -115,9 +114,9 @@ mapping.controller('mappingController_single', function ($scope, mappingService,
             if(result.errorCode !=200){
                 alert("Failed to Save");
             }else {
-                $scope.statusMessage.message = "Success";
+                $scope.statusMessage.message = "Mapping Saved Successfully";
                 $scope.statusMessage.code = 200;
-                alert("Done");               
+               
             }
         });
     }
