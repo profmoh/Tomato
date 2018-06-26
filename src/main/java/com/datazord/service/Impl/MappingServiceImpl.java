@@ -9,13 +9,18 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.datazord.constants.TomatoConstants;
 import com.datazord.dto.DestinationDto;
 import com.datazord.dto.SourceDto;
 import com.datazord.form.MappingForm;
+import com.datazord.model.MappingResult;
+import com.datazord.repositories.MappingResultRepository;
+import com.datazord.repositories.SequenceRepository;
 import com.datazord.service.CategoriesService;
 import com.datazord.service.MappingService;
 import com.datazord.service.ProductOptionsService;
 import com.datazord.service.ProductService;
+import com.datazord.utils.Utils;
 
 @Component
 public class MappingServiceImpl implements MappingService {
@@ -30,6 +35,12 @@ public class MappingServiceImpl implements MappingService {
 
 	@Autowired
 	private ProductService productService;
+	
+	@Autowired
+	private SequenceRepository sequenceRepositorys;
+	
+	@Autowired
+	private MappingResultRepository mappingResultRepository;
 
 	@Override
 	public MappingForm getMappingLists(Integer MappingType) {
@@ -91,6 +102,69 @@ public class MappingServiceImpl implements MappingService {
 		}
 
 		return sourceDtos;
+	}
+
+	@Override
+	public void saveMappingResult(MappingForm mappingForm) {
+		try{
+			switch (mappingForm.getMappingType()) {
+			case 1: 
+				saveMultiMapping(mappingForm.getSourceList(), TomatoConstants.CATEGORY_MAPPING);				
+				break;
+			case 2:
+				saveSingleMApping(mappingForm.getSourceList(), TomatoConstants.COLOR_MAPPING);
+				break;
+				
+			case 3:
+				saveSingleMApping(mappingForm.getSourceList(), TomatoConstants.SIZE_MAPPING);
+				break;
+				
+			case 4:
+				saveMultiMapping(mappingForm.getSourceList(), TomatoConstants.PRODUCT_MAPPING);
+				break;
+			}
+	
+		}catch (Exception e) {
+			logger.error("",e);
+		}
+		
+	}
+	
+	private void saveMultiMapping(List<SourceDto> sourceDtos, Integer mappingType){
+		try {
+			MappingResult mappingResult;
+			for (SourceDto sourceDto : sourceDtos) {
+				for (DestinationDto destinationDto : sourceDto.getChildrenList()) {
+					mappingResult=new MappingResult();
+					mappingResult.setId(sequenceRepositorys.getNextSequenceId(MAPPING_RESULT_SEQ_KEY));
+					mappingResult.setSourceId(sourceDto.getId());
+					mappingResult.setDestinationId(destinationDto.getId());
+					mappingResult.setMappingType(mappingType);
+					
+					mappingResultRepository.save(mappingResult).subscribe();
+				}
+			}
+		} catch (Exception e) {
+			logger.error("",e);
+		}
+	}
+	
+	private void saveSingleMApping(List<SourceDto> sourceDtos, Integer mappingType){
+		try {
+			MappingResult mappingResult;
+			for (SourceDto sourceDto : sourceDtos) {
+				if(sourceDto.getChildren() != null){
+				mappingResult=new MappingResult();
+				mappingResult.setId(sequenceRepositorys.getNextSequenceId(MAPPING_RESULT_SEQ_KEY));
+				mappingResult.setSourceId(sourceDto.getId());
+				mappingResult.setDestinationId(sourceDto.getChildren().getId());
+				mappingResult.setMappingType(mappingType);
+				mappingResultRepository.save(mappingResult).subscribe();
+				}else throw new NullPointerException("destination obj is null");
+			}
+		} catch (Exception e) {
+			logger.error("",e);
+		}
 	}
 
 }

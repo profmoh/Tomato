@@ -8,7 +8,7 @@ public class SourceDto implements Serializable {
 
 	private static final long serialVersionUID = -1424565048748292347L;
 
-	private Integer id;
+	private String id;
 	private String name;
 
 	private DestinationDto children;
@@ -22,11 +22,11 @@ public class SourceDto implements Serializable {
 		this.name = name;
 	}
 
-	public Integer getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 

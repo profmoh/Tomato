@@ -9,9 +9,9 @@ mapping.service('mappingService', ["$q", "$http", function ($q, $http) {
         );
     }
 
-    this.serviceNamePost = function (postData) {
+    this.mappingSave = function (mappingForm) {
         var d = $q.defer();
-        $http.post("", postData)
+        $http.post("http://localhost:8080/mappingController/saveMappingResult", mappingForm)
             .then(function (response) {
                 d.resolve(response.data);
             }, function (response) {

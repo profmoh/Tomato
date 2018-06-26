@@ -19,11 +19,12 @@ mapping.controller('mappingController_multi', function ($scope, mappingService,$
     $scope.statusMessage = {};
     $scope.statusMessage.code = 0 ;
     $scope.statusMessage.message = "";
+    $scope.mappingForm={};
     
     if ($state.current.name == 'mapping.category'){
-        $scope.mappingType = 1;
+        $scope.mappingType=1;
     } else if ($state.current.name == 'mapping.product'){
-        $scope.mappingType =4;
+        $scope.mappingType=4;
     }
     $scope.loadMappingList = function () {
         mappingService.getMappingLists($scope.mappingType).then(function (result) {
@@ -54,14 +55,18 @@ mapping.controller('mappingController_multi', function ($scope, mappingService,$
       }
     }
     $scope.mapping = function () {
-        $scope.statusMessage.message = "Success";
-        $scope.statusMessage.code = 200;
-        $scope.controllerNamePost = function () {
-            mappingService.serviceNamePost($scope.sourceList).then(function (result) {
-
-            });
-        }
+        $scope.mappingForm.mappingType=$scope.mappingType;
+        mappingService.mappingSave($scope.mappingForm).then(function (result) {
+            if(result.errorCode !=200){
+                alert("Failed to Save");
+            }else {
+                $scope.statusMessage.message = "Success";
+                $scope.statusMessage.code = 200;
+                alert("Done");               
+            }
+        });
     }
+
     $scope.statusClose = function(){
         $('.notificationMessage').addClass('ng-hide');
     }
@@ -74,9 +79,9 @@ mapping.controller('mappingController_single', function ($scope, mappingService,
     $scope.statusMessage.message = "";
     
     if ($state.current.name == 'mapping.color'){
-        $scope.mappingType =2;
+        $scope.mappingType=2;
     }else if ($state.current.name == 'mapping.size'){
-        $scope.mappingType =3;
+        $scope.mappingType=3;
     }
     $scope.loadMappingList = function () {
         mappingService.getMappingLists($scope.mappingType).then(function (result) {
@@ -105,13 +110,16 @@ mapping.controller('mappingController_single', function ($scope, mappingService,
       }
     }
     $scope.mapping = function () {
-        $scope.statusMessage.message = "Success";
-        $scope.statusMessage.code = 200;
-        $scope.controllerNamePost = function () {
-            mappingService.serviceNamePost($scope.sourceList).then(function (result) {
-
-            });
-        }
+        $scope.mappingForm.mappingType=$scope.mappingType;
+        mappingService.mappingSave($scope.mappingForm).then(function (result) {
+            if(result.errorCode !=200){
+                alert("Failed to Save");
+            }else {
+                $scope.statusMessage.message = "Success";
+                $scope.statusMessage.code = 200;
+                alert("Done");               
+            }
+        });
     }
     $scope.statusClose = function(){
         $('.notificationMessage').addClass('ng-hide');

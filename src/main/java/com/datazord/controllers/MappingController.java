@@ -39,6 +39,8 @@ public class MappingController {
 	@PostMapping("/saveMappingResult")
 	public ResponseEntity<?> saveMappingResult(@RequestBody MappingForm form) {
 
+		mappingService.saveMappingResult(form);
+		
 		return new ResponseEntity<MappingForm>(form, HttpStatus.OK);
 	}
 }
