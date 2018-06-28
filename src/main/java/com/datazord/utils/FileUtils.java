@@ -61,7 +61,7 @@ public class FileUtils {
 		Document doc = readXMLfileToDocument(path);
 
 		List<String> xpathList = extractXPathList(doc);
-		// xpathList.forEach(System.out::println);
+		xpathList.forEach(System.out::println);
 
 		// String objectMainPath = getXPathIntersection(xpathList);
 

@@ -208,15 +208,6 @@ public class TomatoServiceImpl {
 	public void saveProductListToAPI() throws MissedMappingException {
 		logger.info("calling Source product option sizes");
 
-		List<JsonObject> jsonObjectList = null;
-
-		try {
-			jsonObjectList = FileUtils.readJsonObjectsFormXML(TomatoConstants.xmlFilePath);
-		} catch (SAXException | IOException | ParserConfigurationException | XPathExpressionException e) {
-			e.printStackTrace();
-			return;
-		}
-
 		Map<MappingFlag, Map<String, String>> mappingMap = null;
 
 		try {
@@ -227,6 +218,15 @@ public class TomatoServiceImpl {
 
 		if(Utils.isEmptyMap(mappingMap) || ! isMappingMapValid(mappingMap))
 			throw new MissedMappingException(TomatoConstants.MissedMappingExceptionMessage);
+
+		List<JsonObject> jsonObjectList = null;
+
+		try {
+			jsonObjectList = FileUtils.readJsonObjectsFormXML(TomatoConstants.xmlFilePath);
+		} catch (SAXException | IOException | ParserConfigurationException | XPathExpressionException e) {
+			e.printStackTrace();
+			return;
+		}
 
 		Map<String, Product> resultedProductMap = new HashMap<>();
 

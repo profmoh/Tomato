@@ -15,120 +15,120 @@ import lombok.Data;
 public class Product {
 
 	@JsonProperty("model")
-	private String model;
+	public String model;
 
 	@JsonProperty("quantity")
-	private String quantity;
+	public String quantity;
 
 	@JsonProperty("price")
-	private String price;
+	public String price;
 
 	@JsonProperty("tax_class_id")
-	private String tax_class_id = "1";
+	public String tax_class_id = "1";
 
 	@JsonProperty("manufacturer_id")
-	private String manufacturer_id = "8";
+	public String manufacturer_id = "8";
 
 	@JsonProperty("sku")
-	private String sku;
+	public String sku;
 
 	@JsonProperty("keyword")
-	private String keyword = "";
+	public String keyword = "";
 
 	@JsonProperty("status")
-	private String status = "1";
+	public String status = "1";
 
 	@JsonProperty("points")
-	private Integer points = 0;
+	public Integer points = 0;
 
 	@JsonProperty("reward")
-	private Integer reward = 0;
+	public Integer reward = 0;
 
 	@JsonProperty("image")
-	private String image;
+	public String image;
 
 	@JsonProperty("other_images")
-	private List<String> other_images = new ArrayList<>();
+	public List<String> other_images = new ArrayList<>();
 
 	@JsonProperty("shipping")
-	private String shipping = "1";
+	public String shipping = "1";
 
 	@JsonProperty("stock_status_id")
-	private Integer stock_status_id = 0;
+	public Integer stock_status_id = 0;
 
 	@JsonProperty("upc")
-	private String upc = "";
+	public String upc = "";
 
 	@JsonProperty("ean")
-	private String ean = "";
+	public String ean = "";
 
 	@JsonProperty("jan")
-	private String jan = "";
+	public String jan = "";
 
 	@JsonProperty("isbn")
-	private String isbn = "";
+	public String isbn = "";
 
 	@JsonProperty("mpn")
-	private String mpn = "";
+	public String mpn = "";
 
 	@JsonProperty("location")
-	private String location = "";
+	public String location = "";
 
 	@JsonProperty("date_available")
-	private String date_available;
+	public String date_available;
 
 	@JsonProperty("weight")
-	private Integer weight = 0;
+	public Integer weight = 0;
 
 	@JsonProperty("weight_class_id")
-	private Integer weight_class_id = 0;
+	public Integer weight_class_id = 0;
 
 	@JsonProperty("lenght")
-	private Integer lenght = 0;
+	public Integer lenght = 0;
 
 	@JsonProperty("width")
-	private Integer width = 0;
+	public Integer width = 0;
 
 	@JsonProperty("height")
-	private Integer height = 0;
+	public Integer height = 0;
 
 	@JsonProperty("lenght_class_id")
-	private Integer lenght_class_id = 0;
+	public Integer lenght_class_id = 0;
 
 	@JsonProperty("subtract")
-	private Integer subtract = 0;
+	public Integer subtract = 0;
 
 	@JsonProperty("minimum")
-	private Integer minimum = 0;
+	public Integer minimum = 0;
 
 	@JsonProperty("sort_order")
-	private String sort_order = "1";
+	public String sort_order = "1";
 
 	@JsonProperty("product_store")
-	private List<String> product_store = Arrays.asList("0");
+	public List<String> product_store = Arrays.asList("0");
 
 	@JsonProperty("product_related")
-	private List<String> product_related = new ArrayList<>();
+	public List<String> product_related = new ArrayList<>();
 
 	@JsonProperty("product_filter")
-	private List<String> product_filter = new ArrayList<>();
+	public List<String> product_filter = new ArrayList<>();
 
 	@JsonProperty("product_description")
-	private List<ProductDescription> product_description = new ArrayList<>();
+	public List<ProductDescription> product_description = new ArrayList<>();
 
 	@JsonProperty("product_category")
-	private List<String> product_category = new ArrayList<>();
+	public List<String> product_category = new ArrayList<>();
 
 	@JsonProperty("cv_required")
-	private String cv_required = "1";
+	public String cv_required = "1";
 
 	@JsonProperty("cv_color_option_id")
-	private String cv_color_option_id = TomatoConstants.COLOR_PRODUCT_OPTION.toString();
+	public String cv_color_option_id = TomatoConstants.COLOR_PRODUCT_OPTION.toString();
 
 	@JsonProperty("cv_size_option_id")
-	private String cv_size_option_id = TomatoConstants.SIZE_PRODUCT_OPTION.toString();
+	public String cv_size_option_id = TomatoConstants.SIZE_PRODUCT_OPTION.toString();
 
 	@JsonProperty("product_custom_option")
-	private List<productCustomOption> product_custom_option = new ArrayList<>();
+	public List<productCustomOption> product_custom_option = new ArrayList<>();
 
 }
