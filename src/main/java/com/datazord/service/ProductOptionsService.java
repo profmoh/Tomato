@@ -39,4 +39,8 @@ public interface ProductOptionsService {
 	public Map<String, String> getDestinationColorMap();
 
 	public Map<String, String> getDestinationSizeMap();
+	
+	public DestinationColor getDestinationColorById(String id);
+	
+	public DestinationSize getDestinationSizeById(String id);
 }

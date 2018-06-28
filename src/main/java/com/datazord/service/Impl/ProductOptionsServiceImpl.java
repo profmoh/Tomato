@@ -27,6 +27,7 @@ import com.datazord.repositories.SourceSizeRepository;
 import com.datazord.service.ProductOptionsService;
 
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @Component
 public class ProductOptionsServiceImpl implements ProductOptionsService {
@@ -235,6 +236,34 @@ public class ProductOptionsServiceImpl implements ProductOptionsService {
 			logger.error("", e);
 		}
 
+		return null;
+	}
+
+
+	@Override
+	public DestinationColor getDestinationColorById(String id) {
+		try {
+			Mono<DestinationColor>mono=destinationColorRepository.findById(id);
+			DestinationColor destinationColor=new DestinationColor();
+			destinationColor=mono.block();
+			return destinationColor;
+		} catch (Exception e) {
+			logger.error("", e);
+		}
+		return null;
+	}
+
+
+	@Override
+	public DestinationSize getDestinationSizeById(String id) {
+		try {
+			Mono<DestinationSize>mono=destinationSizeRepository.findById(id);
+			DestinationSize destinationSize=new DestinationSize();
+			destinationSize=mono.block();
+			return destinationSize;
+		} catch (Exception e) {
+			logger.error("", e);
+		}
 		return null;
 	}
 }

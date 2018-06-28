@@ -109,7 +109,7 @@ public class CategoriesServiceImpl implements CategoriesService {
 	@Override
 	public List<DestinationCategories> getDestinationCategoryList() {
 		try {
-			Flux<DestinationCategories> flux = destinationCategoriesRepository.findByLanguageId("en");
+			Flux<DestinationCategories>flux = destinationCategoriesRepository.findByLanguageId("en");
 			List<DestinationCategories> destinationCategories = flux.collectList().block();
 
 			return destinationCategories;
@@ -121,7 +121,7 @@ public class CategoriesServiceImpl implements CategoriesService {
 	}
 
 	@Override
-	public List<SourceCategories> getSourceCategoryList() {
+	public List<SourceCategories> getSourceCategoryList(){ 
 		try {
 			Flux<SourceCategories> flux = sourceCategoriesRepository.findAll();
 			List<SourceCategories> sourceCategories = flux.collectList().block();
@@ -176,6 +176,19 @@ public class CategoriesServiceImpl implements CategoriesService {
 			logger.error("", e);
 		}
 
+		return null;
+	}
+
+	@Override
+	public DestinationCategories getDestinationCategoryById(String id) {
+		try {
+			Mono<DestinationCategories>mono=destinationCategoriesRepository.findById(id);
+			DestinationCategories destinationCategory= new DestinationCategories();
+			destinationCategory=mono.block();
+			return destinationCategory;
+		} catch (Exception e) {
+			logger.error("", e);
+		}
 		return null;
 	}
 }

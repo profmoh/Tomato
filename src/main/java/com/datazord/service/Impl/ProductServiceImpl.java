@@ -32,6 +32,7 @@ import com.datazord.utils.Utils;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @Component
 public class ProductServiceImpl implements ProductService {
@@ -229,6 +230,19 @@ public class ProductServiceImpl implements ProductService {
 			logger.error("", e);
 		}
 
+		return null;
+	}
+
+	@Override
+	public DestinationProduct getDestinationProductById(String id) {
+		try {
+			Mono<DestinationProduct>mono=destinationProductRepository.findById(id);
+			DestinationProduct destinationProduct=new DestinationProduct();
+			destinationProduct=mono.block();
+			return destinationProduct;
+		} catch (Exception e) {
+			logger.error("", e);
+		}
 		return null;
 	}
 }

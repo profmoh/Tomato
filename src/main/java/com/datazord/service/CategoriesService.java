@@ -24,4 +24,6 @@ public interface CategoriesService extends BaseService<DestinationCategories> {
 	public Map<String, String> getSourceCategoriesMap();
 
 	public Map<String, String> getDestinationCategoriesMap();
+	
+	DestinationCategories getDestinationCategoryById(String id);
 }

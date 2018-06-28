@@ -1,5 +1,6 @@
 package com.datazord.service.Impl;
 
+import java.awt.peer.TrayIconPeer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,12 +20,20 @@ import com.datazord.enums.MappingFlag;
 import com.datazord.exceptions.MissedMappingException;
 import com.datazord.form.MappingForm;
 import com.datazord.model.MappingResult;
+import com.datazord.model.destination.DestinationCategories;
+import com.datazord.model.destination.DestinationColor;
+import com.datazord.model.destination.DestinationProduct;
+import com.datazord.model.destination.DestinationSize;
 import com.datazord.repositories.MappingResultRepository;
 import com.datazord.repositories.SequenceRepository;
 import com.datazord.service.CategoriesService;
 import com.datazord.service.MappingService;
 import com.datazord.service.ProductOptionsService;
 import com.datazord.service.ProductService;
+import com.mongodb.Mongo;
+
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @Component
 public class MappingServiceImpl implements MappingService {
@@ -55,20 +64,20 @@ public class MappingServiceImpl implements MappingService {
 			List<DestinationDto> destinationDtoList = new ArrayList<>();
 
 			switch (MappingType) {
-			case 1: // CATEGORY_MAPPING
-				sourceDtosList = copySourceProperties(categoriesService.getSourceCategoryList());
+			case TomatoConstants.CATEGORY_MAPPING:
+				sourceDtosList = getSourceList(categoriesService.getSourceCategoryList(),TomatoConstants.CATEGORY_MAPPING);
 				destinationDtoList = copyDestinationProperties(categoriesService.getDestinationCategoryList());
 				break;
-			case 2: // COLOR_MAPPING
-				sourceDtosList = copySourceProperties(productOptionsService.getSourceColorList());
+			case TomatoConstants.COLOR_MAPPING: 
+				sourceDtosList = getSourceList(productOptionsService.getSourceColorList(),TomatoConstants.COLOR_MAPPING);
 				destinationDtoList = copyDestinationProperties(productOptionsService.getDestinationColorList());
 				break;
-			case 3: // SIZE_MAPPING
-				sourceDtosList = copySourceProperties(productOptionsService.getSourceSizeList());
+			case TomatoConstants.SIZE_MAPPING: 
+				sourceDtosList = getSourceList(productOptionsService.getSourceSizeList(),TomatoConstants.SIZE_MAPPING);
 				destinationDtoList = copyDestinationProperties(productOptionsService.getDestinationSizeList());
 				break;
-			case 4: // PRODUCT_MAPPING
-				sourceDtosList = copySourceProperties(productService.getSourceProductList());
+			case TomatoConstants.PRODUCT_MAPPING: 
+				sourceDtosList = getSourceList(productService.getSourceProductList(),TomatoConstants.PRODUCT_MAPPING);
 				destinationDtoList = copyDestinationProperties(productService.getDestinationProductList());
 				break;
 			}
@@ -94,18 +103,68 @@ public class MappingServiceImpl implements MappingService {
 
 		return destinationDtos;
 	}
+	
+	private List<SourceDto> getSourceList(List<?> ObjectList, Integer mappingType){
+		try {
 
-	private List<SourceDto> copySourceProperties(List<?> ObjectList) {
-		SourceDto sourceDto;
-		List<SourceDto> sourceDtos = new ArrayList<>();
+			SourceDto sourceDto;
+			DestinationDto dto;
+			List<SourceDto> sourceDtos = new ArrayList<>();
+			List<DestinationDto> destinationDtos = new ArrayList<>();
 
-		for (Object object : ObjectList) {
-			sourceDto = new SourceDto();
-			BeanUtils.copyProperties(object, sourceDto);
-			sourceDtos.add(sourceDto);
+			for (Object object : ObjectList) {
+				sourceDto = new SourceDto();
+				BeanUtils.copyProperties(object, sourceDto);
+
+				Flux<MappingResult> flux = mappingResultRepository.findBySourceId(sourceDto.getId());
+				List<MappingResult> mappingResults = flux.collectList().block();
+
+				switch (mappingType) {
+				case TomatoConstants.CATEGORY_MAPPING:
+					for (MappingResult mappingResult : mappingResults) {
+						DestinationCategories destinationCategory = categoriesService
+								.getDestinationCategoryById(mappingResult.getDestinationId());
+						dto = new DestinationDto();
+						BeanUtils.copyProperties(destinationCategory, dto);
+						destinationDtos.add(dto);
+					}
+					sourceDto.setChildrenList(destinationDtos);
+					break;
+				case TomatoConstants.COLOR_MAPPING:
+					DestinationColor destinationColor = productOptionsService
+							.getDestinationColorById(mappingResults.get(0).getDestinationId());
+					dto = new DestinationDto();
+					BeanUtils.copyProperties(destinationColor, dto);
+					sourceDto.setChildren(dto);
+					break;
+
+				case TomatoConstants.SIZE_MAPPING:
+					DestinationSize destinationSize = productOptionsService
+							.getDestinationSizeById(mappingResults.get(0).getDestinationId());
+					dto = new DestinationDto();
+					BeanUtils.copyProperties(destinationSize, dto);
+					sourceDto.setChildren(dto);
+					break;
+
+				case TomatoConstants.PRODUCT_MAPPING:
+					for (MappingResult mappingResult : mappingResults) {
+						DestinationProduct destinationProduct = productService
+								.getDestinationProductById(mappingResult.getDestinationId());
+						dto = new DestinationDto();
+						BeanUtils.copyProperties(destinationProduct, dto);
+						destinationDtos.add(dto);
+					}
+					sourceDto.setChildrenList(destinationDtos);
+
+					break;
+				}
+				sourceDtos.add(sourceDto);
+			}
+			return sourceDtos;
+		} catch (Exception e) {
+			logger.error("", e);
 		}
-
-		return sourceDtos;
+		return null;
 	}
 
 	@Override
