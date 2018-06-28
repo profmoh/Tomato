@@ -13,16 +13,16 @@ import lombok.Data;
 public class productCustomOption {
 	
 	@JsonProperty("color_id")
-	private String color_id;
+	public String color_id;
 	
 	@JsonProperty("image")
-	private String image;
+	public String image;
 	
 	@JsonProperty("sort_order")
-	private String sort_order = "0";
+	public String sort_order = "0";
 	
 	@JsonProperty("child")
-	private List<Child>child=new ArrayList<>();
+	public List<Child>child=new ArrayList<>();
 	
 	
 }
