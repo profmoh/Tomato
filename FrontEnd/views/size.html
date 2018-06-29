@@ -11,12 +11,12 @@
                         <h3>Source</h3>
                         <ul class="dragList_content">
                             <li ng-repeat='item in sourceList'  data-drop="true"
-                                ng-model="item.children" jqyoui-droppable="{multiple:true}"
-                                data-jqyoui-options="{revert: 'invalid'}">
+                                ng-model="item.children" jqyoui-droppable="{multiple:false}"
+                                data-jqyoui-options="{revert: 'invalid'}" >
                                 {{item.name}}
-                                <ul class="nestedMappingList">
-                                    <li ng-repeat="itemC in item.children"> {{itemC.name}}
-                                        <i class="fa fa-times" ng-click="deleteItem(itemC,item)"></i>
+                                <ul class="nestedMappingList" >
+                                    <li ng-show="item.children.name"> {{item.children.name}}
+                                        <i class="fa fa-times" ng-click="deleteItem(item.children,item)"></i>
                                     </li>
                                 </ul>
                             </li>
@@ -30,8 +30,8 @@
                         <ul class="dragList_content">
                             <li ng-repeat='item in destinationList' ng-show="item.name" data-drag="true"
                                 data-jqyoui-options="{revert: 'invalid', helper: 'clone'}"
-                                ng-model="destinationList"
-                                jqyoui-draggable="{index: {{$index}}, animate: false, placeholder: 'keep'}">
+                                ng-model="destinationList" data-id="{{item.id}}"
+                                jqyoui-draggable="{index: {{$index}}, animate: false}">
                                 {{item.name}}
                             </li>
                         </ul>

@@ -1,7 +1,7 @@
 package com.datazord.enums;
 
 public enum MappingFlag {
-	category(1), size(2), color(3), productPath(4);
+	category(1), color(2), size(3), productPath(4);
 
 	private int value;
 

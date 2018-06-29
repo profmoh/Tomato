@@ -1,6 +1,5 @@
 package com.datazord.service.Impl;
 
-import java.awt.peer.TrayIconPeer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -30,10 +29,9 @@ import com.datazord.service.CategoriesService;
 import com.datazord.service.MappingService;
 import com.datazord.service.ProductOptionsService;
 import com.datazord.service.ProductService;
-import com.mongodb.Mongo;
+import com.datazord.utils.Utils;
 
 import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
 @Component
 public class MappingServiceImpl implements MappingService {
@@ -110,55 +108,59 @@ public class MappingServiceImpl implements MappingService {
 			SourceDto sourceDto;
 			DestinationDto dto;
 			List<SourceDto> sourceDtos = new ArrayList<>();
-			List<DestinationDto> destinationDtos = new ArrayList<>();
+			List<DestinationDto> destinationDtos;
 
 			for (Object object : ObjectList) {
 				sourceDto = new SourceDto();
 				BeanUtils.copyProperties(object, sourceDto);
 
-				Flux<MappingResult> flux = mappingResultRepository.findBySourceId(sourceDto.getId());
+				Flux<MappingResult> flux = mappingResultRepository.findBySourceIdAndMappingType(sourceDto.getId(),
+						MappingFlag.valueOf(mappingType).name());
 				List<MappingResult> mappingResults = flux.collectList().block();
 
-				switch (mappingType) {
-				case TomatoConstants.CATEGORY_MAPPING:
-					for (MappingResult mappingResult : mappingResults) {
-						DestinationCategories destinationCategory = categoriesService
-								.getDestinationCategoryById(mappingResult.getDestinationId());
+				if (!Utils.isEmptyCollection(mappingResults)) {
+					switch (mappingType) {
+					case TomatoConstants.CATEGORY_MAPPING:
+						destinationDtos = new ArrayList<>();
+						for (MappingResult mappingResult : mappingResults) {
+							DestinationCategories destinationCategory = categoriesService
+									.getDestinationCategoryById(mappingResult.getDestinationId());
+							dto = new DestinationDto();
+							BeanUtils.copyProperties(destinationCategory, dto);
+							destinationDtos.add(dto);
+						}
+						sourceDto.setChildrenList(destinationDtos);
+						break;
+					case TomatoConstants.COLOR_MAPPING:
+						DestinationColor destinationColor = productOptionsService
+								.getDestinationColorById(mappingResults.get(0).getDestinationId());
 						dto = new DestinationDto();
-						BeanUtils.copyProperties(destinationCategory, dto);
-						destinationDtos.add(dto);
-					}
-					sourceDto.setChildrenList(destinationDtos);
-					break;
-				case TomatoConstants.COLOR_MAPPING:
-					DestinationColor destinationColor = productOptionsService
-							.getDestinationColorById(mappingResults.get(0).getDestinationId());
-					dto = new DestinationDto();
-					BeanUtils.copyProperties(destinationColor, dto);
-					sourceDto.setChildren(dto);
-					break;
+						BeanUtils.copyProperties(destinationColor, dto);
+						sourceDto.setChildren(dto);
+						break;
 
-				case TomatoConstants.SIZE_MAPPING:
-					DestinationSize destinationSize = productOptionsService
-							.getDestinationSizeById(mappingResults.get(0).getDestinationId());
-					dto = new DestinationDto();
-					BeanUtils.copyProperties(destinationSize, dto);
-					sourceDto.setChildren(dto);
-					break;
-
-				case TomatoConstants.PRODUCT_MAPPING:
-					for (MappingResult mappingResult : mappingResults) {
-						DestinationProduct destinationProduct = productService
-								.getDestinationProductById(mappingResult.getDestinationId());
+					case TomatoConstants.SIZE_MAPPING:
+						DestinationSize destinationSize = productOptionsService
+								.getDestinationSizeById(mappingResults.get(0).getDestinationId());
 						dto = new DestinationDto();
-						BeanUtils.copyProperties(destinationProduct, dto);
-						destinationDtos.add(dto);
-					}
-					sourceDto.setChildrenList(destinationDtos);
+						BeanUtils.copyProperties(destinationSize, dto);
+						sourceDto.setChildren(dto);
+						break;
 
-					break;
+					case TomatoConstants.PRODUCT_MAPPING:
+						destinationDtos = new ArrayList<>();
+						for (MappingResult mappingResult : mappingResults) {
+							DestinationProduct destinationProduct = productService
+									.getDestinationProductById(mappingResult.getDestinationId());
+							dto = new DestinationDto();
+							BeanUtils.copyProperties(destinationProduct, dto);
+							destinationDtos.add(dto);
+						}
+						sourceDto.setChildrenList(destinationDtos);
+						break;
+					}
 				}
-				sourceDtos.add(sourceDto);
+					sourceDtos.add(sourceDto);
 			}
 			return sourceDtos;
 		} catch (Exception e) {

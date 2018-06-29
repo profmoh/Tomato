@@ -10,5 +10,5 @@ import reactor.core.publisher.Flux;
 @Repository
 public interface MappingResultRepository extends ReactiveMongoRepository<MappingResult,String> {
 
-	Flux<MappingResult> findBySourceId(String sourceId);
+	Flux<MappingResult> findBySourceIdAndMappingType(String sourceId,String mappingType);
 }

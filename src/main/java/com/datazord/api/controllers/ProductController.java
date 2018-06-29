@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.datazord.api.service.TomatoServiceImpl;
 import com.datazord.service.ProductService;
 
 @RestController
@@ -17,6 +18,9 @@ public class ProductController {
 
 	@Autowired
 	private ProductService productService;
+	
+	@Autowired
+	private TomatoServiceImpl tomatoServiceImpl;
 
 	@GetMapping("/Destination/getParamterPath")
 	private String getProductParamterPath() {
@@ -32,7 +36,8 @@ public class ProductController {
 	private String getSourceProductParamterPath() {
 		logger.info(">>> Start inserting Source Product Paramter Path into DB ");
 
-		productService.saveSourceProductPath();
+		//productService.saveSourceProductPath();
+		tomatoServiceImpl.saveProductListToAPI();
 
 		return "Success";
 
