@@ -127,6 +127,7 @@ public class MappingServiceImpl implements MappingService {
 									.getDestinationCategoryById(mappingResult.getDestinationId());
 							dto = new DestinationDto();
 							BeanUtils.copyProperties(destinationCategory, dto);
+							dto.setIsmapped(true);
 							destinationDtos.add(dto);
 						}
 						sourceDto.setChildrenList(destinationDtos);
@@ -136,6 +137,7 @@ public class MappingServiceImpl implements MappingService {
 								.getDestinationColorById(mappingResults.get(0).getDestinationId());
 						dto = new DestinationDto();
 						BeanUtils.copyProperties(destinationColor, dto);
+						dto.setIsmapped(true);
 						sourceDto.setChildren(dto);
 						break;
 
@@ -144,6 +146,7 @@ public class MappingServiceImpl implements MappingService {
 								.getDestinationSizeById(mappingResults.get(0).getDestinationId());
 						dto = new DestinationDto();
 						BeanUtils.copyProperties(destinationSize, dto);
+						dto.setIsmapped(true);
 						sourceDto.setChildren(dto);
 						break;
 
@@ -154,6 +157,7 @@ public class MappingServiceImpl implements MappingService {
 									.getDestinationProductById(mappingResult.getDestinationId());
 							dto = new DestinationDto();
 							BeanUtils.copyProperties(destinationProduct, dto);
+							dto.setIsmapped(true);
 							destinationDtos.add(dto);
 						}
 						sourceDto.setChildrenList(destinationDtos);
@@ -173,18 +177,18 @@ public class MappingServiceImpl implements MappingService {
 	public void saveMappingResult(MappingForm mappingForm) {
 		try{
 			switch (mappingForm.getMappingType()) {
-			case 1: 
+			case TomatoConstants.CATEGORY_MAPPING: 
 				saveMultiMapping(mappingForm.getSourceList(), TomatoConstants.CATEGORY_MAPPING);				
 				break;
-			case 2:
+			case TomatoConstants.COLOR_MAPPING:
 				saveSingleMApping(mappingForm.getSourceList(), TomatoConstants.COLOR_MAPPING);
 				break;
 				
-			case 3:
+			case TomatoConstants.SIZE_MAPPING:
 				saveSingleMApping(mappingForm.getSourceList(), TomatoConstants.SIZE_MAPPING);
 				break;
 				
-			case 4:
+			case TomatoConstants.PRODUCT_MAPPING:
 				saveMultiMapping(mappingForm.getSourceList(), TomatoConstants.PRODUCT_MAPPING);
 				break;
 			}
@@ -200,6 +204,7 @@ public class MappingServiceImpl implements MappingService {
 			MappingResult mappingResult;
 			for (SourceDto sourceDto : sourceDtos) {
 				for (DestinationDto destinationDto : sourceDto.getChildrenList()) {
+					if(!destinationDto.isIsmapped()){
 					mappingResult=new MappingResult();
 					mappingResult.setId(sequenceRepositorys.getNextSequenceId(MAPPING_RESULT_SEQ_KEY));
 					mappingResult.setSourceId(sourceDto.getId());
@@ -207,6 +212,7 @@ public class MappingServiceImpl implements MappingService {
 					mappingResult.setMappingType(MappingFlag.valueOf(mappingType).name());
 					
 					mappingResultRepository.save(mappingResult).subscribe();
+					}
 				}
 			}
 		} catch (Exception e) {
@@ -218,7 +224,7 @@ public class MappingServiceImpl implements MappingService {
 		try {
 			MappingResult mappingResult;
 			for (SourceDto sourceDto : sourceDtos) {
-				if(sourceDto.getChildren() != null){
+				if(sourceDto.getChildren() != null && !sourceDto.getChildren().isIsmapped()){
 				mappingResult=new MappingResult();
 				mappingResult.setId(sequenceRepositorys.getNextSequenceId(MAPPING_RESULT_SEQ_KEY));
 				mappingResult.setSourceId(sourceDto.getId());

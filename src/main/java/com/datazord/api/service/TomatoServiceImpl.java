@@ -280,8 +280,13 @@ public class TomatoServiceImpl {
 
 			resultedProductMap.put(destinationCategory, product);
 		}
-
 		// call the API
+		for (Map.Entry<String, Product> entry : resultedProductMap.entrySet()) {
+			API_Reply api_Reply= addProduct(entry.getValue());
+			logger.debug("DestinationCategory:"+entry.getKey()+">>> Success:"+api_Reply.getSuccess()+" , Error:"+api_Reply.getError()+" ,Data:"+
+					api_Reply.getData());
+		}
+		
 	}
 
 	private boolean isMappingMapValid(Map<MappingFlag, Map<String, String>> mappingMap) {

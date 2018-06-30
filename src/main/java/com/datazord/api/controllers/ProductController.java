@@ -19,9 +19,6 @@ public class ProductController {
 	@Autowired
 	private ProductService productService;
 	
-	@Autowired
-	private TomatoServiceImpl tomatoServiceImpl;
-
 	@GetMapping("/Destination/getParamterPath")
 	private String getProductParamterPath() {
 		logger.info(">>> Start inserting Product Paramter Path into DB ");
@@ -36,9 +33,8 @@ public class ProductController {
 	private String getSourceProductParamterPath() {
 		logger.info(">>> Start inserting Source Product Paramter Path into DB ");
 
-		//productService.saveSourceProductPath();
-		tomatoServiceImpl.saveProductListToAPI();
-
+		productService.saveSourceProductPath();
+		
 		return "Success";
 
 	}
