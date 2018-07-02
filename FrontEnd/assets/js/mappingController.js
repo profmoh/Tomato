@@ -43,7 +43,14 @@ mapping.controller('mappingController_multi', function ($scope, mappingService,$
         var parentIndex = $scope.sourceList.indexOf(parent);
         var itemIndex = $scope.sourceList[parentIndex].childrenList.indexOf(item);
         $scope.sourceList[parentIndex].childrenList.splice(itemIndex, 1);
-        $scope.destinationList.push(item)
+        $scope.destinationList.push(item);
+        if(item.ismapped){
+        var deletedMapping={};
+        //deletedMapping.sourceId=parent.id;
+        //deletedMapping.destinationId=item.id;
+        deletedMapping.id=item.mappingId;
+        $scope.mappingForm.deletedList.push(deletedMapping);
+        }
     }
     $scope.showMe = function () {
         if($scope.sourceList !== undefined){
@@ -97,7 +104,14 @@ mapping.controller('mappingController_single', function ($scope, mappingService,
     $scope.deleteItem = function (item, parent) {
         var parentIndex = $scope.sourceList.indexOf(parent);
         $scope.sourceList[parentIndex].children = null;
-        $scope.destinationList.push(item)
+        $scope.destinationList.push(item);
+        if(item.ismapped){
+        var deletedMapping={};
+        //deletedMapping.sourceId=parent.id;
+        //deletedMapping.destinationId=item.id;
+        deletedMapping.id=item.mappingId;
+        $scope.mappingForm.deletedList.push(deletedMapping);
+        }
     }
     $scope.showMe = function () {
         if($scope.sourceList !== undefined){

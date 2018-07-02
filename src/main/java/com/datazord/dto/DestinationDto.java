@@ -9,6 +9,7 @@ public class DestinationDto implements Serializable {
 	private String id;
 	private String name;
 	private boolean ismapped;
+	private String mappingId;
 
 	public String getName() {
 		return name;
@@ -32,5 +33,13 @@ public class DestinationDto implements Serializable {
 
 	public void setIsmapped(boolean ismapped) {
 		this.ismapped = ismapped;
+	}
+
+	public String getMappingId() {
+		return mappingId;
+	}
+
+	public void setMappingId(String mappingId) {
+		this.mappingId = mappingId;
 	}
 }

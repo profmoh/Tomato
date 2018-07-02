@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.datazord.dto.DestinationDto;
 import com.datazord.dto.SourceDto;
+import com.datazord.model.MappingResult;
 
 public class MappingForm extends BaseForm {
 
@@ -14,6 +15,7 @@ public class MappingForm extends BaseForm {
 
 	private List<SourceDto> sourceList = new ArrayList<>();
 	private List<DestinationDto> destinationList = new ArrayList<>();
+	private List<MappingResult> deletedList=new ArrayList<>();
 
 	public List<SourceDto> getSourceList() {
 		return sourceList;
@@ -37,6 +39,14 @@ public class MappingForm extends BaseForm {
 
 	public void setMappingType(Integer mappingType) {
 		this.mappingType = mappingType;
+	}
+
+	public List<MappingResult> getDeletedList() {
+		return deletedList;
+	}
+
+	public void setDeletedList(List<MappingResult> deletedList) {
+		this.deletedList = deletedList;
 	}
 
 }

@@ -128,6 +128,7 @@ public class MappingServiceImpl implements MappingService {
 							dto = new DestinationDto();
 							BeanUtils.copyProperties(destinationCategory, dto);
 							dto.setIsmapped(true);
+							dto.setMappingId(mappingResult.getId());
 							destinationDtos.add(dto);
 						}
 						sourceDto.setChildrenList(destinationDtos);
@@ -138,6 +139,7 @@ public class MappingServiceImpl implements MappingService {
 						dto = new DestinationDto();
 						BeanUtils.copyProperties(destinationColor, dto);
 						dto.setIsmapped(true);
+						dto.setMappingId(mappingResults.get(0).getId());
 						sourceDto.setChildren(dto);
 						break;
 
@@ -147,6 +149,7 @@ public class MappingServiceImpl implements MappingService {
 						dto = new DestinationDto();
 						BeanUtils.copyProperties(destinationSize, dto);
 						dto.setIsmapped(true);
+						dto.setMappingId(mappingResults.get(0).getId());
 						sourceDto.setChildren(dto);
 						break;
 
@@ -158,6 +161,7 @@ public class MappingServiceImpl implements MappingService {
 							dto = new DestinationDto();
 							BeanUtils.copyProperties(destinationProduct, dto);
 							dto.setIsmapped(true);
+							dto.setMappingId(mappingResult.getId());
 							destinationDtos.add(dto);
 						}
 						sourceDto.setChildrenList(destinationDtos);
@@ -178,18 +182,26 @@ public class MappingServiceImpl implements MappingService {
 		try{
 			switch (mappingForm.getMappingType()) {
 			case TomatoConstants.CATEGORY_MAPPING: 
-				saveMultiMapping(mappingForm.getSourceList(), TomatoConstants.CATEGORY_MAPPING);				
+				saveMultiMapping(mappingForm.getSourceList(), TomatoConstants.CATEGORY_MAPPING);
+				if(!Utils.isEmptyCollection(mappingForm.getDeletedList()))
+					deleteMappingResult(mappingForm.getDeletedList(),TomatoConstants.CATEGORY_MAPPING);
 				break;
 			case TomatoConstants.COLOR_MAPPING:
 				saveSingleMApping(mappingForm.getSourceList(), TomatoConstants.COLOR_MAPPING);
+				if(!Utils.isEmptyCollection(mappingForm.getDeletedList()))
+					deleteMappingResult(mappingForm.getDeletedList(),TomatoConstants.COLOR_MAPPING);
 				break;
 				
 			case TomatoConstants.SIZE_MAPPING:
 				saveSingleMApping(mappingForm.getSourceList(), TomatoConstants.SIZE_MAPPING);
+				if(!Utils.isEmptyCollection(mappingForm.getDeletedList()))
+					deleteMappingResult(mappingForm.getDeletedList(),TomatoConstants.SIZE_MAPPING);
 				break;
 				
 			case TomatoConstants.PRODUCT_MAPPING:
 				saveMultiMapping(mappingForm.getSourceList(), TomatoConstants.PRODUCT_MAPPING);
+				if(!Utils.isEmptyCollection(mappingForm.getDeletedList()))
+					deleteMappingResult(mappingForm.getDeletedList(),TomatoConstants.PRODUCT_MAPPING);
 				break;
 			}
 	
@@ -291,5 +303,19 @@ public class MappingServiceImpl implements MappingService {
 		}
 
 		return resultMapping;
+	}
+
+	@Override
+	public void deleteMappingResult(List<MappingResult> mappingList,Integer MappingType) {
+		try {
+
+			for (MappingResult mappingResult : mappingList) {
+				mappingResultRepository.deleteById(mappingResult.getId()).subscribe();
+			}
+
+		} catch (Exception e) {
+			logger.error("", e);
+		}
+
 	}
 }
