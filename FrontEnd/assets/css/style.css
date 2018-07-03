@@ -26,6 +26,7 @@ body {
     align-self: center;
     margin: 0 10px;
 }
+
 .pageContent {
     height: 100%;
 }
@@ -163,7 +164,6 @@ body {
     height: 350px;
 }
 
-
 .loginForm {
     display: flex;
     justify-content: center;
@@ -183,18 +183,22 @@ body {
 .loginForm_Title {
     color: #ffffff;
     text-align: center;
+    margin-bottom: 20px;
 }
+
 .loginForm_input {
     background-color: rgba(255, 255, 255, 0.10);
     border: 1px solid rgba(204, 204, 204, 0.45);
     color: #fff;
 }
+
 .loginForm_input:focus {
     border-color: rgba(204, 204, 204, 1);
     outline: 0;
-    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(252, 250, 255, 0.6);
-    box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(252, 250, 255, 0.6);
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(252, 250, 255, 0.6);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(252, 250, 255, 0.6);
 }
+
 .notificationMessage {
     padding: 25px;
     min-width: 200px;
@@ -205,7 +209,7 @@ body {
     background-color: #dff0d8;
     color: #3c763d;
     border-radius: 4px;
-    border: 2px solid ##d6e9c6;;
+    border: 2px solid #d6e9c6;;
     z-index: 10000;
 }
 
@@ -215,6 +219,7 @@ body {
     right: 10px;
     cursor: pointer;
 }
+
 .notificationMessage_close.success {
     color: #3c763d;
 }
@@ -229,13 +234,204 @@ body {
     top: 10px;
     right: 10px;
 }
+
 .notificationMessage.success {
-                background-color: #dff0d8;
+    background-color: #dff0d8;
     color: #3c763d;
-    border: 2px solid ##d6e9c6;;
+    border: 2px solid #d6e9c6;;
 }
+
 .notificationMessage.error {
     background-color: #f2dede;
     color: #a94442;
     border: 2px solid #ebccd1;;
+}
+
+nav.sidebar, .main {
+    -webkit-transition: margin 200ms ease-out;
+    -moz-transition: margin 200ms ease-out;
+    -o-transition: margin 200ms ease-out;
+    transition: margin 200ms ease-out;
+}
+
+.main {
+    padding: 10px 10px 0 10px;
+}
+
+@media (min-width: 765px) {
+
+    .main {
+        position: absolute;
+        width: calc(100% - 40px);
+        margin-left: 40px;
+        float: right;
+    }
+
+    nav.sidebar {
+        border-radius: 0;
+        background-color: #00000040;
+        border: none;
+    }
+
+    nav.sidebar.navbar.sidebar > .container .navbar-brand, .navbar > .container-fluid .navbar-brand {
+        margin-left: 0px;
+    }
+
+    nav.sidebar .navbar-brand, nav.sidebar .navbar-header {
+        text-align: center;
+        width: 100%;
+        margin-left: 0px;
+    }
+
+    nav.sidebar a {
+        padding-right: 13px;
+    }
+
+    nav.sidebar .navbar-nav > li {
+        border-bottom: 1px #e5e5e536 solid;
+    }
+
+    nav.sidebar .navbar-nav .open .dropdown-menu {
+        position: static;
+        float: none;
+        width: auto;
+        margin-top: 0;
+        background-color: transparent;
+        border: 0;
+        -webkit-box-shadow: none;
+        box-shadow: none;
+    }
+
+    nav.sidebar .navbar-collapse, nav.sidebar .container-fluid {
+        padding: 0 0px 0 0px;
+    }
+
+    .navbar-inverse .navbar-nav .open .dropdown-menu > li > a {
+        color: #777;
+    }
+
+    nav.sidebar {
+        width: 300px;
+        height: 100%;
+        margin-left: -160px;
+        float: left;
+        margin-bottom: 0px;
+    }
+
+    nav.sidebar li {
+        width: 100%;
+    }
+
+    nav.sidebar:hover {
+        margin-left: 0px;
+    }
+
+    .forAnimate {
+        opacity: 0;
+    }
+}
+
+@media (min-width: 1330px) {
+
+    .main {
+        width: calc(100% - 200px);
+        margin-left: 200px;
+    }
+
+    nav.sidebar {
+        margin-left: 0px;
+        float: left;
+    }
+
+    nav.sidebar .forAnimate {
+        opacity: 1;
+    }
+}
+
+nav.sidebar .navbar-nav .open .dropdown-menu > li > a:hover, nav.sidebar .navbar-nav .open .dropdown-menu > li > a:focus {
+    color: #CCC;
+    background-color: transparent;
+}
+
+.mainContent {
+    width: calc(100% - 300px);
+    float: left;
+    height: 100%;
+}
+
+.navbarSubMenu {
+    list-style-type: none;
+}
+
+.navbarSubMenu li {
+    margin: 5px 0;
+
+}
+
+.navbarSubMenu li a {
+    color: #e6e6e6;
+    display: block;
+}
+
+.navbarSubMenu li a:hover {
+    opacity: 0.6;
+    text-decoration: none;
+}
+
+
+.customForm {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.customForm_content {
+    align-self: center;
+    margin: 0 10px;
+    width: 50%;
+    padding: 15px;
+    background-color: rgba(0, 0, 0, 0.25);
+    border-radius: 4px;
+}
+
+.customForm_Title {
+    color: #ffffff;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.customForm_input {
+    background-color: rgba(255, 255, 255, 0.10);
+    border: 1px solid rgba(204, 204, 204, 0.45);
+    color: #fff;
+}
+
+.customForm_input:focus {
+    border-color: rgba(204, 204, 204, 1);
+    outline: 0;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(252, 250, 255, 0.6);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(252, 250, 255, 0.6);
+}
+.customForm label {
+    color: white;
+}
+.inputFile {
+    position: relative;
+}
+.inputFile input[type=file]{
+    position: absolute;
+    opacity: 0;
+    top: 0;
+    left: 0;
+    width: 100%;
+    cursor: pointer;
+    height: 100%;
+}
+.navbar-default .navbar-nav>li>a {
+    color: #fff;
+}
+.navbar-default .navbar-nav>li>a:hover {
+    color: #fff;
+    opacity: 0.7;
 }

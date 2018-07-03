@@ -1,52 +1,45 @@
-<div class="row">
-    <button ng-click="mapHome()" class="btn btn-default homeBtn">Back</button>
-    <div class="container">
-        <div class="row">
-            <div class="mappingContent" ng-controller="mappingController_multi">
-                <div class="col-md-12">
-                    <h2 class="mappingContent_title">Category Mapping</h2>
-                </div>
-                <div class="col-md-6">
-                    <div class="mappingContent_list">
-                        <h3>Source</h3>
-                        <ul class="dragList_content">
-                            <li ng-repeat='item in sourceList'  data-drop="true"
-                                ng-model="item.childrenList" jqyoui-droppable="{multiple:true}"
-                                data-jqyoui-options="{revert: 'invalid'}" >
-                                {{item.name}}
-                                <ul class="nestedMappingList">
-                                    <li ng-repeat="itemC in item.childrenList track by $index"> {{itemC.name}}
-                                        <i class="fa fa-times" ng-click="deleteItem(itemC,item)"></i>
-                                    </li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </div>
-
-                </div>
-                <div class="col-md-6">
-                    <div class="mappingContent_list">
-                        <h3>Destination</h3>
-                        <ul class="dragList_content">
-                            <li ng-repeat='item in destinationList' ng-show="item.name" data-drag="true"
-                                data-jqyoui-options="{revert: 'invalid', helper: 'clone'}"
-                                ng-model="destinationList" data-id="{{item.id}}"
-                                jqyoui-draggable="{index: {{$index}}, animate: false}">
-                                {{item.name}}
-                            </li>
-                        </ul>
-
-                    </div>
-
-                </div>
-                <div class="col-md-12 text-center mappingAction"  ng-show="showMe()">
-                    <button class="btn btn-default btn-lg" ng-click="mapping()">Map</button>
-                </div>
-                <div class="alert notificationMessage" ng-show="statusMessage.code != 0">
-                    <a class="notificationMessage_close close" ng-click="statusClose()"><i class="fa fa-times"></i></a>
-                    <span class="notificationMessage_content">{{statusMessage.message}}</span>
-                </div>
-            </div>
+<div class="mappingContent" ng-controller="mappingController_multi">
+    <div class="col-md-12">
+        <h2 class="mappingContent_title">Category Mapping</h2>
+    </div>
+    <div class="col-md-6">
+        <div class="mappingContent_list">
+            <h3>Source</h3>
+            <ul class="dragList_content">
+                <li ng-repeat='item in sourceList' data-drop="true"
+                    ng-model="item.childrenList" jqyoui-droppable="{multiple:true}"
+                    data-jqyoui-options="{revert: 'invalid'}">
+                    {{item.name}}
+                    <ul class="nestedMappingList">
+                        <li ng-repeat="itemC in item.childrenList track by $index"> {{itemC.name}}
+                            <i class="fa fa-times" ng-click="deleteItem(itemC,item)"></i>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
         </div>
+
+    </div>
+    <div class="col-md-6">
+        <div class="mappingContent_list">
+            <h3>Destination</h3>
+            <ul class="dragList_content">
+                <li ng-repeat='item in destinationList' ng-show="item.name" data-drag="true"
+                    data-jqyoui-options="{revert: 'invalid', helper: 'clone'}"
+                    ng-model="destinationList" data-id="{{item.id}}"
+                    jqyoui-draggable="{index: {{$index}}, animate: false}">
+                    {{item.name}}
+                </li>
+            </ul>
+
+        </div>
+
+    </div>
+    <div class="col-md-12 text-center mappingAction" ng-show="showMe()">
+        <button class="btn btn-default btn-lg" ng-click="mapping()">Map</button>
+    </div>
+    <div class="alert notificationMessage" ng-show="statusMessage.code != 0">
+        <a class="notificationMessage_close close" ng-click="statusClose()"><i class="fa fa-times"></i></a>
+        <span class="notificationMessage_content">{{statusMessage.message}}</span>
     </div>
 </div>
