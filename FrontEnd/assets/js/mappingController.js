@@ -7,7 +7,7 @@ mapping.controller('loginController', function ($scope, mappingService,$state) {
         if(result.errorCode !=200){
             alert("Failed to login");
         }else {
-            $state.go('mapping');
+            $state.go('services.configuration');
         }
         });
     }

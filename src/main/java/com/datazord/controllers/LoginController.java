@@ -20,10 +20,15 @@ public class LoginController {
 
 	@PostMapping("/login")
 	public ResponseEntity<?> login(@RequestBody LoginForm loginForm) {
+		try {
 
-		if (loginForm.getUsername().equals("khaled"))
-			loginForm.setErrorCode(TomatoConstants.ERROR_CODE_SUCCESS);
+			if (loginForm.getUsername().equals("khaled"))
+				loginForm.setErrorCode(TomatoConstants.ERROR_CODE_SUCCESS);
 
-		return new ResponseEntity<LoginForm>(loginForm, HttpStatus.OK);
+			return new ResponseEntity<LoginForm>(loginForm, HttpStatus.OK);
+		} catch (Exception e) {
+			loginForm.setErrorCode(TomatoConstants.ERROR_CODE_FAILED);
+			return new ResponseEntity<LoginForm>(loginForm, HttpStatus.OK);
+		}
 	}
 }
