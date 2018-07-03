@@ -21,9 +21,9 @@ mapping.controller('mappingController_multi', function ($scope, mappingService,$
     $scope.statusMessage.message = "";
     $scope.mappingForm={};
     
-    if ($state.current.name == 'mapping.category'){
+    if ($state.current.name == 'services.mapping.category'){
         $scope.mappingType=1;
-    } else if ($state.current.name == 'mapping.product'){
+    } else if ($state.current.name == 'services.mapping.product'){
         $scope.mappingType=4;
     }
     $scope.loadMappingList = function () {
@@ -84,9 +84,9 @@ mapping.controller('mappingController_single', function ($scope, mappingService,
     $scope.statusMessage.code = 0 ;
     $scope.statusMessage.message = "";
     
-    if ($state.current.name == 'mapping.color'){
+    if ($state.current.name == 'services.mapping.color'){
         $scope.mappingType=2;
-    }else if ($state.current.name == 'mapping.size'){
+    }else if ($state.current.name == 'services.mapping.size'){
         $scope.mappingType=3;
     }
     $scope.loadMappingList = function () {

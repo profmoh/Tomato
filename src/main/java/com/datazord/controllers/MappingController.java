@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.datazord.constants.TomatoConstants;
 import com.datazord.form.MappingForm;
 import com.datazord.service.MappingService;
+import com.datazord.utils.ScheduleJob;
 
 @CrossOrigin()
 @RestController
@@ -27,7 +28,7 @@ public class MappingController {
 
 	@GetMapping("/getMappingForm/{mappingType}")
 	public ResponseEntity<?> getMappingForm(@PathVariable("mappingType") Integer mappingType) {
-
+				
 		MappingForm form = new MappingForm();
 
 		form = mappingService.getMappingLists(mappingType);
