@@ -52,6 +52,7 @@ body {
 
 .mappingContent {
     padding: 25px;
+    position: relative
 }
 
 .mappingContent_list h3 {
@@ -206,8 +207,6 @@ body {
     position: fixed;
     bottom: 5px;
     right: 5px;
-    background-color: #dff0d8;
-    color: #3c763d;
     border-radius: 4px;
     border: 2px solid #d6e9c6;;
     z-index: 10000;
@@ -221,10 +220,14 @@ body {
 }
 
 .notificationMessage_close.success {
+    background-color: #dff0d8;
     color: #3c763d;
+    border: 2px solid #d6e9c6;;
 }
 
 .notificationMessage_close.error {
+    background-color: #ffd3d2;
+    border: 2px solid #ffd3d2;;
     color: #a94442;
 }
 
@@ -434,4 +437,9 @@ nav.sidebar .navbar-nav .open .dropdown-menu > li > a:hover, nav.sidebar .navbar
 .navbar-default .navbar-nav>li>a:hover {
     color: #fff;
     opacity: 0.7;
+}
+.reloadBtn {
+    position: absolute;
+    top: 10px;
+    right: 40px;
 }

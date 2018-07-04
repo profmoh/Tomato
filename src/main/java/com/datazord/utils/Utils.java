@@ -21,6 +21,33 @@ public class Utils {
 	public static boolean isEmptyCollection(Collection<?> collection) {
 		return collection == null || collection.isEmpty();
 	}
+	
+	public static boolean isNotEmpty(String obj) {
+		return obj != null && obj.length() != 0;
+	}
+
+	public static boolean isNotEmpty(List obj) {
+		return obj != null && obj.size() != 0;
+	}
+
+	public static boolean isNotEmpty(Object obj) {
+		return obj != null;
+	}
+	
+	public static boolean isEmpty(Object obj) {
+		return obj == null;
+	}
+
+	public static boolean isEmptyString(String string) {
+		return string == null || string.isEmpty() || string == "";
+	}
+
+	public static boolean isNullorEmpty(String object) {
+		if (object != null && !object.equals("") && !object.equals("null") && !object.equals(null)) {
+			return false;
+		}
+		return true;
+	}
 
 	public static <T> Set<Object> getDistinctFieldByFieldName(final List<T> objList, final String fieldName) {
 		if (objList == null || objList.size() == 0 || StringUtils.isBlank(fieldName))

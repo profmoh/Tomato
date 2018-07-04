@@ -1,36 +1,44 @@
-<div class="customForm" >
-    <div class="customForm_content">
+<div class="customForm" ng-controller="configurationController">
+    <div class="customForm_content" >
         <h2 class="customForm_Title">Company Setting</h2>
         <form class="form-horizontal">
             <div class="form-group">
                 <label class="col-sm-4 control-label">Company Name</label>
                 <div class="col-sm-8">
-                    <input type="text" class="form-control" placeholder="Company Name">
+                    <input type="text" class="form-control" placeholder="Company Name"
+                    ng-model="configurationForm.companyName">
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-sm-4 control-label">Image Path</label>
                 <div class="col-sm-8">
-                    <input type="text" class="form-control" placeholder="Image Path">
+                    <input type="text" class="form-control" placeholder="Image Path"
+                    ng-model="configurationForm.imagePath">
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-sm-4 control-label">XML Path</label>
                 <div class="col-sm-8">
-                    <input type="text" class="form-control" placeholder="XML Path">
+                    <input type="text" class="form-control" placeholder="XML Path"
+                    ng-model="configurationForm.xmlPath">
                 </div>
             </div>
             <div class="form-group">
-                <label class="col-sm-4 control-label">Schedule Run Time</label>
+                <label class="col-sm-4 control-label">Schedule Run Time (days)</label>
                 <div class="col-sm-8">
-                    <input type="text" class="form-control" placeholder="Schedule Run Time">
+                    <input type="number" class="form-control" placeholder="Schedule Run Time"
+                    ng-model="configurationForm.scheduleRunTime">
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-sm-12">
-                    <button class="btn btn-default btn-block">Save</button>
+                <div class="col-sm-12 text-center">
+                    <button class="btn btn-default" ng-click="saveCompanySetting()">Save</button>
                 </div>
             </div>
         </form>
     </div>
+    <div class="alert notificationMessage" ng-show="statusMessage.code != 0" ng-class="{success: statusMessage.code == '200' }">
+            <a class="notificationMessage_close close" ng-click="statusClose()"><i class="fa fa-times"></i></a>
+            <span class="notificationMessage_content">{{statusMessage.message}}</span>
+        </div>
 </div>

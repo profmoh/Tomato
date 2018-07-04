@@ -12,6 +12,8 @@ public class TomatoConstants {
 
 	public static final Integer SIZE_PRODUCT_OPTION = 1;
 	public static final Integer COLOR_PRODUCT_OPTION = 13;
+	
+	public static final String TOMATO_COMPANY_ID = "1";
 
 	public static String xmlFilePath = "E:\\my private Work\\TomatoWorkSpace\\Items.xml";
 
