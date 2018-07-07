@@ -1,15 +1,15 @@
 package com.datazord.enums;
 
-public enum MappingFlag {
+public enum MappingType {
 	category(1), color(2), size(3), productPath(4);
 
 	private int value;
 
-	private MappingFlag(int value) {
+	private MappingType(int value) {
 		this.value = value;
 	}
 
-	public static MappingFlag valueOf(int value) {
+	public static MappingType valueOf(int value) {
 		switch (value) {
 		case 1:
 			return category;

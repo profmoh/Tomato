@@ -26,7 +26,7 @@ public class Utils {
 		return obj != null && obj.length() != 0;
 	}
 
-	public static boolean isNotEmpty(List obj) {
+	public static boolean isNotEmpty(List<?> obj) {
 		return obj != null && obj.size() != 0;
 	}
 
@@ -104,7 +104,7 @@ public class Utils {
 
 					// currentObject.addProperty(propertyName, textContent);
 
-					return currentObject.get(propertyName).getAsString().trim().toLowerCase();
+					return currentObject.get(propertyName).getAsString().trim()/*.toLowerCase()*/;
 				} catch (Exception e) {
 					e.printStackTrace();
 					return null;

@@ -23,27 +23,40 @@ import org.xml.sax.SAXException;
 
 import com.datazord.api.reply.API_Reply;
 import com.datazord.constants.TomatoConstants;
-import com.datazord.enums.MappingFlag;
+import com.datazord.enums.Language;
+import com.datazord.enums.MappingType;
 import com.datazord.exceptions.MissedMappingException;
 import com.datazord.json.tomato.pojo.ProductOptions.ProductOptions;
 import com.datazord.json.tomato.pojo.categories.Categories;
 import com.datazord.json.tomato.pojo.categories.Category;
+import com.datazord.json.tomato.pojo.product.Child;
 import com.datazord.json.tomato.pojo.product.Product;
+import com.datazord.json.tomato.pojo.product.ProductDescription;
+import com.datazord.json.tomato.pojo.product.productCustomOption;
+import com.datazord.model.MappingResult;
+import com.datazord.model.destination.DestinationProduct;
+import com.datazord.model.source.SourceProduct;
 import com.datazord.service.CategoriesService;
 import com.datazord.service.MappingService;
 import com.datazord.service.ProductOptionsService;
+import com.datazord.service.ProductService;
 import com.datazord.utils.ApiUtils;
 import com.datazord.utils.FileUtils;
 import com.datazord.utils.JsonUtils;
 import com.datazord.utils.Utils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
 @Service
 public class TomatoServiceImpl {
 
 	private static final Logger logger = LoggerFactory.getLogger(TomatoServiceImpl.class);
+
+	@Autowired
+	private ProductService productService;
 
 	@Autowired
 	private ProductOptionsService productOptionsService;
@@ -142,6 +155,22 @@ public class TomatoServiceImpl {
 	public List<String> saveSourceCategories() throws MissedMappingException {
 		logger.info("Getting Source Catigories ...");
 
+		DestinationProduct categoryDestinationPath = productService.getDestinationProductByName(TomatoConstants.DESTINATION_CATEGORY_JSON_PATH);
+
+		if(categoryDestinationPath == null)
+			throw new MissedMappingException("Category Path from destination is not defined");
+
+		MappingResult catecoryDestinationMapping =
+				mappingService.findMappingResultByDestinationIdAndMappingType(categoryDestinationPath.getId(), MappingType.productPath);
+
+		if(catecoryDestinationMapping == null)
+			throw new MissedMappingException("Category Path from destination is not mapped to any source path");
+
+		SourceProduct categorySource = productService.getSourceProductById(catecoryDestinationMapping.getSourceId());
+
+		if(categorySource == null)
+			throw new MissedMappingException("Category Path from source is not found");
+
 		List<JsonObject> jsonObjectList = null;
 
 		try {
@@ -152,8 +181,8 @@ public class TomatoServiceImpl {
 		}
 
 // use the mapping to get the path or throw MissedMappingException
-		Set<String> categoriesList = Utils.getDistinctFieldByFieldNameInJson(jsonObjectList,
-				"#document :: DataTable :: diffgr:diffgram :: DocumentElement :: Items :: item_name");
+// "#document :: DataTable :: diffgr:diffgram :: DocumentElement :: Items :: item_name"
+		Set<String> categoriesList = Utils.getDistinctFieldByFieldNameInJson(jsonObjectList, categorySource.getName());
 
 		if (!Utils.isEmptyCollection(categoriesList))
 			categoriesService.saveSourceCategories(new ArrayList<>(categoriesList));
@@ -164,6 +193,22 @@ public class TomatoServiceImpl {
 	public List<String> saveSourceProductOptionColors() throws MissedMappingException {
 		logger.info("calling Source product option colors");
 
+		DestinationProduct colorDestinationPath = productService.getDestinationProductByName(TomatoConstants.DESTINATION_COLOR_JSON_PATH);
+
+		if(colorDestinationPath == null)
+			throw new MissedMappingException("Color Path from destination is not defined");
+
+		MappingResult colorDestinationMapping =
+				mappingService.findMappingResultByDestinationIdAndMappingType(colorDestinationPath.getId(), MappingType.productPath);
+
+		if(colorDestinationMapping == null)
+			throw new MissedMappingException("Color Path from destination is not mapped to any source path");
+
+		SourceProduct colorSource = productService.getSourceProductById(colorDestinationMapping.getSourceId());
+
+		if(colorSource == null)
+			throw new MissedMappingException("Color Path from source is not found");
+
 		List<JsonObject> jsonObjectList = null;
 
 		try {
@@ -174,8 +219,8 @@ public class TomatoServiceImpl {
 		}
 
 // use the mapping to get the path or throw MissedMappingException
-		Set<String> colorsList = Utils.getDistinctFieldByFieldNameInJson(jsonObjectList,
-				"#document :: DataTable :: diffgr:diffgram :: DocumentElement :: Items :: color_name");
+// "#document :: DataTable :: diffgr:diffgram :: DocumentElement :: Items :: color_name"
+		Set<String> colorsList = Utils.getDistinctFieldByFieldNameInJson(jsonObjectList, colorSource.getName());
 
 		if (!Utils.isEmptyCollection(colorsList))
 			productOptionsService.saveSourceProductOptionColors(new ArrayList<>(colorsList));
@@ -186,6 +231,22 @@ public class TomatoServiceImpl {
 	public List<String> saveSourceProductOptionSizes() throws MissedMappingException {
 		logger.info("calling Source product option sizes");
 
+		DestinationProduct sizeDestinationPath = productService.getDestinationProductByName(TomatoConstants.DESTINATION_SIZE_JSON_PATH);
+
+		if(sizeDestinationPath == null)
+			throw new MissedMappingException("Size Path from destination is not defined");
+
+		MappingResult sizeDestinationMapping =
+				mappingService.findMappingResultByDestinationIdAndMappingType(sizeDestinationPath.getId(), MappingType.productPath);
+
+		if(sizeDestinationMapping == null)
+			throw new MissedMappingException("Size Path from destination is not mapped to any source path");
+
+		SourceProduct sizeSource = productService.getSourceProductById(sizeDestinationMapping.getSourceId());
+
+		if(sizeSource == null)
+			throw new MissedMappingException("Size Path from source is not found");
+
 		List<JsonObject> jsonObjectList = null;
 
 		try {
@@ -196,8 +257,8 @@ public class TomatoServiceImpl {
 		}
 
 // use the mapping to get the path or throw MissedMappingException
-		Set<String> sizesList = Utils.getDistinctFieldByFieldNameInJson(jsonObjectList,
-				"#document :: DataTable :: diffgr:diffgram :: DocumentElement :: Items :: SIZE_NAME");
+// "#document :: DataTable :: diffgr:diffgram :: DocumentElement :: Items :: SIZE_NAME"
+		Set<String> sizesList = Utils.getDistinctFieldByFieldNameInJson(jsonObjectList, sizeSource.getName());
 
 		if (!Utils.isEmptyCollection(sizesList))
 			productOptionsService.saveSourceProductOptionSizes(new ArrayList<>(sizesList));
@@ -208,7 +269,7 @@ public class TomatoServiceImpl {
 	public void saveProductListToAPI() throws MissedMappingException {
 		logger.info("calling Source product option sizes");
 
-		Map<MappingFlag, Map<String, String>> mappingMap = null;
+		Map<MappingType, Map<String, String>> mappingMap = null;
 
 		try {
 			mappingMap = mappingService.getMappingMap();
@@ -228,87 +289,142 @@ public class TomatoServiceImpl {
 			return;
 		}
 
-		Map<String, Product> resultedProductMap = new HashMap<>();
+		Map<String, Map<String, Map<String, JsonObject>>> jsonObjectMap = new HashMap<>();
 
 		for (JsonObject jsonObject : jsonObjectList) {
 			String sourceSize = JsonUtils.getStringValueFromJsonByPath(
-					jsonObject, mappingMap.get(MappingFlag.productPath).get(TomatoConstants.DESTINATION_SIZE_JSON_PATH));
+					jsonObject, mappingMap.get(MappingType.productPath).get(TomatoConstants.DESTINATION_SIZE_JSON_PATH));
 
-			String destinationSize = mappingMap.get(MappingFlag.size).get(sourceSize);
+			String destinationSize = mappingMap.get(MappingType.size).get(sourceSize);
 
 			if(StringUtils.isBlank(destinationSize))
 				throw new MissedMappingException(TomatoConstants.MissedMappingExceptionMessage);
 
 			String sourceColor = JsonUtils.getStringValueFromJsonByPath(
-					jsonObject, mappingMap.get(MappingFlag.productPath).get(TomatoConstants.DESTINATION_COLOR_JSON_PATH));
+					jsonObject, mappingMap.get(MappingType.productPath).get(TomatoConstants.DESTINATION_COLOR_JSON_PATH));
 
-			String destinationColor = mappingMap.get(MappingFlag.color).get(sourceColor);
+			String destinationColor = mappingMap.get(MappingType.color).get(sourceColor);
 
 			if(StringUtils.isBlank(destinationColor))
 				throw new MissedMappingException(TomatoConstants.MissedMappingExceptionMessage);
 
 			String sourceCategory = JsonUtils.getStringValueFromJsonByPath(
-					jsonObject, mappingMap.get(MappingFlag.productPath).get(TomatoConstants.DESTINATION_CATEGORY_JSON_PATH));
+					jsonObject, mappingMap.get(MappingType.productPath).get(TomatoConstants.DESTINATION_CATEGORY_JSON_PATH));
 
-			String destinationCategory = mappingMap.get(MappingFlag.category).get(sourceCategory);
+			String destinationCategory = mappingMap.get(MappingType.category).get(sourceCategory);
 
 			if(StringUtils.isBlank(destinationCategory))
 				throw new MissedMappingException(TomatoConstants.MissedMappingExceptionMessage);
 
-			Product product = resultedProductMap.get(destinationCategory);
+			if(! jsonObjectMap.containsKey(destinationCategory))
+				jsonObjectMap.put(destinationCategory, new HashMap<>());
 
-			if(product == null)
-				product = new Product();
+			if(! jsonObjectMap.get(destinationCategory).containsKey(destinationColor))
+				jsonObjectMap.get(destinationCategory).put(destinationColor, new HashMap<>());
 
-			for(String destinationPath : mappingMap.get(MappingFlag.productPath).keySet()) {
-				String sourcePath = mappingMap.get(MappingFlag.productPath).get(destinationPath);
+			if(! jsonObjectMap.get(destinationCategory).get(destinationColor).containsKey(destinationSize))
+				jsonObjectMap.get(destinationCategory).get(destinationColor).put(destinationSize, jsonObject);
+		}
 
-				String value = null;
+		//mapping json objects to product
+		Map<String, Product> resultedProductMap = new HashMap<>();
 
-				try {
-					value = JsonUtils.getStringValueFromJsonByPath(jsonObject, sourcePath);
-				} catch (Exception e) {
-					e.printStackTrace();
-					continue;
-				}
+		//categories
+		for(String destinationCategoryFromMap : jsonObjectMap.keySet()) {
+			int colorCounter = 0;
+			JsonObject jsonObject = null;
+			Product product = new Product();
 
-				JsonUtils.setObjectByValueAndPath(product, destinationPath, value);
+			for(Language language : Language.values()) {
+				ProductDescription productDescription = new ProductDescription();
+
+				productDescription.setLanguage_id("" + language.getValue());
+
+				product.getProduct_description().add(productDescription);
 			}
 
-			if(resultedProductMap.get(destinationCategory) != null)
-				resultedProductMap.remove(destinationCategory);
+			//colors
+			for(String destinationColorFromMap : jsonObjectMap.get(destinationCategoryFromMap).keySet()) {
+				int sizeCounter = 0;
+				product.getProduct_custom_option().add(colorCounter, new productCustomOption());
 
-			resultedProductMap.put(destinationCategory, product);
+				//sizes
+				for(String destinationSizeFromMap : jsonObjectMap.get(destinationCategoryFromMap).get(destinationColorFromMap).keySet()) {
+					product.getProduct_custom_option().get(colorCounter).getChild().add(sizeCounter, new Child());
+
+					jsonObject = jsonObjectMap.get(destinationCategoryFromMap).get(destinationColorFromMap).get(destinationSizeFromMap);
+
+					//path
+					for(String destinationPath : mappingMap.get(MappingType.productPath).keySet()) {
+						String sourcePath = mappingMap.get(MappingType.productPath).get(destinationPath);
+
+						String value = null;
+
+						try {
+							if(destinationPath.equals(TomatoConstants.DESTINATION_CATEGORY_JSON_PATH))
+								value = destinationCategoryFromMap;
+							else if(destinationPath.equals(TomatoConstants.DESTINATION_COLOR_JSON_PATH))
+								value = destinationColorFromMap;
+							else if(destinationPath.equals(TomatoConstants.DESTINATION_SIZE_JSON_PATH))
+								value = destinationSizeFromMap;
+							else
+								value = JsonUtils.getStringValueFromJsonByPath(jsonObject, sourcePath);
+						} catch (Exception e) {
+							e.printStackTrace();
+							continue;
+						}
+
+						JsonUtils.setObjectByValueAndPath(product, destinationPath, value);
+					}
+
+					sizeCounter++;
+				}
+
+				colorCounter++;
+			}
+
+			for(ProductDescription productDescription : product.getProduct_description())
+				if(StringUtils.isBlank(productDescription.getName()))
+					productDescription.setName(product.getModel());
+
+			resultedProductMap.put(destinationCategoryFromMap, product);
 		}
+	
+		for (Map.Entry<String, Product> entry : resultedProductMap.entrySet()) {
+			Gson gson = new GsonBuilder().serializeSpecialFloatingPointValues().serializeNulls().create();
+			System.out.println(gson.toJson(entry));
+		}
+
 		// call the API
 		for (Map.Entry<String, Product> entry : resultedProductMap.entrySet()) {
-			API_Reply api_Reply= addProduct(entry.getValue());
-			logger.debug("DestinationCategory:"+entry.getKey()+">>> Success:"+api_Reply.getSuccess()+" , Error:"+api_Reply.getError()+" ,Data:"+
-					api_Reply.getData());
+			API_Reply api_Reply = addProduct(entry.getValue());
+
+			logger.debug("DestinationCategory:" + entry.getKey() +
+					">>> Success:" + api_Reply.getSuccess() + " , Error:" + api_Reply.getError() + " ,Data:" + api_Reply.getData());
 		}
 		
 	}
 
-	private boolean isMappingMapValid(Map<MappingFlag, Map<String, String>> mappingMap) {
-		if(Utils.isEmptyMap(mappingMap.get(MappingFlag.size)))
+	private boolean isMappingMapValid(Map<MappingType, Map<String, String>> mappingMap) {
+		if(Utils.isEmptyMap(mappingMap.get(MappingType.size)))
 			return false;
 
-		if(Utils.isEmptyMap(mappingMap.get(MappingFlag.color)))
+		if(Utils.isEmptyMap(mappingMap.get(MappingType.color)))
 			return false;
 
-		if(Utils.isEmptyMap(mappingMap.get(MappingFlag.category)))
+		if(Utils.isEmptyMap(mappingMap.get(MappingType.category)))
 			return false;
 
-		if(Utils.isEmptyMap(mappingMap.get(MappingFlag.productPath)))
+		if(Utils.isEmptyMap(mappingMap.get(MappingType.productPath)))
 			return false;
 
-		if(StringUtils.isAllBlank(mappingMap.get(MappingFlag.productPath).get(TomatoConstants.DESTINATION_SIZE_JSON_PATH)))
+		if(StringUtils.isAllBlank(mappingMap.get(MappingType.productPath).get(TomatoConstants.DESTINATION_SIZE_JSON_PATH)))
 			return false;
 
-		if(StringUtils.isAllBlank(mappingMap.get(MappingFlag.productPath).get(TomatoConstants.DESTINATION_COLOR_JSON_PATH)))
+		if(StringUtils.isAllBlank(mappingMap.get(MappingType.productPath).get(TomatoConstants.DESTINATION_COLOR_JSON_PATH)))
 			return false;
 
-		if(StringUtils.isAllBlank(mappingMap.get(MappingFlag.productPath).get(TomatoConstants.DESTINATION_CATEGORY_JSON_PATH)))
+		if(StringUtils.isAllBlank(mappingMap.get(MappingType.productPath).get(TomatoConstants.DESTINATION_CATEGORY_JSON_PATH)))
 			return false;
 
 		return true;

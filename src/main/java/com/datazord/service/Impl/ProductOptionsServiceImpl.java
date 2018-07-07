@@ -149,7 +149,7 @@ public class ProductOptionsServiceImpl implements ProductOptionsService {
 	public void saveSourceProductOptionColors(List<String> colorsList) {
 		List<SourceColor> sourceColorsList = colorsList
 				.stream()
-				.map(color -> new SourceColor(sequenceRepositorys.getNextSequenceId(SOURCE_SIZE_SEQ_KEY), color, "1"))
+				.map(color -> new SourceColor(sequenceRepositorys.getNextSequenceId(SOURCE_COLOR_SEQ_KEY), color, "1"))
 				.collect(Collectors.toList());	
 	
 		sourceColorRepository.deleteAll().subscribe();
@@ -261,6 +261,28 @@ public class ProductOptionsServiceImpl implements ProductOptionsService {
 			DestinationSize destinationSize=new DestinationSize();
 			destinationSize=mono.block();
 			return destinationSize;
+		} catch (Exception e) {
+			logger.error("", e);
+		}
+		return null;
+	}
+
+	@Override
+	public SourceSize getSourceSizeById(String id) {
+		try {
+			Mono<SourceSize> mono = sourceSizeRepository.findById(id);
+			return mono.block();
+		} catch (Exception e) {
+			logger.error("", e);
+		}
+		return null;
+	}
+
+	@Override
+	public SourceColor getSourceColorById(String id) {
+		try {
+			Mono<SourceColor> mono = sourceColorRepository.findById(id);
+			return mono.block();
 		} catch (Exception e) {
 			logger.error("", e);
 		}

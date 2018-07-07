@@ -39,4 +39,10 @@ public class TomatoCategoriesController {
 
 		return "Success";
 	}
+
+	@GetMapping("/addProduct")
+	private String addProduct() {
+		apiService.saveProductListToAPI();
+		return "Success";
+	}
 }

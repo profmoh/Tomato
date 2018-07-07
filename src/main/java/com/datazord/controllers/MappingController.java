@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.datazord.constants.TomatoConstants;
+import com.datazord.enums.MappingType;
 import com.datazord.form.MappingForm;
 import com.datazord.service.MappingService;
-import com.datazord.utils.ScheduleJob;
 
 @CrossOrigin()
 @RestController
@@ -31,7 +31,7 @@ public class MappingController {
 				
 		MappingForm form = new MappingForm();
 
-		form = mappingService.getMappingLists(mappingType);
+		form = mappingService.getMappingLists(MappingType.valueOf(mappingType.intValue()));
 		form.setErrorCode(TomatoConstants.ERROR_CODE_SUCCESS);
 
 		return new ResponseEntity<MappingForm>(form, HttpStatus.OK);

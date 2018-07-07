@@ -6,9 +6,12 @@ import org.springframework.stereotype.Repository;
 import com.datazord.model.MappingResult;
 
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @Repository
-public interface MappingResultRepository extends ReactiveMongoRepository<MappingResult,String> {
+public interface MappingResultRepository extends ReactiveMongoRepository<MappingResult, String> {
 
-	Flux<MappingResult> findBySourceIdAndMappingType(String sourceId,String mappingType);
+	Flux<MappingResult> findBySourceIdAndMappingType(String sourceId, String mappingType);
+
+	Mono<MappingResult> findByDestinationIdAndMappingType(String destinationId, String mappingType);
 }

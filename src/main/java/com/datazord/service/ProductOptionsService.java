@@ -43,4 +43,8 @@ public interface ProductOptionsService {
 	public DestinationColor getDestinationColorById(String id);
 	
 	public DestinationSize getDestinationSizeById(String id);
+
+	public SourceSize getSourceSizeById(String id);
+
+	public SourceColor getSourceColorById(String id);
 }

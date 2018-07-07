@@ -1,23 +1,11 @@
 package com.datazord.utils;
 
-import static org.hamcrest.CoreMatchers.instanceOf;
-
-import java.io.IOException;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
-
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.XPathExpressionException;
 
 import org.apache.commons.lang3.StringUtils;
-import org.xml.sax.SAXException;
 
 import com.datazord.json.tomato.pojo.product.Product;
-import com.datazord.json.tomato.pojo.product.productCustomOption;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
 public class JsonUtils {
@@ -69,7 +57,7 @@ public class JsonUtils {
 				return null;
 			}
 
-		return currentObject.get(propertyName).getAsString(); //.addProperty(propertyName, textContent)
+		return currentObject.get(propertyName).getAsString().trim(); //.addProperty(propertyName, textContent)
 	}
 
 	public static void setObjectByValueAndPath(Product product, String path, Object value) {

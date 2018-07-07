@@ -24,6 +24,7 @@ public class MissedMappingException extends RuntimeException {
 	}
 
 	public MissedMappingException(String errMsg) {
+		super(errMsg);
 		this.errMsg = errMsg;
 	}
 }
