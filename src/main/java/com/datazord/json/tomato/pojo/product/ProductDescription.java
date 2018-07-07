@@ -16,7 +16,7 @@ public class ProductDescription {
 	private String description;
 	
 	@JsonProperty("meta_title")
-	private String meta_title;
+	private String meta_title = "Meta title of the product";
 	
 	@JsonProperty("meta_decription")
 	private String meta_decription;

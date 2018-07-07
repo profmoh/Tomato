@@ -320,7 +320,7 @@ public class TomatoServiceImpl {
 				jsonObjectMap.put(destinationCategory, new HashMap<>());
 
 			if(! jsonObjectMap.get(destinationCategory).containsKey(destinationColor))
-				jsonObjectMap.get(destinationCategory).put(destinationCategory, new HashMap<>());
+				jsonObjectMap.get(destinationCategory).put(destinationColor, new HashMap<>());
 
 			if(! jsonObjectMap.get(destinationCategory).get(destinationColor).containsKey(destinationSize))
 				jsonObjectMap.get(destinationCategory).get(destinationColor).put(destinationSize, jsonObject);
@@ -389,20 +389,19 @@ public class TomatoServiceImpl {
 
 			resultedProductMap.put(destinationCategoryFromMap, product);
 		}
-
-		
+	
 		for (Map.Entry<String, Product> entry : resultedProductMap.entrySet()) {
 			Gson gson = new GsonBuilder().serializeSpecialFloatingPointValues().serializeNulls().create();
 			System.out.println(gson.toJson(entry));
 		}
-		
-		
+
 		// call the API
-//		for (Map.Entry<String, Product> entry : resultedProductMap.entrySet()) {
-//			API_Reply api_Reply= addProduct(entry.getValue());
-//			logger.debug("DestinationCategory:"+entry.getKey()+">>> Success:"+api_Reply.getSuccess()+" , Error:"+api_Reply.getError()+" ,Data:"+
-//					api_Reply.getData());
-//		}
+		for (Map.Entry<String, Product> entry : resultedProductMap.entrySet()) {
+			API_Reply api_Reply = addProduct(entry.getValue());
+
+			logger.debug("DestinationCategory:" + entry.getKey() +
+					">>> Success:" + api_Reply.getSuccess() + " , Error:" + api_Reply.getError() + " ,Data:" + api_Reply.getData());
+		}
 		
 	}
 

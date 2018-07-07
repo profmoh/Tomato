@@ -18,10 +18,10 @@ public class Product {
 	public String model;
 
 	@JsonProperty("quantity")
-	public String quantity;
+	public String quantity = "0";
 
 	@JsonProperty("price")
-	public String price;
+	public String price = "0";
 
 	@JsonProperty("tax_class_id")
 	public String tax_class_id = "1";
@@ -30,7 +30,7 @@ public class Product {
 	public String manufacturer_id = "8";
 
 	@JsonProperty("sku")
-	public String sku;
+	public String sku = "demo sku";
 
 	@JsonProperty("keyword")
 	public String keyword = "";
@@ -83,8 +83,8 @@ public class Product {
 	@JsonProperty("weight_class_id")
 	public Integer weight_class_id = 0;
 
-	@JsonProperty("lenght")
-	public Integer lenght = 0;
+	@JsonProperty("length")
+	public Integer length = 0;
 
 	@JsonProperty("width")
 	public Integer width = 0;
@@ -92,8 +92,8 @@ public class Product {
 	@JsonProperty("height")
 	public Integer height = 0;
 
-	@JsonProperty("lenght_class_id")
-	public Integer lenght_class_id = 0;
+	@JsonProperty("length_class_id")
+	public Integer length_class_id = 0;
 
 	@JsonProperty("subtract")
 	public Integer subtract = 0;
