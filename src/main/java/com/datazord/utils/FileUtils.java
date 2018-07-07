@@ -113,7 +113,7 @@ public class FileUtils {
 	}
 
 	public static List<JsonObject> extractNodeMapByPathList(Document doc, List<String> xpathList) throws XPathExpressionException {
-		xpathList.sort(new JpathComparator());
+		xpathList.sort(new JpathComparator(" :: "));
 
 		JsonObject rootObject = new JsonObject();
 
@@ -146,6 +146,9 @@ public class FileUtils {
 				instanceObject = deepCopy(rootObject, JsonObject.class);
 
 				usedXpathList.clear();
+
+				setObjectValue(instanceObject, fullXPath, nodeList.item(i).getTextContent());
+				usedXpathList.add(fullXPath);
 
 				continue;
 			} else {

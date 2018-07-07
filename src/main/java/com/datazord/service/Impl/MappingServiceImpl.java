@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 import com.datazord.constants.TomatoConstants;
 import com.datazord.dto.DestinationDto;
 import com.datazord.dto.SourceDto;
-import com.datazord.enums.MappingFlag;
+import com.datazord.enums.MappingType;
 import com.datazord.exceptions.MissedMappingException;
 import com.datazord.form.MappingForm;
 import com.datazord.model.MappingResult;
@@ -54,28 +54,28 @@ public class MappingServiceImpl implements MappingService {
 	private MappingResultRepository mappingResultRepository;
 
 	@Override
-	public MappingForm getMappingLists(Integer MappingType) {
+	public MappingForm getMappingLists(MappingType mappingType) {
 		MappingForm mappingForm = new MappingForm();
 
 		try {
 			List<SourceDto> sourceDtosList = new ArrayList<>();
 			List<DestinationDto> destinationDtoList = new ArrayList<>();
 
-			switch (MappingType) {
-			case TomatoConstants.CATEGORY_MAPPING:
-				sourceDtosList = getSourceList(categoriesService.getSourceCategoryList(),TomatoConstants.CATEGORY_MAPPING);
+			switch (mappingType) {
+			case category:
+				sourceDtosList = getSourceList(categoriesService.getSourceCategoryList(), MappingType.category);
 				destinationDtoList = copyDestinationProperties(categoriesService.getDestinationCategoryList());
 				break;
-			case TomatoConstants.COLOR_MAPPING: 
-				sourceDtosList = getSourceList(productOptionsService.getSourceColorList(),TomatoConstants.COLOR_MAPPING);
+			case color:
+				sourceDtosList = getSourceList(productOptionsService.getSourceColorList(), MappingType.color);
 				destinationDtoList = copyDestinationProperties(productOptionsService.getDestinationColorList());
 				break;
-			case TomatoConstants.SIZE_MAPPING: 
-				sourceDtosList = getSourceList(productOptionsService.getSourceSizeList(),TomatoConstants.SIZE_MAPPING);
+			case size:
+				sourceDtosList = getSourceList(productOptionsService.getSourceSizeList(), MappingType.size);
 				destinationDtoList = copyDestinationProperties(productOptionsService.getDestinationSizeList());
 				break;
-			case TomatoConstants.PRODUCT_MAPPING: 
-				sourceDtosList = getSourceList(productService.getSourceProductList(),TomatoConstants.PRODUCT_MAPPING);
+			case productPath:
+				sourceDtosList = getSourceList(productService.getSourceProductList(), MappingType.productPath);
 				destinationDtoList = copyDestinationProperties(productService.getDestinationProductList());
 				break;
 			}
@@ -102,7 +102,7 @@ public class MappingServiceImpl implements MappingService {
 		return destinationDtos;
 	}
 	
-	private List<SourceDto> getSourceList(List<?> ObjectList, Integer mappingType){
+	private List<SourceDto> getSourceList(List<?> ObjectList, MappingType mappingType) {
 		try {
 
 			SourceDto sourceDto;
@@ -114,13 +114,12 @@ public class MappingServiceImpl implements MappingService {
 				sourceDto = new SourceDto();
 				BeanUtils.copyProperties(object, sourceDto);
 
-				Flux<MappingResult> flux = mappingResultRepository.findBySourceIdAndMappingType(sourceDto.getId(),
-						MappingFlag.valueOf(mappingType).name());
+				Flux<MappingResult> flux = mappingResultRepository.findBySourceIdAndMappingType(sourceDto.getId(), mappingType.name());
 				List<MappingResult> mappingResults = flux.collectList().block();
 
 				if (!Utils.isEmptyCollection(mappingResults)) {
 					switch (mappingType) {
-					case TomatoConstants.CATEGORY_MAPPING:
+					case category:
 						destinationDtos = new ArrayList<>();
 						for (MappingResult mappingResult : mappingResults) {
 							DestinationCategories destinationCategory = categoriesService
@@ -133,7 +132,7 @@ public class MappingServiceImpl implements MappingService {
 						}
 						sourceDto.setChildrenList(destinationDtos);
 						break;
-					case TomatoConstants.COLOR_MAPPING:
+					case color:
 						DestinationColor destinationColor = productOptionsService
 								.getDestinationColorById(mappingResults.get(0).getDestinationId());
 						dto = new DestinationDto();
@@ -143,7 +142,7 @@ public class MappingServiceImpl implements MappingService {
 						sourceDto.setChildren(dto);
 						break;
 
-					case TomatoConstants.SIZE_MAPPING:
+					case size:
 						DestinationSize destinationSize = productOptionsService
 								.getDestinationSizeById(mappingResults.get(0).getDestinationId());
 						dto = new DestinationDto();
@@ -153,7 +152,7 @@ public class MappingServiceImpl implements MappingService {
 						sourceDto.setChildren(dto);
 						break;
 
-					case TomatoConstants.PRODUCT_MAPPING:
+					case productPath:
 						destinationDtos = new ArrayList<>();
 						for (MappingResult mappingResult : mappingResults) {
 							DestinationProduct destinationProduct = productService
@@ -168,7 +167,7 @@ public class MappingServiceImpl implements MappingService {
 						break;
 					}
 				}
-					sourceDtos.add(sourceDto);
+				sourceDtos.add(sourceDto);
 			}
 			return sourceDtos;
 		} catch (Exception e) {
@@ -179,79 +178,90 @@ public class MappingServiceImpl implements MappingService {
 
 	@Override
 	public void saveMappingResult(MappingForm mappingForm) {
-		try{
-			switch (mappingForm.getMappingType()) {
-			case TomatoConstants.CATEGORY_MAPPING: 
-				saveMultiMapping(mappingForm.getSourceList(), TomatoConstants.CATEGORY_MAPPING);
-				if(!Utils.isEmptyCollection(mappingForm.getDeletedList()))
-					deleteMappingResult(mappingForm.getDeletedList(),TomatoConstants.CATEGORY_MAPPING);
+		try {
+			switch (MappingType.valueOf(mappingForm.getMappingType().intValue())) {
+			case category:
+				saveMultiMapping(mappingForm.getSourceList(), MappingType.category);
+
+				if (!Utils.isEmptyCollection(mappingForm.getDeletedList()))
+					deleteMappingResult(mappingForm.getDeletedList(), MappingType.category);
+
 				break;
-			case TomatoConstants.COLOR_MAPPING:
-				saveSingleMApping(mappingForm.getSourceList(), TomatoConstants.COLOR_MAPPING);
-				if(!Utils.isEmptyCollection(mappingForm.getDeletedList()))
-					deleteMappingResult(mappingForm.getDeletedList(),TomatoConstants.COLOR_MAPPING);
+			case color:
+				saveSingleMApping(mappingForm.getSourceList(), MappingType.color);
+
+				if (!Utils.isEmptyCollection(mappingForm.getDeletedList()))
+					deleteMappingResult(mappingForm.getDeletedList(), MappingType.color);
+
 				break;
-				
-			case TomatoConstants.SIZE_MAPPING:
-				saveSingleMApping(mappingForm.getSourceList(), TomatoConstants.SIZE_MAPPING);
-				if(!Utils.isEmptyCollection(mappingForm.getDeletedList()))
-					deleteMappingResult(mappingForm.getDeletedList(),TomatoConstants.SIZE_MAPPING);
+			case size:
+				saveSingleMApping(mappingForm.getSourceList(), MappingType.size);
+
+				if (!Utils.isEmptyCollection(mappingForm.getDeletedList()))
+					deleteMappingResult(mappingForm.getDeletedList(), MappingType.size);
+
 				break;
-				
-			case TomatoConstants.PRODUCT_MAPPING:
-				saveMultiMapping(mappingForm.getSourceList(), TomatoConstants.PRODUCT_MAPPING);
-				if(!Utils.isEmptyCollection(mappingForm.getDeletedList()))
-					deleteMappingResult(mappingForm.getDeletedList(),TomatoConstants.PRODUCT_MAPPING);
+			case productPath:
+				saveMultiMapping(mappingForm.getSourceList(), MappingType.productPath);
+
+				if (!Utils.isEmptyCollection(mappingForm.getDeletedList()))
+					deleteMappingResult(mappingForm.getDeletedList(), MappingType.productPath);
+
 				break;
 			}
-	
-		}catch (Exception e) {
-			logger.error("",e);
+
+		} catch (Exception e) {
+			logger.error("", e);
 		}
-		
+
 	}
 	
-	private void saveMultiMapping(List<SourceDto> sourceDtos, Integer mappingType){
+	private void saveMultiMapping(List<SourceDto> sourceDtos, MappingType mappingType) {
 		try {
 			MappingResult mappingResult;
+
 			for (SourceDto sourceDto : sourceDtos) {
 				for (DestinationDto destinationDto : sourceDto.getChildrenList()) {
-					if(!destinationDto.isIsmapped()){
-					mappingResult=new MappingResult();
-					mappingResult.setId(sequenceRepositorys.getNextSequenceId(MAPPING_RESULT_SEQ_KEY));
-					mappingResult.setSourceId(sourceDto.getId());
-					mappingResult.setDestinationId(destinationDto.getId());
-					mappingResult.setMappingType(MappingFlag.valueOf(mappingType).name());
-					
-					mappingResultRepository.save(mappingResult).subscribe();
+					if (!destinationDto.isIsmapped()) {
+						mappingResult = new MappingResult();
+
+						mappingResult.setId(sequenceRepositorys.getNextSequenceId(MAPPING_RESULT_SEQ_KEY));
+						mappingResult.setSourceId(sourceDto.getId());
+						mappingResult.setDestinationId(destinationDto.getId());
+						mappingResult.setMappingType(mappingType.name());
+
+						mappingResultRepository.save(mappingResult).subscribe();
 					}
 				}
 			}
 		} catch (Exception e) {
-			logger.error("",e);
+			logger.error("", e);
 		}
 	}
 	
-	private void saveSingleMApping(List<SourceDto> sourceDtos, Integer mappingType){
+	private void saveSingleMApping(List<SourceDto> sourceDtos, MappingType mappingType) {
 		try {
 			MappingResult mappingResult;
+
 			for (SourceDto sourceDto : sourceDtos) {
-				if(sourceDto.getChildren() != null && !sourceDto.getChildren().isIsmapped()){
-				mappingResult=new MappingResult();
-				mappingResult.setId(sequenceRepositorys.getNextSequenceId(MAPPING_RESULT_SEQ_KEY));
-				mappingResult.setSourceId(sourceDto.getId());
-				mappingResult.setDestinationId(sourceDto.getChildren().getId());
-				mappingResult.setMappingType(MappingFlag.valueOf(mappingType).name());
-				mappingResultRepository.save(mappingResult).subscribe();
+				if (sourceDto.getChildren() != null && !sourceDto.getChildren().isIsmapped()) {
+					mappingResult = new MappingResult();
+
+					mappingResult.setId(sequenceRepositorys.getNextSequenceId(MAPPING_RESULT_SEQ_KEY));
+					mappingResult.setSourceId(sourceDto.getId());
+					mappingResult.setDestinationId(sourceDto.getChildren().getId());
+					mappingResult.setMappingType(mappingType.name());
+
+					mappingResultRepository.save(mappingResult).subscribe();
 				}
 			}
 		} catch (Exception e) {
-			logger.error("",e);
+			logger.error("", e);
 		}
 	}
 
 	@Override
-	public Map<MappingFlag, Map<String, String>> getMappingMap() throws MissedMappingException {
+	public Map<MappingType, Map<String, String>> getMappingMap() throws MissedMappingException {
 		List<MappingResult> mappingResultList = mappingResultRepository.findAll().collectList().block();
 
 		Map<String, String> sourceSizeMap = productOptionsService.getSourceSizeMap();
@@ -264,10 +274,10 @@ public class MappingServiceImpl implements MappingService {
 		Map<String, String> destinationCategoryMap = categoriesService.getDestinationCategoriesMap();
 		Map<String, String> destinationProductPathMap = productService.getDestinationProductPathMap();
 
-		Map<MappingFlag, Map<String, String>> resultMapping = new HashMap<>();
+		Map<MappingType, Map<String, String>> resultMapping = new HashMap<>();
 
 		for(MappingResult mappingResult : mappingResultList) {
-			MappingFlag mappingFlag = MappingFlag.valueOf(mappingResult.getMappingType());
+			MappingType mappingFlag = MappingType.valueOf(mappingResult.getMappingType());
 
 			if(resultMapping.get(mappingFlag) == null)
 				resultMapping.put(mappingFlag, new HashMap<>());
@@ -299,19 +309,21 @@ public class MappingServiceImpl implements MappingService {
 			if(StringUtils.isBlank(sourceValue) || StringUtils.isBlank(destinationValue))
 				throw new MissedMappingException(TomatoConstants.MissedMappingExceptionMessage);
 
-			resultMapping.get(mappingFlag).put(sourceValue, destinationValue);
+			if(mappingFlag.equals(MappingType.productPath))
+				resultMapping.get(mappingFlag).put(destinationValue, sourceValue);
+			else
+				resultMapping.get(mappingFlag).put(sourceValue, destinationValue);
 		}
 
 		return resultMapping;
 	}
 
 	@Override
-	public void deleteMappingResult(List<MappingResult> mappingList,Integer MappingType) {
+	public void deleteMappingResult(List<MappingResult> mappingList, MappingType MappingType) {
 		try {
 
-			for (MappingResult mappingResult : mappingList) {
+			for (MappingResult mappingResult : mappingList)
 				mappingResultRepository.deleteById(mappingResult.getId()).subscribe();
-			}
 
 		} catch (Exception e) {
 			logger.error("", e);

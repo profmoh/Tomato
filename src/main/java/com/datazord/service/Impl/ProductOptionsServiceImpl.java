@@ -149,7 +149,7 @@ public class ProductOptionsServiceImpl implements ProductOptionsService {
 	public void saveSourceProductOptionColors(List<String> colorsList) {
 		List<SourceColor> sourceColorsList = colorsList
 				.stream()
-				.map(color -> new SourceColor(sequenceRepositorys.getNextSequenceId(SOURCE_SIZE_SEQ_KEY), color, "1"))
+				.map(color -> new SourceColor(sequenceRepositorys.getNextSequenceId(SOURCE_COLOR_SEQ_KEY), color, "1"))
 				.collect(Collectors.toList());	
 	
 		sourceColorRepository.deleteAll().subscribe();
