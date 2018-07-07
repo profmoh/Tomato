@@ -33,9 +33,13 @@ import com.datazord.json.tomato.pojo.product.Child;
 import com.datazord.json.tomato.pojo.product.Product;
 import com.datazord.json.tomato.pojo.product.ProductDescription;
 import com.datazord.json.tomato.pojo.product.productCustomOption;
+import com.datazord.model.MappingResult;
+import com.datazord.model.destination.DestinationProduct;
+import com.datazord.model.source.SourceProduct;
 import com.datazord.service.CategoriesService;
 import com.datazord.service.MappingService;
 import com.datazord.service.ProductOptionsService;
+import com.datazord.service.ProductService;
 import com.datazord.utils.ApiUtils;
 import com.datazord.utils.FileUtils;
 import com.datazord.utils.JsonUtils;
@@ -50,6 +54,9 @@ import com.google.gson.JsonObject;
 public class TomatoServiceImpl {
 
 	private static final Logger logger = LoggerFactory.getLogger(TomatoServiceImpl.class);
+
+	@Autowired
+	private ProductService productService;
 
 	@Autowired
 	private ProductOptionsService productOptionsService;
@@ -148,7 +155,22 @@ public class TomatoServiceImpl {
 	public List<String> saveSourceCategories() throws MissedMappingException {
 		logger.info("Getting Source Catigories ...");
 
-//		mappingService.getMappingLists(MappingType)
+		DestinationProduct categoryDestinationPath = productService.getDestinationProductByName(TomatoConstants.DESTINATION_CATEGORY_JSON_PATH);
+
+		if(categoryDestinationPath == null)
+			throw new MissedMappingException("Category Path from destination is not defined");
+
+		MappingResult catecoryDestinationMapping =
+				mappingService.findMappingResultByDestinationIdAndMappingType(categoryDestinationPath.getId(), MappingType.productPath);
+
+		if(catecoryDestinationMapping == null)
+			throw new MissedMappingException("Category Path from destination is not mapped to any source path");
+
+		SourceProduct categorySource = productService.getSourceProductById(catecoryDestinationMapping.getSourceId());
+
+		if(categorySource == null)
+			throw new MissedMappingException("Category Path from source is not found");
+
 		List<JsonObject> jsonObjectList = null;
 
 		try {
@@ -159,8 +181,8 @@ public class TomatoServiceImpl {
 		}
 
 // use the mapping to get the path or throw MissedMappingException
-		Set<String> categoriesList = Utils.getDistinctFieldByFieldNameInJson(jsonObjectList,
-				"#document :: DataTable :: diffgr:diffgram :: DocumentElement :: Items :: item_name");
+// "#document :: DataTable :: diffgr:diffgram :: DocumentElement :: Items :: item_name"
+		Set<String> categoriesList = Utils.getDistinctFieldByFieldNameInJson(jsonObjectList, categorySource.getName());
 
 		if (!Utils.isEmptyCollection(categoriesList))
 			categoriesService.saveSourceCategories(new ArrayList<>(categoriesList));
@@ -171,6 +193,22 @@ public class TomatoServiceImpl {
 	public List<String> saveSourceProductOptionColors() throws MissedMappingException {
 		logger.info("calling Source product option colors");
 
+		DestinationProduct colorDestinationPath = productService.getDestinationProductByName(TomatoConstants.DESTINATION_COLOR_JSON_PATH);
+
+		if(colorDestinationPath == null)
+			throw new MissedMappingException("Color Path from destination is not defined");
+
+		MappingResult colorDestinationMapping =
+				mappingService.findMappingResultByDestinationIdAndMappingType(colorDestinationPath.getId(), MappingType.productPath);
+
+		if(colorDestinationMapping == null)
+			throw new MissedMappingException("Color Path from destination is not mapped to any source path");
+
+		SourceProduct colorSource = productService.getSourceProductById(colorDestinationMapping.getSourceId());
+
+		if(colorSource == null)
+			throw new MissedMappingException("Color Path from source is not found");
+
 		List<JsonObject> jsonObjectList = null;
 
 		try {
@@ -181,8 +219,8 @@ public class TomatoServiceImpl {
 		}
 
 // use the mapping to get the path or throw MissedMappingException
-		Set<String> colorsList = Utils.getDistinctFieldByFieldNameInJson(jsonObjectList,
-				"#document :: DataTable :: diffgr:diffgram :: DocumentElement :: Items :: color_name");
+// "#document :: DataTable :: diffgr:diffgram :: DocumentElement :: Items :: color_name"
+		Set<String> colorsList = Utils.getDistinctFieldByFieldNameInJson(jsonObjectList, colorSource.getName());
 
 		if (!Utils.isEmptyCollection(colorsList))
 			productOptionsService.saveSourceProductOptionColors(new ArrayList<>(colorsList));
@@ -193,6 +231,22 @@ public class TomatoServiceImpl {
 	public List<String> saveSourceProductOptionSizes() throws MissedMappingException {
 		logger.info("calling Source product option sizes");
 
+		DestinationProduct sizeDestinationPath = productService.getDestinationProductByName(TomatoConstants.DESTINATION_SIZE_JSON_PATH);
+
+		if(sizeDestinationPath == null)
+			throw new MissedMappingException("Size Path from destination is not defined");
+
+		MappingResult sizeDestinationMapping =
+				mappingService.findMappingResultByDestinationIdAndMappingType(sizeDestinationPath.getId(), MappingType.productPath);
+
+		if(sizeDestinationMapping == null)
+			throw new MissedMappingException("Size Path from destination is not mapped to any source path");
+
+		SourceProduct sizeSource = productService.getSourceProductById(sizeDestinationMapping.getSourceId());
+
+		if(sizeSource == null)
+			throw new MissedMappingException("Size Path from source is not found");
+
 		List<JsonObject> jsonObjectList = null;
 
 		try {
@@ -203,8 +257,8 @@ public class TomatoServiceImpl {
 		}
 
 // use the mapping to get the path or throw MissedMappingException
-		Set<String> sizesList = Utils.getDistinctFieldByFieldNameInJson(jsonObjectList,
-				"#document :: DataTable :: diffgr:diffgram :: DocumentElement :: Items :: SIZE_NAME");
+// "#document :: DataTable :: diffgr:diffgram :: DocumentElement :: Items :: SIZE_NAME"
+		Set<String> sizesList = Utils.getDistinctFieldByFieldNameInJson(jsonObjectList, sizeSource.getName());
 
 		if (!Utils.isEmptyCollection(sizesList))
 			productOptionsService.saveSourceProductOptionSizes(new ArrayList<>(sizesList));

@@ -25,4 +25,8 @@ public interface ProductService {
 	public Map<String, String> getDestinationProductPathMap();
 	
 	public DestinationProduct getDestinationProductById(String id);
+
+	public DestinationProduct getDestinationProductByName(String name);
+
+	public SourceProduct getSourceProductById(String id);
 }

@@ -20,4 +20,8 @@ public interface MappingService {
 
 	void deleteMappingResult(List<MappingResult> mappingList, MappingType MappingType);
 
+	List<MappingResult> findMappingResultBySourceIdAndMappingType(String sourceId, MappingType mappingType);
+
+	MappingResult findMappingResultByDestinationIdAndMappingType(String destinationId, MappingType mappingType);
+
 }

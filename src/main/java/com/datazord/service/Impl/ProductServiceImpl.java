@@ -236,10 +236,33 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	public DestinationProduct getDestinationProductById(String id) {
 		try {
-			Mono<DestinationProduct>mono=destinationProductRepository.findById(id);
-			DestinationProduct destinationProduct=new DestinationProduct();
-			destinationProduct=mono.block();
-			return destinationProduct;
+			Mono<DestinationProduct> mono = destinationProductRepository.findById(id);
+			return mono.block();
+//			DestinationProduct destinationProduct = new DestinationProduct();
+//			destinationProduct = mono.block();
+//			return destinationProduct;
+		} catch (Exception e) {
+			logger.error("", e);
+		}
+		return null;
+	}
+
+	@Override
+	public DestinationProduct getDestinationProductByName(String name) {
+		try {
+			Mono<DestinationProduct> mono = destinationProductRepository.findByName(name);
+			return mono.block();
+		} catch (Exception e) {
+			logger.error("", e);
+		}
+		return null;
+	}
+
+	@Override
+	public SourceProduct getSourceProductById(String id) {
+		try {
+			Mono<SourceProduct> mono = sourceProductRepository.findById(id);
+			return mono.block();
 		} catch (Exception e) {
 			logger.error("", e);
 		}

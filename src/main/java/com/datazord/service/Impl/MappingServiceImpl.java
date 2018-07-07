@@ -32,6 +32,7 @@ import com.datazord.service.ProductService;
 import com.datazord.utils.Utils;
 
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @Component
 public class MappingServiceImpl implements MappingService {
@@ -101,7 +102,19 @@ public class MappingServiceImpl implements MappingService {
 
 		return destinationDtos;
 	}
-	
+
+	@Override
+	public List<MappingResult> findMappingResultBySourceIdAndMappingType(String sourceId, MappingType mappingType) {
+		Flux<MappingResult> flux = mappingResultRepository.findBySourceIdAndMappingType(sourceId, mappingType.name());
+		return flux.collectList().block();
+	}
+
+	@Override
+	public MappingResult findMappingResultByDestinationIdAndMappingType(String destinationId, MappingType mappingType) {
+		Mono<MappingResult> mappingResult = mappingResultRepository.findByDestinationIdAndMappingType(destinationId, mappingType.name());
+		return mappingResult.block();
+	}
+
 	private List<SourceDto> getSourceList(List<?> ObjectList, MappingType mappingType) {
 		try {
 
@@ -114,8 +127,7 @@ public class MappingServiceImpl implements MappingService {
 				sourceDto = new SourceDto();
 				BeanUtils.copyProperties(object, sourceDto);
 
-				Flux<MappingResult> flux = mappingResultRepository.findBySourceIdAndMappingType(sourceDto.getId(), mappingType.name());
-				List<MappingResult> mappingResults = flux.collectList().block();
+				List<MappingResult> mappingResults = findMappingResultBySourceIdAndMappingType(sourceDto.getId(), mappingType);
 
 				if (!Utils.isEmptyCollection(mappingResults)) {
 					switch (mappingType) {

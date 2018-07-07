@@ -266,4 +266,26 @@ public class ProductOptionsServiceImpl implements ProductOptionsService {
 		}
 		return null;
 	}
+
+	@Override
+	public SourceSize getSourceSizeById(String id) {
+		try {
+			Mono<SourceSize> mono = sourceSizeRepository.findById(id);
+			return mono.block();
+		} catch (Exception e) {
+			logger.error("", e);
+		}
+		return null;
+	}
+
+	@Override
+	public SourceColor getSourceColorById(String id) {
+		try {
+			Mono<SourceColor> mono = sourceColorRepository.findById(id);
+			return mono.block();
+		} catch (Exception e) {
+			logger.error("", e);
+		}
+		return null;
+	}
 }
