@@ -31,4 +31,21 @@ mapping.controller('configurationController', function ($scope, configurationSer
     
     }
 
+    $scope.updateXmlPath=function(){
+        configurationService.updateXmlPath($scope.configurationForm).then(function(result){
+            if(result.errorCode !=200){
+                $scope.statusMessage.message = "failed";
+                $scope.statusMessage.code = 250;
+            }else {
+                $scope.configurationForm=result;
+                $scope.statusMessage.message = "XmlPath updated Successfully";
+                $scope.statusMessage.code = 200;
+            }
+        });
+
+    
+    
+    }
+
+
 });  

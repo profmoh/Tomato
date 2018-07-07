@@ -46,4 +46,13 @@ public class ConfigurationController {
 		form.setErrorCode(TomatoConstants.ERROR_CODE_SUCCESS);
 		return new ResponseEntity<ConfigurationForm>(form, HttpStatus.OK);
 	}
+	
+	@PostMapping("/updateXmlPath")
+	public ResponseEntity<?> updateXmlPath(@RequestBody ConfigurationForm form){
+		CompanyConfigurationDto configurationDto=new CompanyConfigurationDto();
+		BeanUtils.copyProperties(form, configurationDto);
+		configurationService.saveCompanyConfiguration(configurationDto);
+		form.setErrorCode(TomatoConstants.ERROR_CODE_SUCCESS);
+		return new ResponseEntity<ConfigurationForm>(form, HttpStatus.OK);
+	}
 }
