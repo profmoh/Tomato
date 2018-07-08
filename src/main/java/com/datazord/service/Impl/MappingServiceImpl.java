@@ -96,19 +96,24 @@ public class MappingServiceImpl implements MappingService {
 	}
 	
 	
-	private List<DestinationDto> removeduplication(List<SourceDto> sourceDtosList,List<DestinationDto>destinationDtoList){
+	private List<DestinationDto> removeduplication(List<SourceDto> sourceDtosList, List<DestinationDto> destinationDtoList) {
 		try {
-		
-		for (SourceDto sourceDto : sourceDtosList) {
-			if(Utils.isNotEmpty(sourceDto.getChildren()))
-				destinationDtoList.removeIf(p-> { return p.getId()==sourceDto.getChildren().getId();});
-			else if(Utils.isNotEmpty(sourceDto.getChildrenList())){
-				for (DestinationDto childDto : sourceDto.getChildrenList()) {
-					destinationDtoList.removeIf(p -> {return p.getId()== childDto.getId();});
+
+			for (SourceDto sourceDto : sourceDtosList) {
+				if (Utils.isNotEmpty(sourceDto.getChildren()))
+					destinationDtoList.removeIf(p -> {
+						return p.getId().equals(sourceDto.getChildren().getId());
+					});
+				else if (Utils.isNotEmpty(sourceDto.getChildrenList())) {
+					for (DestinationDto childDto : sourceDto.getChildrenList()) {
+						destinationDtoList.removeIf(p -> {
+							return p.getId().equals(childDto.getId());
+						});
+					}
 				}
 			}
-		}
-		return destinationDtoList;
+
+			return destinationDtoList;
 		} catch (Exception e) {
 			logger.error("", e);
 			return null;
