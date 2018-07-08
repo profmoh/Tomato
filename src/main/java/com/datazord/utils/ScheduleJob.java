@@ -11,6 +11,10 @@ public class ScheduleJob {
 	
 	private static final Logger logger = LoggerFactory.getLogger(ScheduleJob.class);
 
+	public static void main(String[] args) {
+		validateJobDate();
+	}
+	
 	public ScheduleJob() {
 		doJob();
 	}
@@ -39,13 +43,15 @@ public class ScheduleJob {
 		thread.start();
 	}
 
-	private boolean validateJobDate() {
+	private static boolean validateJobDate() {
 
 		try {
-			SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+			SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy hh");
 
-			Date lastRunDate = dateFormat.parse("03/07/2018"); // get from DB
+			Date lastRunDate = dateFormat.parse("08/07/2018  0"); // get from DB
 			Date currentDate = new Date();
+			
+			Calendar now = Calendar.getInstance();
 
 			logger.info("Last Run Date >>",lastRunDate);
 			
@@ -55,7 +61,7 @@ public class ScheduleJob {
 			Integer scheduleInterval = 5;// get from DB
 			Calendar c = Calendar.getInstance();
 			c.setTime(lastRunDate);
-			c.add(Calendar.DATE, scheduleInterval);
+			c.add(Calendar.HOUR, scheduleInterval);
 			Date runDate = c.getTime();
 			String runDateStr = dateFormat.format(runDate);
 			logger.info("RunDate >>"+runDateStr);
