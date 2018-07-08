@@ -27,11 +27,11 @@ public class MappingController {
 	private MappingService mappingService;
 
 	@GetMapping("/getMappingForm/{mappingType}")
-	public ResponseEntity<?> getMappingForm(@PathVariable("mappingType") Integer mappingType) {
+	public ResponseEntity<?> getMappingForm(@PathVariable("mappingType") int mappingType) {
 				
 		MappingForm form = new MappingForm();
 
-		form = mappingService.getMappingLists(MappingType.valueOf(mappingType.intValue()));
+		form = mappingService.getMappingLists(MappingType.valueOf(mappingType));
 		form.setErrorCode(TomatoConstants.ERROR_CODE_SUCCESS);
 
 		return new ResponseEntity<MappingForm>(form, HttpStatus.OK);
@@ -41,6 +41,18 @@ public class MappingController {
 	public ResponseEntity<?> saveMappingResult(@RequestBody MappingForm form) {
 
 		mappingService.saveMappingResult(form);
+		
+		return new ResponseEntity<MappingForm>(form, HttpStatus.OK);
+	}
+	
+	@GetMapping("/reloadDestination/{mappingType}")
+	public ResponseEntity<?> reloadDestinationObjects(@PathVariable("mappingType") int mappingType) {
+		
+		MappingForm form = new MappingForm();
+		
+		mappingService.reloadDestinationObjects(MappingType.valueOf(mappingType));
+		
+		form.setErrorCode(TomatoConstants.ERROR_CODE_SUCCESS);
 		
 		return new ResponseEntity<MappingForm>(form, HttpStatus.OK);
 	}

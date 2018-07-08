@@ -10,14 +10,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.index.GeospatialIndex;
 import org.springframework.stereotype.Component;
 
+import com.datazord.api.service.TomatoServiceImpl;
 import com.datazord.constants.TomatoConstants;
 import com.datazord.dto.DestinationDto;
 import com.datazord.dto.SourceDto;
 import com.datazord.enums.MappingType;
 import com.datazord.exceptions.MissedMappingException;
 import com.datazord.form.MappingForm;
+import com.datazord.json.tomato.pojo.categories.Category;
 import com.datazord.model.MappingResult;
 import com.datazord.model.destination.DestinationCategories;
 import com.datazord.model.destination.DestinationColor;
@@ -53,13 +56,16 @@ public class MappingServiceImpl implements MappingService {
 	
 	@Autowired
 	private MappingResultRepository mappingResultRepository;
+	
+	@Autowired
+	private TomatoServiceImpl apiService;
 
 	@Override
 	public MappingForm getMappingLists(MappingType mappingType) {
 		MappingForm mappingForm = new MappingForm();
 
 		try {
-			List<SourceDto> sourceDtosList = new ArrayList<>();
+		    List<SourceDto> sourceDtosList = new ArrayList<>();
 			List<DestinationDto> destinationDtoList = new ArrayList<>();
 
 			switch (mappingType) {
@@ -80,7 +86,7 @@ public class MappingServiceImpl implements MappingService {
 				destinationDtoList = copyDestinationProperties(productService.getDestinationProductList());
 				break;
 			}
-
+			removeduplication(sourceDtosList, destinationDtoList);
 			mappingForm.setSourceList(sourceDtosList);
 			mappingForm.setDestinationList(destinationDtoList);
 		} catch (Exception e) {
@@ -88,6 +94,26 @@ public class MappingServiceImpl implements MappingService {
 		}
 
 		return mappingForm;
+	}
+	
+	
+	private List<DestinationDto> removeduplication(List<SourceDto> sourceDtosList,List<DestinationDto>destinationDtoList){
+		try {
+		
+		for (SourceDto sourceDto : sourceDtosList) {
+			if(Utils.isNotEmpty(sourceDto.getChildren()))
+				destinationDtoList.removeIf(p-> { return p.getId()==sourceDto.getChildren().getId();});
+			else if(Utils.isNotEmpty(sourceDto.getChildrenList())){
+				for (DestinationDto childDto : sourceDto.getChildrenList()) {
+					destinationDtoList.removeIf(p -> {return p.getId()== childDto.getId();});
+				}
+			}
+		}
+		return destinationDtoList;
+		} catch (Exception e) {
+			logger.error("", e);
+			return null;
+		}
 	}
 
 	private List<DestinationDto> copyDestinationProperties(List<?> ObjectList) {
@@ -341,5 +367,29 @@ public class MappingServiceImpl implements MappingService {
 			logger.error("", e);
 		}
 
+	}
+
+	@Override
+	public void reloadDestinationObjects(MappingType MappingType) {
+		try {
+			switch (MappingType) {
+			case productPath:
+				productService.saveDestinationProduct();
+				break;
+			case category:
+				List<Category> categories = apiService.findCategories();
+				categoriesService.saveDestinationCategories(categories);
+				break;
+			case color:
+				productOptionsService.saveDestinationProductOptions(TomatoConstants.COLOR_PRODUCT_OPTION);
+				break;
+			case size:
+				productOptionsService.saveDestinationProductOptions(TomatoConstants.SIZE_PRODUCT_OPTION);
+				break;
+			}
+		} catch (Exception e) {
+			logger.error("", e);
+		}
+		
 	}
 }

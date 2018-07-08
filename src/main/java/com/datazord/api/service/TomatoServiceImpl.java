@@ -129,7 +129,11 @@ public class TomatoServiceImpl {
 		try {
 			logger.info("Insert Product Into Tomato ");
 
-			String addproductUrl = baseUrl.concat("/rest_admin/products");
+			String addOrUpdateproductUrl ;
+			
+			if(checkIfProductIsExsit(0))
+			addOrUpdateproductUrl= baseUrl.concat("/rest_admin/products/"+0);
+			else addOrUpdateproductUrl= baseUrl.concat("/rest_admin/products");
 
 			String bodyJson;
 			API_Reply api_Reply = new API_Reply();
@@ -138,7 +142,7 @@ public class TomatoServiceImpl {
 			bodyJson = mapper.writeValueAsString(product);
 
 			ResponseEntity<API_Reply> responseEntity = ApiUtils.doRequest(
-					headerName, this.authorization, bodyJson, null, addproductUrl, HttpMethod.POST, API_Reply.class);
+					headerName, this.authorization, bodyJson, null, addOrUpdateproductUrl, HttpMethod.POST, API_Reply.class);
 
 			api_Reply = responseEntity.getBody();
 
@@ -403,6 +407,28 @@ public class TomatoServiceImpl {
 					">>> Success:" + api_Reply.getSuccess() + " , Error:" + api_Reply.getError() + " ,Data:" + api_Reply.getData());
 		}
 		
+	}
+	
+	private boolean checkIfProductIsExsit(int productId){
+		try {
+			String productDetailsUrl = baseUrl.concat("/rest_admin/products/").concat("" + productId);
+			API_Reply api_Reply = new API_Reply();
+			ResponseEntity<API_Reply> responseEntity = ApiUtils.doRequest(headerName, this.authorization, null, null,
+					productDetailsUrl, HttpMethod.GET, API_Reply.class);
+			api_Reply = responseEntity.getBody();
+
+			logger.debug("productId:" + productId + ">>> Success:" + api_Reply.getSuccess() + " , Error:"
+					+ api_Reply.getError() + " ,Data:" + api_Reply.getData());
+
+			if (api_Reply.getSuccess().equals(0))
+				return true;
+			else
+				return false;
+
+		} catch (Exception e) {
+			logger.error("", e);
+			return false;
+		}
 	}
 
 	private boolean isMappingMapValid(Map<MappingType, Map<String, String>> mappingMap) {

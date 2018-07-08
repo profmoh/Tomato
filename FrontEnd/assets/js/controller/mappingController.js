@@ -57,6 +57,20 @@ mapping.controller('mappingController_multi', function ($scope, mappingService,$
         });
     }
 
+    $scope.reloadDestination=function(){
+
+        mappingService.reloadDestination($scope.mappingType).then(function (result) {
+            if(result.errorCode !=200){
+
+            }else {
+                $scope.statusMessage.message = "Reload Destination Successfully";
+                $scope.statusMessage.code = 200; 
+            }
+        });
+
+
+    }
+
     $scope.statusClose = function(){
         $('.notificationMessage').addClass('ng-hide');
     }
@@ -118,6 +132,21 @@ mapping.controller('mappingController_single', function ($scope, mappingService,
             }
         });
     }
+
+    $scope.reloadDestination=function(){
+
+        mappingService.reloadDestination($scope.mappingType).then(function (result) {
+            if(result.errorCode !=200){
+
+            }else {
+                $scope.statusMessage.message = "Reload Destination Successfully";
+                $scope.statusMessage.code = 200; 
+            }
+        });
+
+
+    }
+    
     $scope.statusClose = function(){
         $('.notificationMessage').addClass('ng-hide');
     }
