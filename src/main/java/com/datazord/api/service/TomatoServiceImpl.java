@@ -23,6 +23,7 @@ import org.xml.sax.SAXException;
 
 import com.datazord.api.reply.API_Reply;
 import com.datazord.constants.TomatoConstants;
+import com.datazord.dto.CompanyConfigurationDto;
 import com.datazord.enums.Language;
 import com.datazord.enums.MappingType;
 import com.datazord.exceptions.MissedMappingException;
@@ -37,12 +38,15 @@ import com.datazord.model.MappingResult;
 import com.datazord.model.destination.DestinationProduct;
 import com.datazord.model.source.SourceProduct;
 import com.datazord.service.CategoriesService;
+import com.datazord.service.CompanyConfigurationService;
 import com.datazord.service.MappingService;
 import com.datazord.service.ProductOptionsService;
 import com.datazord.service.ProductService;
 import com.datazord.utils.ApiUtils;
 import com.datazord.utils.FileUtils;
+import com.datazord.utils.ImageUtils;
 import com.datazord.utils.JsonUtils;
+import com.datazord.utils.UrlUtils;
 import com.datazord.utils.Utils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -66,6 +70,9 @@ public class TomatoServiceImpl {
 
 	@Autowired
 	private MappingService mappingService;
+
+	@Autowired
+	private CompanyConfigurationService companyConfigurationService;
 
 	@Value("${resource.url}")
 	private String baseUrl;
@@ -389,10 +396,60 @@ public class TomatoServiceImpl {
 				colorCounter++;
 			}
 
+			// handle language and download image
 			for(ProductDescription productDescription : product.getProduct_description())
 				if(StringUtils.isBlank(productDescription.getName()))
 					productDescription.setName(product.getModel());
 
+			CompanyConfigurationDto companyConfig = companyConfigurationService.getCompanyConfig();
+
+			if(companyConfig != null && StringUtils.isNotBlank(companyConfig.getImagePath())) {
+				if(StringUtils.isNotBlank(product.getImage()) && product.getImage().startsWith("http://")) {
+					String imageName = UrlUtils.getNameFromUrl(product.getImage());
+
+					try {
+						String imagePath = ImageUtils.downloadImage(product.getImage(), imageName, companyConfig.getImagePath());
+						product.setImage(imagePath);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+
+				List<String> otherImagesList = new ArrayList<>();
+
+				for(String imageUrl : product.getOther_images()) {
+					if(StringUtils.isBlank(product.getImage()) || ! product.getImage().startsWith("http://"))
+						continue;
+
+					String imageName = UrlUtils.getNameFromUrl(imageUrl);
+
+					try {
+						String imagePath = ImageUtils.downloadImage(imageUrl, imageName, companyConfig.getImagePath());
+						otherImagesList.add(imagePath);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+
+				product.setOther_images(otherImagesList);
+
+				for(productCustomOption productCustomOption : product.getProduct_custom_option()) {
+					String imageUrl = productCustomOption.getImage();
+
+					if(StringUtils.isBlank(imageUrl) || ! imageUrl.startsWith("http://"))
+						continue;
+
+					String imageName = UrlUtils.getNameFromUrl(imageUrl);
+
+					try {
+						String imagePath = ImageUtils.downloadImage(imageUrl, imageName, companyConfig.getImagePath());
+						productCustomOption.setImage(imagePath);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+			
 			resultedProductMap.put(destinationCategoryFromMap, product);
 		}
 	
