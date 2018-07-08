@@ -26,9 +26,6 @@ mapping.controller('configurationController', function ($scope, configurationSer
                 $scope.statusMessage.code = '200';
             }
         });
-
-    
-    
     }
 
     $scope.updateXmlPath=function(){

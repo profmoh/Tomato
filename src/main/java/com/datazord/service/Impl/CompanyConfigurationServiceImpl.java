@@ -26,6 +26,12 @@ public class CompanyConfigurationServiceImpl implements CompanyConfigurationServ
 	@Autowired
 	private TomatoServiceImpl apiService;
 	
+	@Autowired
+	private ProductServiceImpl productServiceImpl;
+	
+	@Autowired
+	private ProductOptionsServiceImpl productOptionsServiceImpl;
+	
 	@Override
 	public CompanyConfigurationDto getCompanyConfig() {
 		try {
@@ -43,6 +49,7 @@ public class CompanyConfigurationServiceImpl implements CompanyConfigurationServ
 	@Override
 	public void saveCompanyConfiguration(CompanyConfigurationDto companyConfigurationDto) {
 		try {
+			reloadSourceObjects();
 			CompanyConfiguration configuration=new CompanyConfiguration();
 			BeanUtils.copyProperties(companyConfigurationDto, configuration);
 			configuration.setId(TomatoConstants.TOMATO_COMPANY_ID);
@@ -52,6 +59,23 @@ public class CompanyConfigurationServiceImpl implements CompanyConfigurationServ
 			logger.error("",e);
 		}
 		
+	}
+	
+	private void reloadSourceObjects(){
+		
+		try {
+			productServiceImpl.saveSourceProductPath();
+			
+			apiService.saveSourceCategories();
+			
+			apiService.saveSourceProductOptionColors();
+			
+			apiService.saveSourceProductOptionSizes();
+			
+		} catch (Exception e) {
+			
+		}
+			
 	}
 
 	@Override
