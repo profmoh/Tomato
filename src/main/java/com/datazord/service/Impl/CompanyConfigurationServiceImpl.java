@@ -6,6 +6,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.datazord.api.service.TomatoServiceImpl;
 import com.datazord.constants.TomatoConstants;
 import com.datazord.dto.CompanyConfigurationDto;
 import com.datazord.model.CompanyConfiguration;
@@ -20,6 +21,9 @@ public class CompanyConfigurationServiceImpl implements CompanyConfigurationServ
 			
 	@Autowired
 	private CompanyConfigurationRepository configurationRepository;
+	
+	@Autowired
+	private TomatoServiceImpl apiService;
 	
 	@Override
 	public CompanyConfigurationDto getCompanyConfig() {
@@ -43,6 +47,16 @@ public class CompanyConfigurationServiceImpl implements CompanyConfigurationServ
 			configuration.setId(TomatoConstants.TOMATO_COMPANY_ID);
 			configuration.setCompanyId(TomatoConstants.TOMATO_COMPANY_ID);
 			configurationRepository.save(configuration).subscribe();
+		} catch (Exception e) {
+			logger.error("",e);
+		}
+		
+	}
+
+	@Override
+	public void addProduct(CompanyConfigurationDto companyConfigurationDto) {
+		try {
+			apiService.saveProductListToAPI();
 		} catch (Exception e) {
 			logger.error("",e);
 		}

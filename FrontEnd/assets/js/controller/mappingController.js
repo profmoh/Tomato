@@ -49,22 +49,24 @@ mapping.controller('mappingController_multi', function ($scope, mappingService,$
         $scope.mappingForm.mappingType=$scope.mappingType;
         mappingService.mappingSave($scope.mappingForm).then(function (result) {
             if(result.errorCode !=200){
-                alert("Failed to Save");
+               // alert("Failed to Save");
             }else {
                 $scope.statusMessage.message = "Mapping Saved Successfully";
-                $scope.statusMessage.code = 200;           
+                $scope.statusMessage.code = '200';           
             }
         });
     }
 
-    $scope.reloadDestination=function(){
+    $scope.reloadObjects=function(){
 
-        mappingService.reloadDestination($scope.mappingType).then(function (result) {
+        mappingService.reloadObjects($scope.mappingType).then(function (result) {
             if(result.errorCode !=200){
+                $scope.statusMessage.message = result.errorMessage;
+                $scope.statusMessage.code = '250'; 
 
             }else {
-                $scope.statusMessage.message = "Reload Destination Successfully";
-                $scope.statusMessage.code = 200; 
+                $scope.statusMessage.message = "Reload Done Successfully";
+                $scope.statusMessage.code = '200'; 
             }
         });
 
@@ -133,13 +135,13 @@ mapping.controller('mappingController_single', function ($scope, mappingService,
         });
     }
 
-    $scope.reloadDestination=function(){
+    $scope.reloadObjects=function(){
 
-        mappingService.reloadDestination($scope.mappingType).then(function (result) {
+        mappingService.reloadObjects($scope.mappingType).then(function (result) {
             if(result.errorCode !=200){
 
             }else {
-                $scope.statusMessage.message = "Reload Destination Successfully";
+                $scope.statusMessage.message = "Reload Done Successfully";
                 $scope.statusMessage.code = 200; 
             }
         });

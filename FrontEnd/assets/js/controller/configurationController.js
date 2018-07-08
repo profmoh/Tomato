@@ -3,11 +3,11 @@ mapping.controller('configurationController', function ($scope, configurationSer
     $scope.statusMessage = {};
     $scope.statusMessage.code = 0 ;
     $scope.statusMessage.message = "";
-
     $scope.loadCompanySetting = function () {
         configurationService.getCopmanyConfiguration().then(function (result) {
             if(result.errorCode !=200){
-
+                $scope.statusMessage.message = "failed";
+                $scope.statusMessage.code = '250';
             }else {
                 $scope.configurationForm=result;
             }
@@ -19,11 +19,11 @@ mapping.controller('configurationController', function ($scope, configurationSer
         configurationService.saveConfiguration($scope.configurationForm).then(function(result){
             if(result.errorCode !=200){
                 $scope.statusMessage.message = "failed";
-                $scope.statusMessage.code = 250;
+                $scope.statusMessage.code = '250';
             }else {
                 $scope.configurationForm=result;
                 $scope.statusMessage.message = "Configuration Saved Successfully";
-                $scope.statusMessage.code = 200;
+                $scope.statusMessage.code = '200';
             }
         });
 
@@ -35,11 +35,11 @@ mapping.controller('configurationController', function ($scope, configurationSer
         configurationService.updateXmlPath($scope.configurationForm).then(function(result){
             if(result.errorCode !=200){
                 $scope.statusMessage.message = "failed";
-                $scope.statusMessage.code = 250;
+                $scope.statusMessage.code = '250';
             }else {
                 $scope.configurationForm=result;
                 $scope.statusMessage.message = "XmlPath updated Successfully";
-                $scope.statusMessage.code = 200;
+                $scope.statusMessage.code = '200';
             }
         });
 
@@ -47,5 +47,25 @@ mapping.controller('configurationController', function ($scope, configurationSer
     
     }
 
+    $scope.fileInputchange=function(){
+        $scope.fileInput = $('.xmlPath').val();
+        $('.inputXml').val($('.xmlPath').val());
+    }
+
+    $scope.submit=function(){
+
+        $scope.configurationForm.filePath=$scope.fileInput;
+        configurationService.addProduct($scope.configurationForm).then(function(result){
+            if(result.errorCode !=200){
+                $scope.statusMessage.message = "failed";
+                $scope.statusMessage.code = '250';
+            }else {
+                $scope.configurationForm=result;
+                $scope.statusMessage.message = "Product added Successfully";
+                $scope.statusMessage.code = '200';
+            }
+        });
+
+    }
 
 });  

@@ -24,5 +24,5 @@ public interface MappingService {
 
 	MappingResult findMappingResultByDestinationIdAndMappingType(String destinationId, MappingType mappingType);
 
-	void reloadDestinationObjects(MappingType MappingType);
+	void reloadObjects(MappingType MappingType);
 }

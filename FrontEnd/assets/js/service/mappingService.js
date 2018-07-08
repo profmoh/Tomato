@@ -20,8 +20,8 @@ mapping.service('mappingService', ["$q", "$http", function ($q, $http) {
         return d.promise;
     }
 
-    this.reloadDestination = function (mappingType) {
-        return $http.get("http://localhost:8080/mappingController/reloadDestination/"+mappingType).then(
+    this.reloadObjects = function (mappingType) {
+        return $http.get("http://localhost:8080/mappingController/reloadObjects/"+mappingType).then(
             function (response) {
                 return response.data;
             }, function (response) {

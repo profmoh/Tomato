@@ -139,8 +139,8 @@ public class TomatoServiceImpl {
 
 			String addOrUpdateproductUrl ;
 			
-			if(checkIfProductIsExsit(0))
-			addOrUpdateproductUrl= baseUrl.concat("/rest_admin/products/"+0);
+			if(checkIfProductIsExsit(product.getModel()))
+			addOrUpdateproductUrl= baseUrl.concat("/rest_admin/products/"+product.getModel());
 			else addOrUpdateproductUrl= baseUrl.concat("/rest_admin/products");
 
 			String bodyJson;
@@ -473,9 +473,9 @@ public class TomatoServiceImpl {
 		
 	}
 	
-	private boolean checkIfProductIsExsit(int productId){
+	private boolean checkIfProductIsExsit(String productId){
 		try {
-			String productDetailsUrl = baseUrl.concat("/rest_admin/products/").concat("" + productId);
+			String productDetailsUrl = baseUrl.concat("/rest_admin/products/").concat(productId);
 			API_Reply api_Reply = new API_Reply();
 			ResponseEntity<API_Reply> responseEntity = ApiUtils.doRequest(headerName, this.authorization, null, null,
 					productDetailsUrl, HttpMethod.GET, API_Reply.class);

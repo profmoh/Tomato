@@ -33,6 +33,17 @@ mapping.service('configurationService', ["$q", "$http", function ($q, $http) {
             });
         return d.promise;
     }
+
+    this.addProduct = function (configurationForm) {
+        var d = $q.defer();
+        $http.post("http://localhost:8080/configurationController/addProduct", configurationForm)
+            .then(function (response) {
+                d.resolve(response.data);
+            }, function (response) {
+                d.reject(response.data || "Request failed");
+            });
+        return d.promise;
+    }
    
 
 }]);
