@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
 import org.xml.sax.SAXException;
 
 import com.datazord.constants.TomatoConstants;
-import com.datazord.dto.ReconcilationHolder;
+import com.datazord.dto.ReconciliationHolder;
 import com.datazord.json.tomato.pojo.product.Child;
 import com.datazord.json.tomato.pojo.product.Product;
 import com.datazord.json.tomato.pojo.product.ProductDescription;
@@ -30,7 +30,7 @@ import com.datazord.repositories.SequenceRepository;
 import com.datazord.repositories.SourceProductRepository;
 import com.datazord.service.ProductService;
 import com.datazord.utils.FileUtils;
-import com.datazord.utils.Reconcilation;
+import com.datazord.utils.Reconciliation;
 import com.datazord.utils.Utils;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -116,27 +116,27 @@ public class ProductServiceImpl implements ProductService {
 		try {
 			List<String> productParmaeterPath = getParamterPathFromObject();
 
-			List<ReconcilationHolder> disProductListReconcilation =
+			List<ReconciliationHolder> disProductListReconciliation =
 					productParmaeterPath
 					.stream()
-					.map(p -> new ReconcilationHolder(sequenceRepositorys.getNextSequenceId(DESTINATION_PRODUCT_SEQ_KEY), p))
+					.map(p -> new ReconciliationHolder(sequenceRepositorys.getNextSequenceId(DESTINATION_PRODUCT_SEQ_KEY), p))
 					.collect(Collectors.toList());
 
 			List<DestinationProduct> mainProductList = destinationProductRepository.findAll().collectList().block();
 
-			List<ReconcilationHolder> mainProductListReconcilation =
-					mainProductList.stream().map(s -> new ReconcilationHolder(s.getId(), s.getName())).collect(Collectors.toList());
+			List<ReconciliationHolder> mainProductListReconciliation =
+					mainProductList.stream().map(s -> new ReconciliationHolder(s.getId(), s.getName())).collect(Collectors.toList());
 
-			List<ReconcilationHolder> reconcilationResult =
-					Reconcilation.compare(mainProductListReconcilation, disProductListReconcilation, Arrays.asList("name"));
+			List<ReconciliationHolder> reconciliationResult =
+					Reconciliation.compare(mainProductListReconciliation, disProductListReconciliation, Arrays.asList("name"));
 
-			for (ReconcilationHolder reconcilationHolder : reconcilationResult) {
-				switch (reconcilationHolder.reconcilationResult) {
+			for (ReconciliationHolder reconciliationHolder : reconciliationResult) {
+				switch (reconciliationHolder.reconciliationResult) {
 				case added:
-					destinationProductRepository.save(new DestinationProduct(reconcilationHolder.id, reconcilationHolder.name)).subscribe();
+					destinationProductRepository.save(new DestinationProduct(reconciliationHolder.id, reconciliationHolder.name)).subscribe();
 					break;
 				case removed:
-					destinationProductRepository.deleteById(reconcilationHolder.mainId).subscribe();
+					destinationProductRepository.deleteById(reconciliationHolder.mainId).subscribe();
 					break;
 				default:
 					break;
@@ -209,27 +209,27 @@ public class ProductServiceImpl implements ProductService {
 			return;
 		}
 
-		List<ReconcilationHolder> disProductListReconcilation =
+		List<ReconciliationHolder> disProductListReconciliation =
 				xpathList
 				.stream()
-				.map(p -> new ReconcilationHolder(sequenceRepositorys.getNextSequenceId(SOURCE_PRODUCT_PATH_SEQ_KEY), p))
+				.map(p -> new ReconciliationHolder(sequenceRepositorys.getNextSequenceId(SOURCE_PRODUCT_PATH_SEQ_KEY), p))
 				.collect(Collectors.toList());
 
 		List<SourceProduct> mainProductList = sourceProductRepository.findAll().collectList().block();
 
-		List<ReconcilationHolder> mainProductListReconcilation =
-				mainProductList.stream().map(s -> new ReconcilationHolder(s.getId(), s.getName())).collect(Collectors.toList());
+		List<ReconciliationHolder> mainProductListReconciliation =
+				mainProductList.stream().map(s -> new ReconciliationHolder(s.getId(), s.getName())).collect(Collectors.toList());
 
-		List<ReconcilationHolder> reconcilationResult =
-				Reconcilation.compare(mainProductListReconcilation, disProductListReconcilation, Arrays.asList("name"));
+		List<ReconciliationHolder> reconciliationResult =
+				Reconciliation.compare(mainProductListReconciliation, disProductListReconciliation, Arrays.asList("name"));
 
-		for (ReconcilationHolder reconcilationHolder : reconcilationResult) {
-			switch (reconcilationHolder.reconcilationResult) {
+		for (ReconciliationHolder reconciliationHolder : reconciliationResult) {
+			switch (reconciliationHolder.reconciliationResult) {
 			case added:
-				sourceProductRepository.save(new SourceProduct(reconcilationHolder.id, reconcilationHolder.name)).subscribe();
+				sourceProductRepository.save(new SourceProduct(reconciliationHolder.id, reconciliationHolder.name)).subscribe();
 				break;
 			case removed:
-				sourceProductRepository.deleteById(reconcilationHolder.mainId).subscribe();
+				sourceProductRepository.deleteById(reconciliationHolder.mainId).subscribe();
 				break;
 			default:
 				break;

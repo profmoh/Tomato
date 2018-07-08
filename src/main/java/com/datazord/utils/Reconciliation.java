@@ -5,11 +5,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import com.datazord.enums.ReconcilationResult;
+import com.datazord.enums.ReconciliationResult;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 
-public class Reconcilation {
+public class Reconciliation {
 
 	public static <T> List<T> compare(List<T> mainGroup, List<T> disGroup, List<String> compareAtributes)
 			throws IllegalArgumentException, IllegalAccessException, SecurityException, NoSuchFieldException {
@@ -21,13 +21,13 @@ public class Reconcilation {
 
 		Field idField = tClass.getDeclaredField("id");
 		Field mainIdField = tClass.getDeclaredField("mainId");
-		Field reconcileResultField = tClass.getDeclaredField("reconcilationResult");
+		Field reconcileResultField = tClass.getDeclaredField("reconciliationResult");
 
 		List<T> resultList = new ArrayList<T>();
 
 		if (Utils.isEmptyCollection(mainGroup)) {
 			for (T t : disGroup) {
-				reconcileResultField.set(t, ReconcilationResult.added);
+				reconcileResultField.set(t, ReconciliationResult.added);
 
 				resultList.add(t);
 			}
@@ -37,7 +37,7 @@ public class Reconcilation {
 
 		if (Utils.isEmptyCollection(disGroup)) {
 			for (T t : mainGroup) {
-				reconcileResultField.set(t, ReconcilationResult.removed);
+				reconcileResultField.set(t, ReconciliationResult.removed);
 
 				resultList.add(t);
 			}
@@ -49,7 +49,7 @@ public class Reconcilation {
 			Collection<T> equalityCollection = Collections2.filter(mainGroup, find(dis, compareAtributes));
 
 			if (equalityCollection.size() > 0) {
-				reconcileResultField.set(dis, ReconcilationResult.identical);
+				reconcileResultField.set(dis, ReconciliationResult.identical);
 
 				T t = equalityCollection.iterator().next();
 
@@ -60,7 +60,7 @@ public class Reconcilation {
 				resultList.add(dis);
 				mainGroup.remove(t);
 			} else {
-				reconcileResultField.set(dis, ReconcilationResult.added);
+				reconcileResultField.set(dis, ReconciliationResult.added);
 
 				resultList.add(dis);
 				continue;
@@ -68,7 +68,7 @@ public class Reconcilation {
 		}
 
 		for (T t : mainGroup) {
-			reconcileResultField.set(t, ReconcilationResult.removed);
+			reconcileResultField.set(t, ReconciliationResult.removed);
 
 			Object recid = idField.get(t);
 			mainIdField.set(t, recid);

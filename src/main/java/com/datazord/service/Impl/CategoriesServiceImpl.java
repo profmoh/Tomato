@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
-import com.datazord.dto.ReconcilationHolder;
+import com.datazord.dto.ReconciliationHolder;
 import com.datazord.enums.Language;
 import com.datazord.json.tomato.pojo.categories.Category;
 import com.datazord.model.destination.DestinationCategories;
@@ -22,7 +22,7 @@ import com.datazord.repositories.DestinationCategoriesRepository;
 import com.datazord.repositories.SequenceRepository;
 import com.datazord.repositories.SourceCategoriesRepository;
 import com.datazord.service.CategoriesService;
-import com.datazord.utils.Reconcilation;
+import com.datazord.utils.Reconciliation;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -109,30 +109,30 @@ public class CategoriesServiceImpl implements CategoriesService {
 			categoryMapResult.put(destinationCategory.getName() + "." + destinationCategory.getLanguageId(), destinationCategory);
 		}
 
-		List<ReconcilationHolder> disSizeListReconcilation =
+		List<ReconciliationHolder> disSizeListReconciliation =
 				categoryMapResult.values()
 				.stream()
-				.map(p -> new ReconcilationHolder(p.getId(), p.getName(), p.getLanguageId()))
+				.map(p -> new ReconciliationHolder(p.getId(), p.getName(), p.getLanguageId()))
 				.collect(Collectors.toList());
 
 		List<DestinationCategories> mainCategoryList = destinationCategoriesRepository.findAll().collectList().block();
 
-		List<ReconcilationHolder> mainCategoryListReconcilation =
+		List<ReconciliationHolder> mainCategoryListReconciliation =
 				mainCategoryList
 				.stream()
-				.map(c -> new ReconcilationHolder(c.getId(), c.getName(), c.getLanguageId()))
+				.map(c -> new ReconciliationHolder(c.getId(), c.getName(), c.getLanguageId()))
 				.collect(Collectors.toList());
 
-		List<ReconcilationHolder> reconcilationResult =
-				Reconcilation.compare(mainCategoryListReconcilation, disSizeListReconcilation, Arrays.asList("name", "language"));
+		List<ReconciliationHolder> reconciliationResult =
+				Reconciliation.compare(mainCategoryListReconciliation, disSizeListReconciliation, Arrays.asList("name", "language"));
 
-		for (ReconcilationHolder reconcilationHolder : reconcilationResult) {
-			switch (reconcilationHolder.reconcilationResult) {
+		for (ReconciliationHolder reconciliationHolder : reconciliationResult) {
+			switch (reconciliationHolder.reconciliationResult) {
 			case added:
-				destinationCategoriesRepository.save(categoryMapResult.get(reconcilationHolder.name + "." + reconcilationHolder.language)).subscribe();
+				destinationCategoriesRepository.save(categoryMapResult.get(reconciliationHolder.name + "." + reconciliationHolder.language)).subscribe();
 				break;
 			case removed:
-				destinationCategoriesRepository.deleteById(reconcilationHolder.mainId).subscribe();
+				destinationCategoriesRepository.deleteById(reconciliationHolder.mainId).subscribe();
 				break;
 			default:
 				break;
@@ -175,27 +175,27 @@ public class CategoriesServiceImpl implements CategoriesService {
 				.collect(Collectors.toMap(c -> c + "." + Language.en.name(),
 						c -> new SourceCategories(sequenceRepositorys.getNextSequenceId(SOURCE_CATEGORIES_SEQ_KEY), c, Language.en.name())));
 
-		List<ReconcilationHolder> disCategoryListReconcilation =
+		List<ReconciliationHolder> disCategoryListReconciliation =
 				sourceCategoryMap.values()
 				.stream()
-				.map(s -> new ReconcilationHolder(s.getId(), s.getName(), s.getLanguageId()))
+				.map(s -> new ReconciliationHolder(s.getId(), s.getName(), s.getLanguageId()))
 				.collect(Collectors.toList());
 
 		List<SourceCategories> mainCategoryList = sourceCategoriesRepository.findAll().collectList().block();
 
-		List<ReconcilationHolder> mainCategoryListReconcilation =
-				mainCategoryList.stream().map(s -> new ReconcilationHolder(s.getId(), s.getName(), s.getLanguageId())).collect(Collectors.toList());
+		List<ReconciliationHolder> mainCategoryListReconciliation =
+				mainCategoryList.stream().map(s -> new ReconciliationHolder(s.getId(), s.getName(), s.getLanguageId())).collect(Collectors.toList());
 
-		List<ReconcilationHolder> reconcilationResult =
-				Reconcilation.compare(mainCategoryListReconcilation, disCategoryListReconcilation, Arrays.asList("name", "language"));
+		List<ReconciliationHolder> reconciliationResult =
+				Reconciliation.compare(mainCategoryListReconciliation, disCategoryListReconciliation, Arrays.asList("name", "language"));
 
-		for (ReconcilationHolder reconcilationHolder : reconcilationResult) {
-			switch (reconcilationHolder.reconcilationResult) {
+		for (ReconciliationHolder reconciliationHolder : reconciliationResult) {
+			switch (reconciliationHolder.reconciliationResult) {
 			case added:
-				sourceCategoriesRepository.save(sourceCategoryMap.get(reconcilationHolder.name + "." + reconcilationHolder.language)).subscribe();
+				sourceCategoriesRepository.save(sourceCategoryMap.get(reconciliationHolder.name + "." + reconciliationHolder.language)).subscribe();
 				break;
 			case removed:
-				sourceCategoriesRepository.deleteById(reconcilationHolder.mainId).subscribe();
+				sourceCategoriesRepository.deleteById(reconciliationHolder.mainId).subscribe();
 				break;
 			default:
 				break;

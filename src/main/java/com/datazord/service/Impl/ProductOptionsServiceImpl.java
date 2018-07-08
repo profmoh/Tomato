@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 
 import com.datazord.api.service.TomatoServiceImpl;
 import com.datazord.constants.TomatoConstants;
-import com.datazord.dto.ReconcilationHolder;
+import com.datazord.dto.ReconciliationHolder;
 import com.datazord.enums.Language;
 import com.datazord.json.tomato.pojo.ProductOptions.OptionValue;
 import com.datazord.json.tomato.pojo.ProductOptions.OptionValueDescription;
@@ -28,7 +28,7 @@ import com.datazord.repositories.SequenceRepository;
 import com.datazord.repositories.SourceColorRepository;
 import com.datazord.repositories.SourceSizeRepository;
 import com.datazord.service.ProductOptionsService;
-import com.datazord.utils.Reconcilation;
+import com.datazord.utils.Reconciliation;
 import com.datazord.utils.Utils;
 
 import reactor.core.publisher.Flux;
@@ -91,60 +91,60 @@ public class ProductOptionsServiceImpl implements ProductOptionsService {
 			}
 
 			if (optionID.equals(TomatoConstants.SIZE_PRODUCT_OPTION) && ! Utils.isEmptyMap(sizeMapResult)) {
-				List<ReconcilationHolder> disSizeListReconcilation =
+				List<ReconciliationHolder> disSizeListReconciliation =
 						sizeMapResult.values()
 						.stream()
-						.map(s -> new ReconcilationHolder(s.getId(), s.getName(), s.getLanguageId()))
+						.map(s -> new ReconciliationHolder(s.getId(), s.getName(), s.getLanguageId()))
 						.collect(Collectors.toList());
 
 				List<DestinationSize> mainSizeList = destinationSizeRepository.findAll().collectList().block();
 
-				List<ReconcilationHolder> mainSizeListReconcilation =
+				List<ReconciliationHolder> mainSizeListReconciliation =
 						mainSizeList
 						.stream()
-						.map(s -> new ReconcilationHolder(s.getId(), s.getName(), s.getLanguageId()))
+						.map(s -> new ReconciliationHolder(s.getId(), s.getName(), s.getLanguageId()))
 						.collect(Collectors.toList());
 
-				List<ReconcilationHolder> reconcilationResult =
-						Reconcilation.compare(mainSizeListReconcilation, disSizeListReconcilation, Arrays.asList("name", "language"));
+				List<ReconciliationHolder> reconciliationResult =
+						Reconciliation.compare(mainSizeListReconciliation, disSizeListReconciliation, Arrays.asList("name", "language"));
 
-				for (ReconcilationHolder reconcilationHolder : reconcilationResult) {
-					switch (reconcilationHolder.reconcilationResult) {
+				for (ReconciliationHolder reconciliationHolder : reconciliationResult) {
+					switch (reconciliationHolder.reconciliationResult) {
 					case added:
-						destinationSizeRepository.save(sizeMapResult.get(reconcilationHolder.name + "." + reconcilationHolder.language)).subscribe();
+						destinationSizeRepository.save(sizeMapResult.get(reconciliationHolder.name + "." + reconciliationHolder.language)).subscribe();
 						break;
 					case removed:
-						destinationSizeRepository.deleteById(reconcilationHolder.mainId).subscribe();
+						destinationSizeRepository.deleteById(reconciliationHolder.mainId).subscribe();
 						break;
 					default:
 						break;
 					}
 				}
 			} else if (optionID.equals(TomatoConstants.COLOR_PRODUCT_OPTION) && ! Utils.isEmptyMap(colorMapResult)) {
-				List<ReconcilationHolder> disColorListReconcilation =
+				List<ReconciliationHolder> disColorListReconciliation =
 						colorMapResult.values()
 						.stream()
-						.map(s -> new ReconcilationHolder(s.getId(), s.getName(), s.getLanguageId()))
+						.map(s -> new ReconciliationHolder(s.getId(), s.getName(), s.getLanguageId()))
 						.collect(Collectors.toList());
 
 				List<DestinationColor> mainColorList = destinationColorRepository.findAll().collectList().block();
 
-				List<ReconcilationHolder> mainColorListReconcilation =
+				List<ReconciliationHolder> mainColorListReconciliation =
 						mainColorList
 						.stream()
-						.map(s -> new ReconcilationHolder(s.getId(), s.getName(), s.getLanguageId()))
+						.map(s -> new ReconciliationHolder(s.getId(), s.getName(), s.getLanguageId()))
 						.collect(Collectors.toList());
 
-				List<ReconcilationHolder> reconcilationResult =
-						Reconcilation.compare(mainColorListReconcilation, disColorListReconcilation, Arrays.asList("name", "language"));
+				List<ReconciliationHolder> reconciliationResult =
+						Reconciliation.compare(mainColorListReconciliation, disColorListReconciliation, Arrays.asList("name", "language"));
 
-				for (ReconcilationHolder reconcilationHolder : reconcilationResult) {
-					switch (reconcilationHolder.reconcilationResult) {
+				for (ReconciliationHolder reconciliationHolder : reconciliationResult) {
+					switch (reconciliationHolder.reconciliationResult) {
 					case added:
-						destinationColorRepository.save(colorMapResult.get(reconcilationHolder.name + "." + reconcilationHolder.language)).subscribe();
+						destinationColorRepository.save(colorMapResult.get(reconciliationHolder.name + "." + reconciliationHolder.language)).subscribe();
 						break;
 					case removed:
-						destinationColorRepository.deleteById(reconcilationHolder.mainId).subscribe();
+						destinationColorRepository.deleteById(reconciliationHolder.mainId).subscribe();
 						break;
 					default:
 						break;
@@ -218,27 +218,27 @@ public class ProductOptionsServiceImpl implements ProductOptionsService {
 				.collect(Collectors.toMap(c -> c + "." + Language.en.name(),
 						c -> new SourceColor(sequenceRepositorys.getNextSequenceId(SOURCE_COLOR_SEQ_KEY), c, Language.en.name())));
 
-		List<ReconcilationHolder> disColorListReconcilation =
+		List<ReconciliationHolder> disColorListReconciliation =
 				sourceColorMap.values()
 				.stream()
-				.map(s -> new ReconcilationHolder(s.getId(), s.getName(), s.getLanguageId()))
+				.map(s -> new ReconciliationHolder(s.getId(), s.getName(), s.getLanguageId()))
 				.collect(Collectors.toList());
 
 		List<SourceColor> mainColorList = sourceColorRepository.findAll().collectList().block();
 
-		List<ReconcilationHolder> mainColorListReconcilation =
-				mainColorList.stream().map(s -> new ReconcilationHolder(s.getId(), s.getName(), s.getLanguageId())).collect(Collectors.toList());
+		List<ReconciliationHolder> mainColorListReconciliation =
+				mainColorList.stream().map(s -> new ReconciliationHolder(s.getId(), s.getName(), s.getLanguageId())).collect(Collectors.toList());
 
-		List<ReconcilationHolder> reconcilationResult =
-				Reconcilation.compare(mainColorListReconcilation, disColorListReconcilation, Arrays.asList("name", "language"));
+		List<ReconciliationHolder> reconciliationResult =
+				Reconciliation.compare(mainColorListReconciliation, disColorListReconciliation, Arrays.asList("name", "language"));
 
-		for (ReconcilationHolder reconcilationHolder : reconcilationResult) {
-			switch (reconcilationHolder.reconcilationResult) {
+		for (ReconciliationHolder reconciliationHolder : reconciliationResult) {
+			switch (reconciliationHolder.reconciliationResult) {
 			case added:
-				sourceColorRepository.save(sourceColorMap.get(reconcilationHolder.name + "." + reconcilationHolder.language)).subscribe();
+				sourceColorRepository.save(sourceColorMap.get(reconciliationHolder.name + "." + reconciliationHolder.language)).subscribe();
 				break;
 			case removed:
-				sourceColorRepository.deleteById(reconcilationHolder.mainId).subscribe();
+				sourceColorRepository.deleteById(reconciliationHolder.mainId).subscribe();
 				break;
 			default:
 				break;
@@ -253,27 +253,27 @@ public class ProductOptionsServiceImpl implements ProductOptionsService {
 				.collect(Collectors.toMap(s -> s + "." + Language.en.name(),
 						s -> new SourceSize(sequenceRepositorys.getNextSequenceId(SOURCE_SIZE_SEQ_KEY), s, Language.en.name())));
 
-		List<ReconcilationHolder> disSizeListReconcilation =
+		List<ReconciliationHolder> disSizeListReconciliation =
 				sourceSizeMap.values()
 				.stream()
-				.map(s -> new ReconcilationHolder(s.getId(), s.getName(), s.getLanguageId()))
+				.map(s -> new ReconciliationHolder(s.getId(), s.getName(), s.getLanguageId()))
 				.collect(Collectors.toList());
 
 		List<SourceSize> mainSizeList = sourceSizeRepository.findAll().collectList().block();
 
-		List<ReconcilationHolder> mainSizeListReconcilation =
-				mainSizeList.stream().map(s -> new ReconcilationHolder(s.getId(), s.getName(), s.getLanguageId())).collect(Collectors.toList());
+		List<ReconciliationHolder> mainSizeListReconciliation =
+				mainSizeList.stream().map(s -> new ReconciliationHolder(s.getId(), s.getName(), s.getLanguageId())).collect(Collectors.toList());
 
-		List<ReconcilationHolder> reconcilationResult =
-				Reconcilation.compare(mainSizeListReconcilation, disSizeListReconcilation, Arrays.asList("name", "language"));
+		List<ReconciliationHolder> reconciliationResult =
+				Reconciliation.compare(mainSizeListReconciliation, disSizeListReconciliation, Arrays.asList("name", "language"));
 
-		for (ReconcilationHolder reconcilationHolder : reconcilationResult) {
-			switch (reconcilationHolder.reconcilationResult) {
+		for (ReconciliationHolder reconciliationHolder : reconciliationResult) {
+			switch (reconciliationHolder.reconciliationResult) {
 			case added:
-				sourceSizeRepository.save(sourceSizeMap.get(reconcilationHolder.name + "." + reconcilationHolder.language)).subscribe();
+				sourceSizeRepository.save(sourceSizeMap.get(reconciliationHolder.name + "." + reconciliationHolder.language)).subscribe();
 				break;
 			case removed:
-				sourceSizeRepository.deleteById(reconcilationHolder.mainId).subscribe();
+				sourceSizeRepository.deleteById(reconciliationHolder.mainId).subscribe();
 				break;
 			default:
 				break;
