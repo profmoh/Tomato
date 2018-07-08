@@ -28,9 +28,9 @@ public interface ProductOptionsService {
 
 	public List<SourceSize> getSourceSizeList();
 
-	void saveSourceProductOptionColors(List<String> colorsList);
+	void saveSourceProductOptionColors(List<String> colorsList) throws IllegalArgumentException, IllegalAccessException, SecurityException, NoSuchFieldException ;
 
-	void saveSourceProductOptionSizes(List<String> sizesList);
+	void saveSourceProductOptionSizes(List<String> sizesList) throws IllegalArgumentException, IllegalAccessException, SecurityException, NoSuchFieldException ;
 
 	public Map<String, String> getSourceColorMap();
 

@@ -23,6 +23,7 @@ import org.xml.sax.SAXException;
 
 import com.datazord.api.reply.API_Reply;
 import com.datazord.constants.TomatoConstants;
+import com.datazord.dto.CompanyConfigurationDto;
 import com.datazord.enums.Language;
 import com.datazord.enums.MappingType;
 import com.datazord.exceptions.MissedMappingException;
@@ -37,12 +38,15 @@ import com.datazord.model.MappingResult;
 import com.datazord.model.destination.DestinationProduct;
 import com.datazord.model.source.SourceProduct;
 import com.datazord.service.CategoriesService;
+import com.datazord.service.CompanyConfigurationService;
 import com.datazord.service.MappingService;
 import com.datazord.service.ProductOptionsService;
 import com.datazord.service.ProductService;
 import com.datazord.utils.ApiUtils;
 import com.datazord.utils.FileUtils;
+import com.datazord.utils.ImageUtils;
 import com.datazord.utils.JsonUtils;
+import com.datazord.utils.UrlUtils;
 import com.datazord.utils.Utils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -66,6 +70,9 @@ public class TomatoServiceImpl {
 
 	@Autowired
 	private MappingService mappingService;
+
+	@Autowired
+	private CompanyConfigurationService companyConfigurationService;
 
 	@Value("${resource.url}")
 	private String baseUrl;
@@ -156,7 +163,7 @@ public class TomatoServiceImpl {
 		}
 	}
 
-	public List<String> saveSourceCategories() throws MissedMappingException {
+	public List<String> saveSourceCategories() throws MissedMappingException, IllegalArgumentException, IllegalAccessException, SecurityException, NoSuchFieldException {
 		logger.info("Getting Source Catigories ...");
 
 		DestinationProduct categoryDestinationPath = productService.getDestinationProductByName(TomatoConstants.DESTINATION_CATEGORY_JSON_PATH);
@@ -184,8 +191,6 @@ public class TomatoServiceImpl {
 			return null;
 		}
 
-// use the mapping to get the path or throw MissedMappingException
-// "#document :: DataTable :: diffgr:diffgram :: DocumentElement :: Items :: item_name"
 		Set<String> categoriesList = Utils.getDistinctFieldByFieldNameInJson(jsonObjectList, categorySource.getName());
 
 		if (!Utils.isEmptyCollection(categoriesList))
@@ -222,12 +227,14 @@ public class TomatoServiceImpl {
 			return null;
 		}
 
-// use the mapping to get the path or throw MissedMappingException
-// "#document :: DataTable :: diffgr:diffgram :: DocumentElement :: Items :: color_name"
 		Set<String> colorsList = Utils.getDistinctFieldByFieldNameInJson(jsonObjectList, colorSource.getName());
 
-		if (!Utils.isEmptyCollection(colorsList))
-			productOptionsService.saveSourceProductOptionColors(new ArrayList<>(colorsList));
+		if (! Utils.isEmptyCollection(colorsList))
+			try {
+				productOptionsService.saveSourceProductOptionColors(new ArrayList<>(colorsList));
+			} catch (IllegalArgumentException | IllegalAccessException | SecurityException | NoSuchFieldException e) {
+				e.printStackTrace();
+			}
 
 		return new ArrayList<>(colorsList);
 	}
@@ -260,12 +267,14 @@ public class TomatoServiceImpl {
 			return null;
 		}
 
-// use the mapping to get the path or throw MissedMappingException
-// "#document :: DataTable :: diffgr:diffgram :: DocumentElement :: Items :: SIZE_NAME"
 		Set<String> sizesList = Utils.getDistinctFieldByFieldNameInJson(jsonObjectList, sizeSource.getName());
 
-		if (!Utils.isEmptyCollection(sizesList))
-			productOptionsService.saveSourceProductOptionSizes(new ArrayList<>(sizesList));
+		if (! Utils.isEmptyCollection(sizesList))
+			try {
+				productOptionsService.saveSourceProductOptionSizes(new ArrayList<>(sizesList));
+			} catch (IllegalArgumentException | IllegalAccessException | SecurityException | NoSuchFieldException e) {
+				e.printStackTrace();
+			}
 
 		return new ArrayList<>(sizesList);
 	}
@@ -387,10 +396,60 @@ public class TomatoServiceImpl {
 				colorCounter++;
 			}
 
+			// handle language and download image
 			for(ProductDescription productDescription : product.getProduct_description())
 				if(StringUtils.isBlank(productDescription.getName()))
 					productDescription.setName(product.getModel());
 
+			CompanyConfigurationDto companyConfig = companyConfigurationService.getCompanyConfig();
+
+			if(companyConfig != null && StringUtils.isNotBlank(companyConfig.getImagePath())) {
+				if(StringUtils.isNotBlank(product.getImage()) && product.getImage().startsWith("http://")) {
+					String imageName = UrlUtils.getNameFromUrl(product.getImage());
+
+					try {
+						String imagePath = ImageUtils.downloadImage(product.getImage(), imageName, companyConfig.getImagePath());
+						product.setImage(imagePath);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+
+				List<String> otherImagesList = new ArrayList<>();
+
+				for(String imageUrl : product.getOther_images()) {
+					if(StringUtils.isBlank(product.getImage()) || ! product.getImage().startsWith("http://"))
+						continue;
+
+					String imageName = UrlUtils.getNameFromUrl(imageUrl);
+
+					try {
+						String imagePath = ImageUtils.downloadImage(imageUrl, imageName, companyConfig.getImagePath());
+						otherImagesList.add(imagePath);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+
+				product.setOther_images(otherImagesList);
+
+				for(productCustomOption productCustomOption : product.getProduct_custom_option()) {
+					String imageUrl = productCustomOption.getImage();
+
+					if(StringUtils.isBlank(imageUrl) || ! imageUrl.startsWith("http://"))
+						continue;
+
+					String imageName = UrlUtils.getNameFromUrl(imageUrl);
+
+					try {
+						String imagePath = ImageUtils.downloadImage(imageUrl, imageName, companyConfig.getImagePath());
+						productCustomOption.setImage(imagePath);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+			
 			resultedProductMap.put(destinationCategoryFromMap, product);
 		}
 	

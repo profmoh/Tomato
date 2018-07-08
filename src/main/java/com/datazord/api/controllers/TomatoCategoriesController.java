@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.datazord.api.service.TomatoServiceImpl;
+import com.datazord.exceptions.MissedMappingException;
 import com.datazord.json.tomato.pojo.categories.Category;
 import com.datazord.service.CategoriesService;
 import com.datazord.utils.Utils;
@@ -28,14 +29,24 @@ public class TomatoCategoriesController {
 		List<Category> categories = apiService.findCategories();
 
 		if (!Utils.isEmptyCollection(categories))
-			categoriesService.saveDestinationCategories(categories);
+			try {
+				categoriesService.saveDestinationCategories(categories);
+			} catch (IllegalArgumentException | IllegalAccessException | SecurityException | NoSuchFieldException e) {
+				e.printStackTrace();
+				return "Failed";
+			}
 
 		return "Success";
 	}
 
 	@GetMapping("/Source")
 	public String saveSourceCategories(Model model) {
-		apiService.saveSourceCategories();
+		try {
+			apiService.saveSourceCategories();
+		} catch (MissedMappingException | IllegalArgumentException | IllegalAccessException | SecurityException | NoSuchFieldException e) {
+			e.printStackTrace();
+			return "Failed";
+		}
 
 		return "Success";
 	}

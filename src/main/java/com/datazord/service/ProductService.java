@@ -18,7 +18,7 @@ public interface ProductService {
 
 	public List<SourceProduct> getSourceProductList();
 
-	void saveSourceProductPath();
+	void saveSourceProductPath() throws IllegalArgumentException, IllegalAccessException, SecurityException, NoSuchFieldException;
 
 	public Map<String, String> getSourceProductPathMap();
 

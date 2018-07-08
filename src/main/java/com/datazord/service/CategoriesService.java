@@ -13,13 +13,13 @@ public interface CategoriesService extends BaseService<DestinationCategories> {
 
 	static final String SOURCE_CATEGORIES_SEQ_KEY = "source_categories_seq";
 
-	void saveDestinationCategories(List<Category> categories);
+	void saveDestinationCategories(List<Category> categories) throws IllegalArgumentException, IllegalAccessException, SecurityException, NoSuchFieldException;
 
 	List<DestinationCategories> getDestinationCategoryList();
 
 	List<SourceCategories> getSourceCategoryList();
 
-	void saveSourceCategories(List<String> categoriesList);
+	void saveSourceCategories(List<String> categoriesList) throws IllegalArgumentException, IllegalAccessException, SecurityException, NoSuchFieldException;
 
 	public Map<String, String> getSourceCategoriesMap();
 

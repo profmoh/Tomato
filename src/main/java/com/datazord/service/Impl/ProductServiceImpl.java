@@ -3,6 +3,7 @@ package com.datazord.service.Impl;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Component;
 import org.xml.sax.SAXException;
 
 import com.datazord.constants.TomatoConstants;
+import com.datazord.dto.ReconciliationHolder;
 import com.datazord.json.tomato.pojo.product.Child;
 import com.datazord.json.tomato.pojo.product.Product;
 import com.datazord.json.tomato.pojo.product.ProductDescription;
@@ -28,6 +30,7 @@ import com.datazord.repositories.SequenceRepository;
 import com.datazord.repositories.SourceProductRepository;
 import com.datazord.service.ProductService;
 import com.datazord.utils.FileUtils;
+import com.datazord.utils.Reconciliation;
 import com.datazord.utils.Utils;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -113,15 +116,31 @@ public class ProductServiceImpl implements ProductService {
 		try {
 			List<String> productParmaeterPath = getParamterPathFromObject();
 
-			DestinationProduct destinationProduct;
+			List<ReconciliationHolder> disProductListReconciliation =
+					productParmaeterPath
+					.stream()
+					.map(p -> new ReconciliationHolder(sequenceRepositorys.getNextSequenceId(DESTINATION_PRODUCT_SEQ_KEY), p))
+					.collect(Collectors.toList());
 
-			for (String param : productParmaeterPath) {
-				destinationProduct = new DestinationProduct();
+			List<DestinationProduct> mainProductList = destinationProductRepository.findAll().collectList().block();
 
-				destinationProduct.setName(param);
-				destinationProduct.setId(sequenceRepositorys.getNextSequenceId(DESTINATION_PRODUCT_SEQ_KEY));
+			List<ReconciliationHolder> mainProductListReconciliation =
+					mainProductList.stream().map(s -> new ReconciliationHolder(s.getId(), s.getName())).collect(Collectors.toList());
 
-				destinationProductRepository.save(destinationProduct).subscribe();
+			List<ReconciliationHolder> reconciliationResult =
+					Reconciliation.compare(mainProductListReconciliation, disProductListReconciliation, Arrays.asList("name"));
+
+			for (ReconciliationHolder reconciliationHolder : reconciliationResult) {
+				switch (reconciliationHolder.reconciliationResult) {
+				case added:
+					destinationProductRepository.save(new DestinationProduct(reconciliationHolder.id, reconciliationHolder.name)).subscribe();
+					break;
+				case removed:
+					destinationProductRepository.deleteById(reconciliationHolder.mainId).subscribe();
+					break;
+				default:
+					break;
+				}
 			}
 		} catch (Exception e) {
 			logger.error("", e);
@@ -178,7 +197,7 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	public void saveSourceProductPath() {
+	public void saveSourceProductPath() throws IllegalArgumentException, IllegalAccessException, SecurityException, NoSuchFieldException {
 		logger.info("calling Source product option colors");
 
 		List<String> xpathList = null;
@@ -190,13 +209,32 @@ public class ProductServiceImpl implements ProductService {
 			return;
 		}
 
-		List<SourceProduct> sourceProductsList = xpathList
+		List<ReconciliationHolder> disProductListReconciliation =
+				xpathList
 				.stream()
-				.map(product -> new SourceProduct(sequenceRepositorys.getNextSequenceId(SOURCE_PRODUCT_PATH_SEQ_KEY), product))
+				.map(p -> new ReconciliationHolder(sequenceRepositorys.getNextSequenceId(SOURCE_PRODUCT_PATH_SEQ_KEY), p))
 				.collect(Collectors.toList());
 
-		sourceProductRepository.deleteAll().subscribe();
-		sourceProductRepository.saveAll(sourceProductsList).subscribe();
+		List<SourceProduct> mainProductList = sourceProductRepository.findAll().collectList().block();
+
+		List<ReconciliationHolder> mainProductListReconciliation =
+				mainProductList.stream().map(s -> new ReconciliationHolder(s.getId(), s.getName())).collect(Collectors.toList());
+
+		List<ReconciliationHolder> reconciliationResult =
+				Reconciliation.compare(mainProductListReconciliation, disProductListReconciliation, Arrays.asList("name"));
+
+		for (ReconciliationHolder reconciliationHolder : reconciliationResult) {
+			switch (reconciliationHolder.reconciliationResult) {
+			case added:
+				sourceProductRepository.save(new SourceProduct(reconciliationHolder.id, reconciliationHolder.name)).subscribe();
+				break;
+			case removed:
+				sourceProductRepository.deleteById(reconciliationHolder.mainId).subscribe();
+				break;
+			default:
+				break;
+			}
+		}
 	}
 
 	@Override
