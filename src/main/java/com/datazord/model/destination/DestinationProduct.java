@@ -21,7 +21,6 @@ import lombok.ToString;
 public class DestinationProduct extends BaseModel {
 
 	private String id;
-
 	private String name;
 
 }

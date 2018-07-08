@@ -1,6 +1,8 @@
 package com.datazord.service.Impl;
 
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -11,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
+import com.datazord.dto.ReconcilationHolder;
 import com.datazord.enums.Language;
 import com.datazord.json.tomato.pojo.categories.Category;
 import com.datazord.model.destination.DestinationCategories;
@@ -19,6 +22,7 @@ import com.datazord.repositories.DestinationCategoriesRepository;
 import com.datazord.repositories.SequenceRepository;
 import com.datazord.repositories.SourceCategoriesRepository;
 import com.datazord.service.CategoriesService;
+import com.datazord.utils.Reconcilation;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -92,17 +96,47 @@ public class CategoriesServiceImpl implements CategoriesService {
 	}
 
 	@Override
-	public void saveDestinationCategories(List<Category> categories) {
-		DestinationCategories destinationCategory;
+	public void saveDestinationCategories(List<Category> categories) throws IllegalArgumentException, IllegalAccessException, SecurityException, NoSuchFieldException {
+		Map<String, DestinationCategories> categoryMapResult = new HashMap<>();
 
 		for (Category category : categories) {
-			destinationCategory = new DestinationCategories();
+			DestinationCategories destinationCategory = new DestinationCategories();
 
 			destinationCategory.setName(category.getName());
 			destinationCategory.setLanguageId(Language.valueOf(Integer.parseInt(category.getLanguageId())).name());
 			destinationCategory.setId(sequenceRepositorys.getNextSequenceId(TOMATO_CATEGORIES_SEQ_KEY));
 
-			destinationCategoriesRepository.save(destinationCategory).subscribe();
+			categoryMapResult.put(destinationCategory.getName() + "." + destinationCategory.getLanguageId(), destinationCategory);
+		}
+
+		List<ReconcilationHolder> disSizeListReconcilation =
+				categoryMapResult.values()
+				.stream()
+				.map(p -> new ReconcilationHolder(p.getId(), p.getName(), p.getLanguageId()))
+				.collect(Collectors.toList());
+
+		List<DestinationCategories> mainCategoryList = destinationCategoriesRepository.findAll().collectList().block();
+
+		List<ReconcilationHolder> mainCategoryListReconcilation =
+				mainCategoryList
+				.stream()
+				.map(c -> new ReconcilationHolder(c.getId(), c.getName(), c.getLanguageId()))
+				.collect(Collectors.toList());
+
+		List<ReconcilationHolder> reconcilationResult =
+				Reconcilation.compare(mainCategoryListReconcilation, disSizeListReconcilation, Arrays.asList("name", "language"));
+
+		for (ReconcilationHolder reconcilationHolder : reconcilationResult) {
+			switch (reconcilationHolder.reconcilationResult) {
+			case added:
+				destinationCategoriesRepository.save(categoryMapResult.get(reconcilationHolder.name + "." + reconcilationHolder.language)).subscribe();
+				break;
+			case removed:
+				destinationCategoriesRepository.deleteById(reconcilationHolder.mainId).subscribe();
+				break;
+			default:
+				break;
+			}
 		}
 	}
 
@@ -135,14 +169,38 @@ public class CategoriesServiceImpl implements CategoriesService {
 	}
 
 	@Override
-	public void saveSourceCategories(List<String> categoriesList) {
-		List<SourceCategories> sourceCategoriesList = categoriesList
+	public void saveSourceCategories(List<String> categoriesList) throws IllegalArgumentException, IllegalAccessException, SecurityException, NoSuchFieldException {
+		Map<String, SourceCategories> sourceCategoryMap = categoriesList
 				.stream()
-				.map(category -> new SourceCategories(sequenceRepositorys.getNextSequenceId(SOURCE_CATEGORIES_SEQ_KEY), category, "1"))
+				.collect(Collectors.toMap(c -> c + "." + Language.en.name(),
+						c -> new SourceCategories(sequenceRepositorys.getNextSequenceId(SOURCE_CATEGORIES_SEQ_KEY), c, Language.en.name())));
+
+		List<ReconcilationHolder> disCategoryListReconcilation =
+				sourceCategoryMap.values()
+				.stream()
+				.map(s -> new ReconcilationHolder(s.getId(), s.getName(), s.getLanguageId()))
 				.collect(Collectors.toList());
 
-		sourceCategoriesRepository.deleteAll().subscribe();
-		sourceCategoriesRepository.saveAll(sourceCategoriesList).subscribe();
+		List<SourceCategories> mainCategoryList = sourceCategoriesRepository.findAll().collectList().block();
+
+		List<ReconcilationHolder> mainCategoryListReconcilation =
+				mainCategoryList.stream().map(s -> new ReconcilationHolder(s.getId(), s.getName(), s.getLanguageId())).collect(Collectors.toList());
+
+		List<ReconcilationHolder> reconcilationResult =
+				Reconcilation.compare(mainCategoryListReconcilation, disCategoryListReconcilation, Arrays.asList("name", "language"));
+
+		for (ReconcilationHolder reconcilationHolder : reconcilationResult) {
+			switch (reconcilationHolder.reconcilationResult) {
+			case added:
+				sourceCategoriesRepository.save(sourceCategoryMap.get(reconcilationHolder.name + "." + reconcilationHolder.language)).subscribe();
+				break;
+			case removed:
+				sourceCategoriesRepository.deleteById(reconcilationHolder.mainId).subscribe();
+				break;
+			default:
+				break;
+			}
+		}
 	}
 
 	@Override

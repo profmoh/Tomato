@@ -1,5 +1,7 @@
 package com.datazord.service.Impl;
 
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Component;
 
 import com.datazord.api.service.TomatoServiceImpl;
 import com.datazord.constants.TomatoConstants;
+import com.datazord.dto.ReconcilationHolder;
 import com.datazord.enums.Language;
 import com.datazord.json.tomato.pojo.ProductOptions.OptionValue;
 import com.datazord.json.tomato.pojo.ProductOptions.OptionValueDescription;
@@ -25,6 +28,8 @@ import com.datazord.repositories.SequenceRepository;
 import com.datazord.repositories.SourceColorRepository;
 import com.datazord.repositories.SourceSizeRepository;
 import com.datazord.service.ProductOptionsService;
+import com.datazord.utils.Reconcilation;
+import com.datazord.utils.Utils;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -54,39 +59,100 @@ public class ProductOptionsServiceImpl implements ProductOptionsService {
 
 	@Override
 	public void saveDestinationProductOptions(Integer optionID) {
-		DestinationColor color;
-		DestinationSize size;
+		Map<String, DestinationSize> sizeMapResult = new HashMap<>();
+		Map<String, DestinationColor> colorMapResult = new HashMap<>();
+
 		try {
 			ProductOptions productOptions = findProductOptionsValue(optionID);
-			logger.info("response from findProductOptionsValue >>Success=" + productOptions.getSuccess() + " >> error="
-					+ productOptions.getError());
+			logger.info("response from findProductOptionsValue >>Success=" + productOptions.getSuccess() + " >> error=" + productOptions.getError());
+
 			if (productOptions.getSuccess() == 1) {
 				for (OptionValue optionValue : productOptions.getData().getOption_values()) {
-					for (Map.Entry<String, OptionValueDescription> entry : optionValue.getOptionValueDescription()
-							.entrySet()) {
+					for (Map.Entry<String, OptionValueDescription> entry : optionValue.getOptionValueDescription().entrySet()) {
 						if (productOptions.getData().getOption_id().equals(TomatoConstants.COLOR_PRODUCT_OPTION)) {
-							color = new DestinationColor();
+							DestinationColor color = new DestinationColor();
+
 							color.setName(entry.getValue().getName());
-							color.setLanguageId(
-									Language.valueOf(Integer.parseInt(entry.getValue().getLanguage_id())).name());
+							color.setLanguageId(Language.valueOf(Integer.parseInt(entry.getValue().getLanguage_id())).name());
 							color.setId(sequenceRepositorys.getNextSequenceId(DESTINATION_COLOR_SEQ_KEY));
 
-							destinationColorRepository.save(color).subscribe();
-						} else if (productOptions.getData().getOption_id()
-								.equals(TomatoConstants.SIZE_PRODUCT_OPTION)) {
-							size = new DestinationSize();
+							colorMapResult.put(color.getName() + "." + color.getLanguageId(), color);
+						} else if (productOptions.getData().getOption_id().equals(TomatoConstants.SIZE_PRODUCT_OPTION)) {
+							DestinationSize size = new DestinationSize();
+
 							size.setName(entry.getValue().getName());
-							size.setLanguageId(
-									Language.valueOf(Integer.parseInt(entry.getValue().getLanguage_id())).name());
+							size.setLanguageId(Language.valueOf(Integer.parseInt(entry.getValue().getLanguage_id())).name());
 							size.setId(sequenceRepositorys.getNextSequenceId(DESTINATION_SIZE_SEQ_KEY));
 
-							destinationSizeRepository.save(size).subscribe();
+							sizeMapResult.put(size.getName() + "." + size.getLanguageId(), size);
 						}
 					}
 				}
 			}
-		}catch (Exception e) {
-			logger.error("",e);
+
+			if (optionID.equals(TomatoConstants.SIZE_PRODUCT_OPTION) && ! Utils.isEmptyMap(sizeMapResult)) {
+				List<ReconcilationHolder> disSizeListReconcilation =
+						sizeMapResult.values()
+						.stream()
+						.map(s -> new ReconcilationHolder(s.getId(), s.getName(), s.getLanguageId()))
+						.collect(Collectors.toList());
+
+				List<DestinationSize> mainSizeList = destinationSizeRepository.findAll().collectList().block();
+
+				List<ReconcilationHolder> mainSizeListReconcilation =
+						mainSizeList
+						.stream()
+						.map(s -> new ReconcilationHolder(s.getId(), s.getName(), s.getLanguageId()))
+						.collect(Collectors.toList());
+
+				List<ReconcilationHolder> reconcilationResult =
+						Reconcilation.compare(mainSizeListReconcilation, disSizeListReconcilation, Arrays.asList("name", "language"));
+
+				for (ReconcilationHolder reconcilationHolder : reconcilationResult) {
+					switch (reconcilationHolder.reconcilationResult) {
+					case added:
+						destinationSizeRepository.save(sizeMapResult.get(reconcilationHolder.name + "." + reconcilationHolder.language)).subscribe();
+						break;
+					case removed:
+						destinationSizeRepository.deleteById(reconcilationHolder.mainId).subscribe();
+						break;
+					default:
+						break;
+					}
+				}
+			} else if (optionID.equals(TomatoConstants.COLOR_PRODUCT_OPTION) && ! Utils.isEmptyMap(colorMapResult)) {
+				List<ReconcilationHolder> disColorListReconcilation =
+						colorMapResult.values()
+						.stream()
+						.map(s -> new ReconcilationHolder(s.getId(), s.getName(), s.getLanguageId()))
+						.collect(Collectors.toList());
+
+				List<DestinationColor> mainColorList = destinationColorRepository.findAll().collectList().block();
+
+				List<ReconcilationHolder> mainColorListReconcilation =
+						mainColorList
+						.stream()
+						.map(s -> new ReconcilationHolder(s.getId(), s.getName(), s.getLanguageId()))
+						.collect(Collectors.toList());
+
+				List<ReconcilationHolder> reconcilationResult =
+						Reconcilation.compare(mainColorListReconcilation, disColorListReconcilation, Arrays.asList("name", "language"));
+
+				for (ReconcilationHolder reconcilationHolder : reconcilationResult) {
+					switch (reconcilationHolder.reconcilationResult) {
+					case added:
+						destinationColorRepository.save(colorMapResult.get(reconcilationHolder.name + "." + reconcilationHolder.language)).subscribe();
+						break;
+					case removed:
+						destinationColorRepository.deleteById(reconcilationHolder.mainId).subscribe();
+						break;
+					default:
+						break;
+					}
+				}
+			}
+		} catch (Exception e) {
+			logger.error("", e);
 		}
 	}
 		
@@ -146,25 +212,73 @@ public class ProductOptionsServiceImpl implements ProductOptionsService {
 	}
 
 	@Override
-	public void saveSourceProductOptionColors(List<String> colorsList) {
-		List<SourceColor> sourceColorsList = colorsList
+	public void saveSourceProductOptionColors(List<String> colorsList) throws IllegalArgumentException, IllegalAccessException, SecurityException, NoSuchFieldException {
+		Map<String, SourceColor> sourceColorMap = colorsList
 				.stream()
-				.map(color -> new SourceColor(sequenceRepositorys.getNextSequenceId(SOURCE_COLOR_SEQ_KEY), color, "1"))
-				.collect(Collectors.toList());	
-	
-		sourceColorRepository.deleteAll().subscribe();
-		sourceColorRepository.saveAll(sourceColorsList).subscribe();
+				.collect(Collectors.toMap(c -> c + "." + Language.en.name(),
+						c -> new SourceColor(sequenceRepositorys.getNextSequenceId(SOURCE_COLOR_SEQ_KEY), c, Language.en.name())));
+
+		List<ReconcilationHolder> disColorListReconcilation =
+				sourceColorMap.values()
+				.stream()
+				.map(s -> new ReconcilationHolder(s.getId(), s.getName(), s.getLanguageId()))
+				.collect(Collectors.toList());
+
+		List<SourceColor> mainColorList = sourceColorRepository.findAll().collectList().block();
+
+		List<ReconcilationHolder> mainColorListReconcilation =
+				mainColorList.stream().map(s -> new ReconcilationHolder(s.getId(), s.getName(), s.getLanguageId())).collect(Collectors.toList());
+
+		List<ReconcilationHolder> reconcilationResult =
+				Reconcilation.compare(mainColorListReconcilation, disColorListReconcilation, Arrays.asList("name", "language"));
+
+		for (ReconcilationHolder reconcilationHolder : reconcilationResult) {
+			switch (reconcilationHolder.reconcilationResult) {
+			case added:
+				sourceColorRepository.save(sourceColorMap.get(reconcilationHolder.name + "." + reconcilationHolder.language)).subscribe();
+				break;
+			case removed:
+				sourceColorRepository.deleteById(reconcilationHolder.mainId).subscribe();
+				break;
+			default:
+				break;
+			}
+		}
 	}
 
 	@Override
-	public void saveSourceProductOptionSizes(List<String> sizesList) {
-		List<SourceSize> sourceSizesList = sizesList
+	public void saveSourceProductOptionSizes(List<String> sizesList) throws IllegalArgumentException, IllegalAccessException, SecurityException, NoSuchFieldException  {
+		Map<String, SourceSize> sourceSizeMap = sizesList
 				.stream()
-				.map(size -> new SourceSize(sequenceRepositorys.getNextSequenceId(SOURCE_SIZE_SEQ_KEY), size, "1"))
+				.collect(Collectors.toMap(s -> s + "." + Language.en.name(),
+						s -> new SourceSize(sequenceRepositorys.getNextSequenceId(SOURCE_SIZE_SEQ_KEY), s, Language.en.name())));
+
+		List<ReconcilationHolder> disSizeListReconcilation =
+				sourceSizeMap.values()
+				.stream()
+				.map(s -> new ReconcilationHolder(s.getId(), s.getName(), s.getLanguageId()))
 				.collect(Collectors.toList());
 
-		sourceSizeRepository.deleteAll().subscribe();
-		sourceSizeRepository.saveAll(sourceSizesList).subscribe();
+		List<SourceSize> mainSizeList = sourceSizeRepository.findAll().collectList().block();
+
+		List<ReconcilationHolder> mainSizeListReconcilation =
+				mainSizeList.stream().map(s -> new ReconcilationHolder(s.getId(), s.getName(), s.getLanguageId())).collect(Collectors.toList());
+
+		List<ReconcilationHolder> reconcilationResult =
+				Reconcilation.compare(mainSizeListReconcilation, disSizeListReconcilation, Arrays.asList("name", "language"));
+
+		for (ReconcilationHolder reconcilationHolder : reconcilationResult) {
+			switch (reconcilationHolder.reconcilationResult) {
+			case added:
+				sourceSizeRepository.save(sourceSizeMap.get(reconcilationHolder.name + "." + reconcilationHolder.language)).subscribe();
+				break;
+			case removed:
+				sourceSizeRepository.deleteById(reconcilationHolder.mainId).subscribe();
+				break;
+			default:
+				break;
+			}
+		}
 	}
 
 	private ProductOptions findProductOptionsValue(Integer optionID){
@@ -239,7 +353,6 @@ public class ProductOptionsServiceImpl implements ProductOptionsService {
 		return null;
 	}
 
-
 	@Override
 	public DestinationColor getDestinationColorById(String id) {
 		try {
@@ -252,7 +365,6 @@ public class ProductOptionsServiceImpl implements ProductOptionsService {
 		}
 		return null;
 	}
-
 
 	@Override
 	public DestinationSize getDestinationSizeById(String id) {

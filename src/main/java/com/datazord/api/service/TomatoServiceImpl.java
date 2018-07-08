@@ -156,7 +156,7 @@ public class TomatoServiceImpl {
 		}
 	}
 
-	public List<String> saveSourceCategories() throws MissedMappingException {
+	public List<String> saveSourceCategories() throws MissedMappingException, IllegalArgumentException, IllegalAccessException, SecurityException, NoSuchFieldException {
 		logger.info("Getting Source Catigories ...");
 
 		DestinationProduct categoryDestinationPath = productService.getDestinationProductByName(TomatoConstants.DESTINATION_CATEGORY_JSON_PATH);
@@ -184,8 +184,6 @@ public class TomatoServiceImpl {
 			return null;
 		}
 
-// use the mapping to get the path or throw MissedMappingException
-// "#document :: DataTable :: diffgr:diffgram :: DocumentElement :: Items :: item_name"
 		Set<String> categoriesList = Utils.getDistinctFieldByFieldNameInJson(jsonObjectList, categorySource.getName());
 
 		if (!Utils.isEmptyCollection(categoriesList))
@@ -222,12 +220,14 @@ public class TomatoServiceImpl {
 			return null;
 		}
 
-// use the mapping to get the path or throw MissedMappingException
-// "#document :: DataTable :: diffgr:diffgram :: DocumentElement :: Items :: color_name"
 		Set<String> colorsList = Utils.getDistinctFieldByFieldNameInJson(jsonObjectList, colorSource.getName());
 
-		if (!Utils.isEmptyCollection(colorsList))
-			productOptionsService.saveSourceProductOptionColors(new ArrayList<>(colorsList));
+		if (! Utils.isEmptyCollection(colorsList))
+			try {
+				productOptionsService.saveSourceProductOptionColors(new ArrayList<>(colorsList));
+			} catch (IllegalArgumentException | IllegalAccessException | SecurityException | NoSuchFieldException e) {
+				e.printStackTrace();
+			}
 
 		return new ArrayList<>(colorsList);
 	}
@@ -260,12 +260,14 @@ public class TomatoServiceImpl {
 			return null;
 		}
 
-// use the mapping to get the path or throw MissedMappingException
-// "#document :: DataTable :: diffgr:diffgram :: DocumentElement :: Items :: SIZE_NAME"
 		Set<String> sizesList = Utils.getDistinctFieldByFieldNameInJson(jsonObjectList, sizeSource.getName());
 
-		if (!Utils.isEmptyCollection(sizesList))
-			productOptionsService.saveSourceProductOptionSizes(new ArrayList<>(sizesList));
+		if (! Utils.isEmptyCollection(sizesList))
+			try {
+				productOptionsService.saveSourceProductOptionSizes(new ArrayList<>(sizesList));
+			} catch (IllegalArgumentException | IllegalAccessException | SecurityException | NoSuchFieldException e) {
+				e.printStackTrace();
+			}
 
 		return new ArrayList<>(sizesList);
 	}
