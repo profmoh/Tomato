@@ -1,7 +1,10 @@
 package com.datazord.utils;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Collection;
+import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -60,7 +63,7 @@ public class JsonUtils {
 		return currentObject.get(propertyName).getAsString().trim(); //.addProperty(propertyName, textContent)
 	}
 
-	public static void setObjectByValueAndPath(Product product, String path, Object value) {
+	public static void setObjectByValueAndPath(Product product, String path, Object value) throws NoSuchMethodException, InvocationTargetException {
 		if(StringUtils.isAllBlank(path) || value == null || product == null)
 			return;
 
@@ -74,7 +77,11 @@ public class JsonUtils {
 				Field field = objClass.getDeclaredField(pathArray[i]);
 
 				if(i == pathArray.length - 1) {
-					field.set(currentClass, value);
+					if(field.getType().isAssignableFrom(List.class)) {
+						Method add = List.class.getDeclaredMethod("add", Object.class);
+						add.invoke(((List<?>) field.get(currentClass)), value);
+					} else
+						field.set(currentClass, value);
 					break;
 				} else
 					currentClass = field.get(currentClass);

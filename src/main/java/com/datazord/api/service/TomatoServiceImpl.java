@@ -1,6 +1,7 @@
 package com.datazord.api.service;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -387,7 +388,11 @@ public class TomatoServiceImpl {
 							continue;
 						}
 
-						JsonUtils.setObjectByValueAndPath(product, destinationPath, value);
+						try {
+							JsonUtils.setObjectByValueAndPath(product, destinationPath, value);
+						} catch (NoSuchMethodException | InvocationTargetException e) {
+							e.printStackTrace();
+						}
 					}
 
 					sizeCounter++;
