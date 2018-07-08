@@ -378,25 +378,19 @@ public class MappingServiceImpl implements MappingService {
 		try {
 			switch (MappingType) {
 			case productPath:
-				productService.saveSourceProductPath();
 				productService.saveDestinationProduct();
 				break;
 			case category:
-				apiService.saveSourceCategories();
 				List<Category> categories = apiService.findCategories();
 				categoriesService.saveDestinationCategories(categories);
 				break;
 			case color:
-				apiService.saveSourceProductOptionColors();
 				productOptionsService.saveDestinationProductOptions(TomatoConstants.COLOR_PRODUCT_OPTION);
 				break;
 			case size:
-				apiService.saveSourceProductOptionSizes();
 				productOptionsService.saveDestinationProductOptions(TomatoConstants.SIZE_PRODUCT_OPTION);
 				break;
 			}
-		}catch(MissedMappingException me){
-			throw new MissedMappingException(me.getErrMsg());
 		}catch (Exception e) {
 			logger.error("", e);
 		}
