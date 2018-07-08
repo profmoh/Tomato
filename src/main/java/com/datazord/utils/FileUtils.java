@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -34,7 +35,7 @@ public class FileUtils {
 		List<JsonObject> jsonObjectList = null;
 
 		try {
-			jsonObjectList = readJsonObjectsFormXML("C:\\Users\\Mohamed\\Desktop\\Items.xml");
+			jsonObjectList = readJsonObjectsFormXML("C:\\Users\\Mohamed\\Desktop\\Items.xml", true);
 		} catch (SAXException | IOException | ParserConfigurationException | XPathExpressionException e) {
 			e.printStackTrace();
 			return;
@@ -56,9 +57,9 @@ public class FileUtils {
 			System.out.println("\n\n" + new GsonBuilder().setPrettyPrinting().create().toJson(jsonObject));
 	}
 
-	public static List<JsonObject> readJsonObjectsFormXML(String path)
+	public static List<JsonObject> readJsonObjectsFormXML(String path, boolean isUrl)
 			throws FileNotFoundException, SAXException, IOException, ParserConfigurationException, XPathExpressionException {
-		Document doc = readXMLfileToDocument(path);
+		Document doc = readXMLfileToDocument(path, isUrl);
 
 		List<String> xpathList = extractXPathList(doc);
 		xpathList.forEach(System.out::println);
@@ -68,22 +69,30 @@ public class FileUtils {
 		return extractNodeMapByPathList(doc, xpathList);
 	}
 
-	public static Document readXMLfileToDocument(String path)
+	public static Document readXMLfileToDocument(String path, boolean isUrl)
 			throws FileNotFoundException, SAXException, IOException, ParserConfigurationException {
 
 		if (StringUtils.isBlank(path))
 			return null;
 
-		File file = new File(path);
+		Document doc;
+		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 
-		if (!file.exists())
-			return null;
+		if(isUrl) {
+			factory.setNamespaceAware(true);
 
-		DocumentBuilderFactory dbfac = DocumentBuilderFactory.newInstance();
-		dbfac.setValidating(false);
-
-		DocumentBuilder docBuilder = dbfac.newDocumentBuilder();
-		Document doc = docBuilder.parse(new FileInputStream(file));
+			doc = factory.newDocumentBuilder().parse(new URL(path).openStream());
+		} else {
+			File file = new File(path);
+			
+			if (!file.exists())
+				return null;
+			
+			factory.setValidating(false);
+			
+			DocumentBuilder docBuilder = factory.newDocumentBuilder();
+			doc = docBuilder.parse(new FileInputStream(file));
+		}
 
 		return doc;
 	}

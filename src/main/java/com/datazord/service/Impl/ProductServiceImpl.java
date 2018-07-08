@@ -17,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.xml.sax.SAXException;
 
-import com.datazord.constants.TomatoConstants;
 import com.datazord.dto.ReconciliationHolder;
 import com.datazord.json.tomato.pojo.product.Child;
 import com.datazord.json.tomato.pojo.product.Product;
@@ -197,13 +196,13 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	public void saveSourceProductPath() throws IllegalArgumentException, IllegalAccessException, SecurityException, NoSuchFieldException {
+	public void saveSourceProductPath(String inputPath, boolean isUrl) throws IllegalArgumentException, IllegalAccessException, SecurityException, NoSuchFieldException {
 		logger.info("calling Source product option colors");
 
 		List<String> xpathList = null;
 
 		try {
-			xpathList = FileUtils.extractXPathList(FileUtils.readXMLfileToDocument(TomatoConstants.xmlFilePath));
+			xpathList = FileUtils.extractXPathList(FileUtils.readXMLfileToDocument(inputPath, isUrl));
 		} catch (SAXException | IOException | ParserConfigurationException | XPathExpressionException e) {
 			e.printStackTrace();
 			return;

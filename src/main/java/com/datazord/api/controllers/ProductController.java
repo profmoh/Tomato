@@ -32,12 +32,12 @@ public class ProductController {
 	private String getSourceProductParamterPath() {
 		logger.info(">>> Start inserting Source Product Paramter Path into DB ");
 
-		try {
-			productService.saveSourceProductPath();
-		} catch (IllegalArgumentException | IllegalAccessException | SecurityException | NoSuchFieldException e) {
-			e.printStackTrace();
-			return "Failed";
-		}
+//		try {
+//			productService.saveSourceProductPath();
+//		} catch (IllegalArgumentException | IllegalAccessException | SecurityException | NoSuchFieldException e) {
+//			e.printStackTrace();
+//			return "Failed";
+//		}
 		
 		return "Success";
 

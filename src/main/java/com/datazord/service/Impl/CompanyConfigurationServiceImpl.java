@@ -57,7 +57,7 @@ public class CompanyConfigurationServiceImpl implements CompanyConfigurationServ
 	@Override
 	public void addProduct(CompanyConfigurationDto companyConfigurationDto) {
 		try {
-			apiService.saveProductListToAPI();
+			apiService.saveProductListToAPI(companyConfigurationDto.getFilePath(), companyConfigurationDto.getXmlPath());
 		}catch(MissedMappingException me){
 			throw new MissedMappingException(me.getErrMsg());
 		} catch (Exception e) {

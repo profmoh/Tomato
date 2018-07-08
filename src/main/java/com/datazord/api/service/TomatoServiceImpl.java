@@ -164,7 +164,7 @@ public class TomatoServiceImpl {
 		}
 	}
 
-	public List<String> saveSourceCategories() throws MissedMappingException, IllegalArgumentException, IllegalAccessException, SecurityException, NoSuchFieldException {
+	public List<String> saveSourceCategories(String inputPath, boolean isUrl) throws MissedMappingException, IllegalArgumentException, IllegalAccessException, SecurityException, NoSuchFieldException {
 		logger.info("Getting Source Catigories ...");
 
 		DestinationProduct categoryDestinationPath = productService.getDestinationProductByName(TomatoConstants.DESTINATION_CATEGORY_JSON_PATH);
@@ -186,7 +186,7 @@ public class TomatoServiceImpl {
 		List<JsonObject> jsonObjectList = null;
 
 		try {
-			jsonObjectList = FileUtils.readJsonObjectsFormXML(TomatoConstants.xmlFilePath);
+			jsonObjectList = FileUtils.readJsonObjectsFormXML(inputPath, isUrl);
 		} catch (SAXException | IOException | ParserConfigurationException | XPathExpressionException e) {
 			e.printStackTrace();
 			return null;
@@ -200,7 +200,7 @@ public class TomatoServiceImpl {
 		return new ArrayList<>(categoriesList);
 	}
 
-	public List<String> saveSourceProductOptionColors() throws MissedMappingException {
+	public List<String> saveSourceProductOptionColors(String inputPath, boolean isUrl) throws MissedMappingException {
 		logger.info("calling Source product option colors");
 
 		DestinationProduct colorDestinationPath = productService.getDestinationProductByName(TomatoConstants.DESTINATION_COLOR_JSON_PATH);
@@ -222,7 +222,7 @@ public class TomatoServiceImpl {
 		List<JsonObject> jsonObjectList = null;
 
 		try {
-			jsonObjectList = FileUtils.readJsonObjectsFormXML(TomatoConstants.xmlFilePath);
+			jsonObjectList = FileUtils.readJsonObjectsFormXML(inputPath, isUrl);
 		} catch (SAXException | IOException | ParserConfigurationException | XPathExpressionException e) {
 			e.printStackTrace();
 			return null;
@@ -240,7 +240,7 @@ public class TomatoServiceImpl {
 		return new ArrayList<>(colorsList);
 	}
 
-	public List<String> saveSourceProductOptionSizes() throws MissedMappingException {
+	public List<String> saveSourceProductOptionSizes(String inputPath, boolean isUrl) throws MissedMappingException {
 		logger.info("calling Source product option sizes");
 
 		DestinationProduct sizeDestinationPath = productService.getDestinationProductByName(TomatoConstants.DESTINATION_SIZE_JSON_PATH);
@@ -262,7 +262,7 @@ public class TomatoServiceImpl {
 		List<JsonObject> jsonObjectList = null;
 
 		try {
-			jsonObjectList = FileUtils.readJsonObjectsFormXML(TomatoConstants.xmlFilePath);
+			jsonObjectList = FileUtils.readJsonObjectsFormXML(inputPath, isUrl);
 		} catch (SAXException | IOException | ParserConfigurationException | XPathExpressionException e) {
 			e.printStackTrace();
 			return null;
@@ -280,9 +280,19 @@ public class TomatoServiceImpl {
 		return new ArrayList<>(sizesList);
 	}
 
-	public void saveProductListToAPI() throws MissedMappingException {
+	public void saveProductListToAPI(String inputPath, String xmlUrl) throws MissedMappingException {
 		logger.info("calling Source product option sizes");
 
+		try {
+			productService.saveSourceProductPath(inputPath, true);
+			saveSourceCategories(inputPath, true);
+			saveSourceProductOptionSizes(inputPath, true);
+			saveSourceProductOptionColors(inputPath, true);
+		} catch (IllegalArgumentException | IllegalAccessException | SecurityException | NoSuchFieldException e1) {
+			e1.printStackTrace();
+			return;
+		}
+		
 		Map<MappingType, Map<String, String>> mappingMap = null;
 
 		try {
@@ -297,7 +307,10 @@ public class TomatoServiceImpl {
 		List<JsonObject> jsonObjectList = null;
 
 		try {
-			jsonObjectList = FileUtils.readJsonObjectsFormXML(TomatoConstants.xmlFilePath);
+			if(StringUtils.isBlank(inputPath))
+				jsonObjectList = FileUtils.readJsonObjectsFormXML(xmlUrl, true);
+			else
+				jsonObjectList = FileUtils.readJsonObjectsFormXML(inputPath, false);
 		} catch (SAXException | IOException | ParserConfigurationException | XPathExpressionException e) {
 			e.printStackTrace();
 			return;
