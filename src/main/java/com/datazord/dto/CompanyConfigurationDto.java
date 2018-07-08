@@ -12,6 +12,8 @@ public class CompanyConfigurationDto implements Serializable {
 	
 	private String xmlPath;
 	
+	private String filePath;
+	
 	private Integer scheduleRunTime;
 
 	public String getCompanyName() {
@@ -44,6 +46,14 @@ public class CompanyConfigurationDto implements Serializable {
 
 	public void setScheduleRunTime(Integer scheduleRunTime) {
 		this.scheduleRunTime = scheduleRunTime;
+	}
+
+	public String getFilePath() {
+		return filePath;
+	}
+
+	public void setFilePath(String filePath) {
+		this.filePath = filePath;
 	}
 	
 	

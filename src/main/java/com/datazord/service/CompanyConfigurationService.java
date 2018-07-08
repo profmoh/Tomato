@@ -9,4 +9,6 @@ public interface CompanyConfigurationService {
 	CompanyConfigurationDto getCompanyConfig();
 	
 	void saveCompanyConfiguration(CompanyConfigurationDto companyConfigurationDto);
+	
+	void addProduct(CompanyConfigurationDto companyConfigurationDto);
 }

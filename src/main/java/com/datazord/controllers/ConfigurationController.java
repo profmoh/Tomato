@@ -55,4 +55,15 @@ public class ConfigurationController {
 		form.setErrorCode(TomatoConstants.ERROR_CODE_SUCCESS);
 		return new ResponseEntity<ConfigurationForm>(form, HttpStatus.OK);
 	}
+	
+	
+	@PostMapping("/addProduct")
+	public ResponseEntity<?> addProduct(@RequestBody ConfigurationForm form){
+		
+		CompanyConfigurationDto configurationDto=new CompanyConfigurationDto();
+		BeanUtils.copyProperties(form, configurationDto);
+		configurationService.addProduct(configurationDto);
+		form.setErrorCode(TomatoConstants.ERROR_CODE_SUCCESS);
+		return new ResponseEntity<ConfigurationForm>(form, HttpStatus.OK);
+	}
 }

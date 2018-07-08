@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.datazord.constants.TomatoConstants;
 import com.datazord.enums.MappingType;
+import com.datazord.exceptions.MissedMappingException;
 import com.datazord.form.MappingForm;
 import com.datazord.service.MappingService;
 
@@ -45,15 +46,19 @@ public class MappingController {
 		return new ResponseEntity<MappingForm>(form, HttpStatus.OK);
 	}
 	
-	@GetMapping("/reloadDestination/{mappingType}")
-	public ResponseEntity<?> reloadDestinationObjects(@PathVariable("mappingType") int mappingType) {
-		
+	@GetMapping("/reloadObjects/{mappingType}")
+	public ResponseEntity<?> reloadObjects(@PathVariable("mappingType") int mappingType) {
 		MappingForm form = new MappingForm();
-		
-		mappingService.reloadDestinationObjects(MappingType.valueOf(mappingType));
+		try{		
+		mappingService.reloadObjects(MappingType.valueOf(mappingType));
 		
 		form.setErrorCode(TomatoConstants.ERROR_CODE_SUCCESS);
 		
 		return new ResponseEntity<MappingForm>(form, HttpStatus.OK);
+		}catch (MissedMappingException e) {
+			form.setErrorCode(TomatoConstants.ERROR_CODE_FAILED);
+			form.setErrorMessage("Mapp Objects Is Missed");
+			return new ResponseEntity<MappingForm>(form, HttpStatus.OK);
+		}
 	}
 }

@@ -1,6 +1,6 @@
 <div class="mappingContent" ng-controller="mappingController_single">
-    <button class="btn btn-default reloadBtn" ng-click="reloadDestination()"><i class="fa fa-sync-alt"></i> Reload</button>
     <div class="col-md-12">
+        <button class="btn btn-default reloadBtn" ng-click="reloadObjects()"><i class="fa fa-sync-alt"></i> Reload</button>
         <h2 class="mappingContent_title">Color Mapping</h2>
     </div>
     <div class="col-md-6">
@@ -39,7 +39,7 @@
     <div class="col-md-12 text-center mappingAction" ng-show="showMe()">
         <button class="btn btn-default btn-lg" ng-click="mapping()">Map</button>
     </div>
-    <div class="alert notificationMessage" ng-show="statusMessage.code != 0">
+    <div class="alert notificationMessage" ng-show="statusMessage.code != 0" ng-class="{success: statusMessage.code == '200', error: statusMessage.code == '250'}">
         <a class="notificationMessage_close close" ng-click="statusClose()"><i class="fa fa-times"></i></a>
         <span class="notificationMessage_content">{{statusMessage.message}}</span>
     </div>

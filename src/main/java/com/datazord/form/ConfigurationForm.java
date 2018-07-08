@@ -10,6 +10,8 @@ public class ConfigurationForm extends BaseForm {
 	
 	private String xmlPath;
 	
+	private String filePath;
+	
 	private Integer scheduleRunTime;
 	
 
@@ -43,5 +45,13 @@ public class ConfigurationForm extends BaseForm {
 
 	public void setScheduleRunTime(Integer scheduleRunTime) {
 		this.scheduleRunTime = scheduleRunTime;
+	}
+
+	public String getFilePath() {
+		return filePath;
+	}
+
+	public void setFilePath(String filePath) {
+		this.filePath = filePath;
 	}
 }
