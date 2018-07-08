@@ -57,7 +57,7 @@ mapping.controller('configurationController', function ($scope, configurationSer
         $scope.configurationForm.filePath=$scope.fileInput;
         configurationService.addProduct($scope.configurationForm).then(function(result){
             if(result.errorCode !=200){
-                $scope.statusMessage.message = "failed";
+                $scope.statusMessage.message = result.errorMessage;
                 $scope.statusMessage.code = '250';
             }else {
                 $scope.configurationForm=result;

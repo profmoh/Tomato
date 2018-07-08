@@ -378,7 +378,7 @@ public class MappingServiceImpl implements MappingService {
 		try {
 			switch (MappingType) {
 			case productPath:
-				apiService.saveProductListToAPI();
+				productService.saveSourceProductPath();
 				productService.saveDestinationProduct();
 				break;
 			case category:
@@ -396,7 +396,7 @@ public class MappingServiceImpl implements MappingService {
 				break;
 			}
 		}catch(MissedMappingException me){
-			throw new MissedMappingException("MissedMappingException");
+			throw new MissedMappingException(me.getErrMsg());
 		}catch (Exception e) {
 			logger.error("", e);
 		}

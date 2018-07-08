@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import com.datazord.api.service.TomatoServiceImpl;
 import com.datazord.constants.TomatoConstants;
 import com.datazord.dto.CompanyConfigurationDto;
+import com.datazord.exceptions.MissedMappingException;
 import com.datazord.model.CompanyConfiguration;
 import com.datazord.repositories.CompanyConfigurationRepository;
 import com.datazord.service.CompanyConfigurationService;
@@ -57,6 +58,8 @@ public class CompanyConfigurationServiceImpl implements CompanyConfigurationServ
 	public void addProduct(CompanyConfigurationDto companyConfigurationDto) {
 		try {
 			apiService.saveProductListToAPI();
+		}catch(MissedMappingException me){
+			throw new MissedMappingException(me.getErrMsg());
 		} catch (Exception e) {
 			logger.error("",e);
 		}

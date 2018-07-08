@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.datazord.constants.TomatoConstants;
 import com.datazord.dto.CompanyConfigurationDto;
+import com.datazord.exceptions.MissedMappingException;
 import com.datazord.form.ConfigurationForm;
 import com.datazord.service.CompanyConfigurationService;
 import com.datazord.utils.Utils;
@@ -59,11 +60,16 @@ public class ConfigurationController {
 	
 	@PostMapping("/addProduct")
 	public ResponseEntity<?> addProduct(@RequestBody ConfigurationForm form){
-		
+		try{
 		CompanyConfigurationDto configurationDto=new CompanyConfigurationDto();
 		BeanUtils.copyProperties(form, configurationDto);
 		configurationService.addProduct(configurationDto);
 		form.setErrorCode(TomatoConstants.ERROR_CODE_SUCCESS);
 		return new ResponseEntity<ConfigurationForm>(form, HttpStatus.OK);
+		}catch(MissedMappingException me){
+			form.setErrorCode(TomatoConstants.ERROR_CODE_FAILED);
+			form.setErrorMessage(me.getErrMsg());
+			return new ResponseEntity<ConfigurationForm>(form, HttpStatus.OK);
+		}
 	}
 }

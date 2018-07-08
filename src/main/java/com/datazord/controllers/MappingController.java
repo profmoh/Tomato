@@ -57,7 +57,7 @@ public class MappingController {
 		return new ResponseEntity<MappingForm>(form, HttpStatus.OK);
 		}catch (MissedMappingException e) {
 			form.setErrorCode(TomatoConstants.ERROR_CODE_FAILED);
-			form.setErrorMessage("Mapp Objects Is Missed");
+			form.setErrorMessage(e.getErrMsg());
 			return new ResponseEntity<MappingForm>(form, HttpStatus.OK);
 		}
 	}
