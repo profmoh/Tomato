@@ -18,6 +18,7 @@ import org.springframework.stereotype.Component;
 import org.xml.sax.SAXException;
 
 import com.datazord.dto.ReconciliationHolder;
+import com.datazord.enums.MappingType;
 import com.datazord.json.tomato.pojo.product.Child;
 import com.datazord.json.tomato.pojo.product.Product;
 import com.datazord.json.tomato.pojo.product.ProductDescription;
@@ -27,6 +28,7 @@ import com.datazord.model.source.SourceProduct;
 import com.datazord.repositories.DestinationProductRepository;
 import com.datazord.repositories.SequenceRepository;
 import com.datazord.repositories.SourceProductRepository;
+import com.datazord.service.MappingService;
 import com.datazord.service.ProductService;
 import com.datazord.utils.FileUtils;
 import com.datazord.utils.Reconciliation;
@@ -49,6 +51,9 @@ public class ProductServiceImpl implements ProductService {
 
 	@Autowired
 	private SourceProductRepository sourceProductRepository;
+
+	@Autowired
+	private MappingService mappingService;
 
 	private List<String> getParamterPathFromObject() {
 		try {
@@ -136,6 +141,8 @@ public class ProductServiceImpl implements ProductService {
 					break;
 				case removed:
 					destinationProductRepository.deleteById(reconciliationHolder.mainId).subscribe();
+					mappingService.deleteMappingResult(
+							Arrays.asList(mappingService.findMappingResultByDestinationIdAndMappingType(reconciliationHolder.id, MappingType.productPath)));
 					break;
 				default:
 					break;
@@ -229,6 +236,8 @@ public class ProductServiceImpl implements ProductService {
 				break;
 			case removed:
 				sourceProductRepository.deleteById(reconciliationHolder.mainId).subscribe();
+				mappingService.deleteMappingResult(
+						mappingService.findMappingResultBySourceIdAndMappingType(reconciliationHolder.id, MappingType.productPath));
 				break;
 			default:
 				break;

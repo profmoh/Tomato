@@ -226,28 +226,28 @@ public class MappingServiceImpl implements MappingService {
 				saveMultiMapping(mappingForm.getSourceList(), MappingType.category);
 
 				if (!Utils.isEmptyCollection(mappingForm.getDeletedList()))
-					deleteMappingResult(mappingForm.getDeletedList(), MappingType.category);
+					deleteMappingResult(mappingForm.getDeletedList()/*, MappingType.category*/);
 
 				break;
 			case color:
 				saveSingleMApping(mappingForm.getSourceList(), MappingType.color);
 
 				if (!Utils.isEmptyCollection(mappingForm.getDeletedList()))
-					deleteMappingResult(mappingForm.getDeletedList(), MappingType.color);
+					deleteMappingResult(mappingForm.getDeletedList()/*, MappingType.color*/);
 
 				break;
 			case size:
 				saveSingleMApping(mappingForm.getSourceList(), MappingType.size);
 
 				if (!Utils.isEmptyCollection(mappingForm.getDeletedList()))
-					deleteMappingResult(mappingForm.getDeletedList(), MappingType.size);
+					deleteMappingResult(mappingForm.getDeletedList()/*, MappingType.size*/);
 
 				break;
 			case productPath:
 				saveMultiMapping(mappingForm.getSourceList(), MappingType.productPath);
 
 				if (!Utils.isEmptyCollection(mappingForm.getDeletedList()))
-					deleteMappingResult(mappingForm.getDeletedList(), MappingType.productPath);
+					deleteMappingResult(mappingForm.getDeletedList()/*, MappingType.productPath*/);
 
 				break;
 			}
@@ -361,7 +361,7 @@ public class MappingServiceImpl implements MappingService {
 	}
 
 	@Override
-	public void deleteMappingResult(List<MappingResult> mappingList, MappingType MappingType) {
+	public void deleteMappingResult(List<MappingResult> mappingList) {
 		try {
 
 			for (MappingResult mappingResult : mappingList)
@@ -370,7 +370,6 @@ public class MappingServiceImpl implements MappingService {
 		} catch (Exception e) {
 			logger.error("", e);
 		}
-
 	}
 
 	@Override

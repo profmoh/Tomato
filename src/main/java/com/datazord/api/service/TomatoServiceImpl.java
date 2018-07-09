@@ -280,14 +280,22 @@ public class TomatoServiceImpl {
 		return new ArrayList<>(sizesList);
 	}
 
-	public void saveProductListToAPI(String inputPath, String xmlUrl) throws MissedMappingException {
+	public void saveProductListToAPI(String xmlPath, String xmlUrl) throws MissedMappingException {
 		logger.info("calling Source product option sizes");
 
+		boolean isUrl = true;
+		String inputPath = xmlUrl;
+
+		if(StringUtils.isNotBlank(inputPath)) {
+			isUrl = false;
+			inputPath = xmlPath;
+		}
+
 		try {
-			productService.saveSourceProductPath(inputPath, true);
-			saveSourceCategories(inputPath, true);
-			saveSourceProductOptionSizes(inputPath, true);
-			saveSourceProductOptionColors(inputPath, true);
+			productService.saveSourceProductPath(inputPath, isUrl);
+			saveSourceCategories(inputPath, isUrl);
+			saveSourceProductOptionSizes(inputPath, isUrl);
+			saveSourceProductOptionColors(inputPath, isUrl);
 		} catch (IllegalArgumentException | IllegalAccessException | SecurityException | NoSuchFieldException e1) {
 			e1.printStackTrace();
 			return;
@@ -307,10 +315,7 @@ public class TomatoServiceImpl {
 		List<JsonObject> jsonObjectList = null;
 
 		try {
-			if(StringUtils.isBlank(inputPath))
-				jsonObjectList = FileUtils.readJsonObjectsFormXML(xmlUrl, true);
-			else
-				jsonObjectList = FileUtils.readJsonObjectsFormXML(inputPath, false);
+			jsonObjectList = FileUtils.readJsonObjectsFormXML(inputPath, isUrl);
 		} catch (SAXException | IOException | ParserConfigurationException | XPathExpressionException e) {
 			e.printStackTrace();
 			return;

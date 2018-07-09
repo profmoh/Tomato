@@ -15,7 +15,7 @@ public class TomatoConstants {
 
 	public static String MissedMappingExceptionMessage = "Please Check Mapping to continue";
 
-	public static String DESTINATION_CATEGORY_JSON_PATH = "Product.sku";
+	public static String DESTINATION_CATEGORY_JSON_PATH = "Product.product_category";
 	public static String DESTINATION_COLOR_JSON_PATH = "Product.product_custom_option.color_id";
 	public static String DESTINATION_SIZE_JSON_PATH = "Product.product_custom_option.child.size_id";
 }

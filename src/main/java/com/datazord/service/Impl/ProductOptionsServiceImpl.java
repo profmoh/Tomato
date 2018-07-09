@@ -15,6 +15,7 @@ import com.datazord.api.service.TomatoServiceImpl;
 import com.datazord.constants.TomatoConstants;
 import com.datazord.dto.ReconciliationHolder;
 import com.datazord.enums.Language;
+import com.datazord.enums.MappingType;
 import com.datazord.json.tomato.pojo.ProductOptions.OptionValue;
 import com.datazord.json.tomato.pojo.ProductOptions.OptionValueDescription;
 import com.datazord.json.tomato.pojo.ProductOptions.ProductOptions;
@@ -27,6 +28,7 @@ import com.datazord.repositories.DestinationSizeRepository;
 import com.datazord.repositories.SequenceRepository;
 import com.datazord.repositories.SourceColorRepository;
 import com.datazord.repositories.SourceSizeRepository;
+import com.datazord.service.MappingService;
 import com.datazord.service.ProductOptionsService;
 import com.datazord.utils.Reconciliation;
 import com.datazord.utils.Utils;
@@ -56,6 +58,9 @@ public class ProductOptionsServiceImpl implements ProductOptionsService {
 
 	@Autowired
 	private SourceSizeRepository sourceSizeRepository;
+
+	@Autowired
+	private MappingService mappingService;
 
 	@Override
 	public void saveDestinationProductOptions(Integer optionID) {
@@ -115,6 +120,8 @@ public class ProductOptionsServiceImpl implements ProductOptionsService {
 						break;
 					case removed:
 						destinationSizeRepository.deleteById(reconciliationHolder.mainId).subscribe();
+						mappingService.deleteMappingResult(
+								Arrays.asList(mappingService.findMappingResultByDestinationIdAndMappingType(reconciliationHolder.id, MappingType.size)));
 						break;
 					default:
 						break;
@@ -145,6 +152,8 @@ public class ProductOptionsServiceImpl implements ProductOptionsService {
 						break;
 					case removed:
 						destinationColorRepository.deleteById(reconciliationHolder.mainId).subscribe();
+						mappingService.deleteMappingResult(
+								Arrays.asList(mappingService.findMappingResultByDestinationIdAndMappingType(reconciliationHolder.id, MappingType.color)));
 						break;
 					default:
 						break;
@@ -239,6 +248,8 @@ public class ProductOptionsServiceImpl implements ProductOptionsService {
 				break;
 			case removed:
 				sourceColorRepository.deleteById(reconciliationHolder.mainId).subscribe();
+				mappingService.deleteMappingResult(
+						mappingService.findMappingResultBySourceIdAndMappingType(reconciliationHolder.id, MappingType.color));
 				break;
 			default:
 				break;
@@ -274,6 +285,8 @@ public class ProductOptionsServiceImpl implements ProductOptionsService {
 				break;
 			case removed:
 				sourceSizeRepository.deleteById(reconciliationHolder.mainId).subscribe();
+				mappingService.deleteMappingResult(
+						mappingService.findMappingResultBySourceIdAndMappingType(reconciliationHolder.id, MappingType.size));
 				break;
 			default:
 				break;

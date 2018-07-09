@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 
 import com.datazord.dto.ReconciliationHolder;
 import com.datazord.enums.Language;
+import com.datazord.enums.MappingType;
 import com.datazord.json.tomato.pojo.categories.Category;
 import com.datazord.model.destination.DestinationCategories;
 import com.datazord.model.source.SourceCategories;
@@ -22,6 +23,7 @@ import com.datazord.repositories.DestinationCategoriesRepository;
 import com.datazord.repositories.SequenceRepository;
 import com.datazord.repositories.SourceCategoriesRepository;
 import com.datazord.service.CategoriesService;
+import com.datazord.service.MappingService;
 import com.datazord.utils.Reconciliation;
 
 import reactor.core.publisher.Flux;
@@ -40,6 +42,9 @@ public class CategoriesServiceImpl implements CategoriesService {
 
 	@Autowired
 	private SourceCategoriesRepository sourceCategoriesRepository;
+
+	@Autowired
+	private MappingService mappingService;
 
 	@Override
 	public Flux<DestinationCategories> findAll() {
@@ -133,6 +138,8 @@ public class CategoriesServiceImpl implements CategoriesService {
 				break;
 			case removed:
 				destinationCategoriesRepository.deleteById(reconciliationHolder.mainId).subscribe();
+				mappingService.deleteMappingResult(
+						Arrays.asList(mappingService.findMappingResultByDestinationIdAndMappingType(reconciliationHolder.id, MappingType.category)));
 				break;
 			default:
 				break;
@@ -196,6 +203,8 @@ public class CategoriesServiceImpl implements CategoriesService {
 				break;
 			case removed:
 				sourceCategoriesRepository.deleteById(reconciliationHolder.mainId).subscribe();
+				mappingService.deleteMappingResult(
+						mappingService.findMappingResultBySourceIdAndMappingType(reconciliationHolder.id, MappingType.category));
 				break;
 			default:
 				break;

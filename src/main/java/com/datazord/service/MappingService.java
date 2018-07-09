@@ -18,7 +18,7 @@ public interface MappingService {
 
 	public Map<MappingType, Map<String, String>> getMappingMap() throws MissedMappingException;
 
-	void deleteMappingResult(List<MappingResult> mappingList, MappingType MappingType);
+	void deleteMappingResult(List<MappingResult> mappingList);
 
 	List<MappingResult> findMappingResultBySourceIdAndMappingType(String sourceId, MappingType mappingType);
 

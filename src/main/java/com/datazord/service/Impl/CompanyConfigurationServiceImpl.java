@@ -1,5 +1,6 @@
 package com.datazord.service.Impl;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -28,10 +29,7 @@ public class CompanyConfigurationServiceImpl implements CompanyConfigurationServ
 	
 	@Autowired
 	private ProductServiceImpl productServiceImpl;
-	
-	@Autowired
-	private ProductOptionsServiceImpl productOptionsServiceImpl;
-	
+
 	@Override
 	public CompanyConfigurationDto getCompanyConfig() {
 		try {
@@ -49,33 +47,31 @@ public class CompanyConfigurationServiceImpl implements CompanyConfigurationServ
 	@Override
 	public void saveCompanyConfiguration(CompanyConfigurationDto companyConfigurationDto) {
 		try {
-			reloadSourceObjects();
-			CompanyConfiguration configuration=new CompanyConfiguration();
+			CompanyConfiguration configuration = new CompanyConfiguration();
+
 			BeanUtils.copyProperties(companyConfigurationDto, configuration);
 			configuration.setId(TomatoConstants.TOMATO_COMPANY_ID);
 			configuration.setCompanyId(TomatoConstants.TOMATO_COMPANY_ID);
+
 			configurationRepository.save(configuration).subscribe();
+
+			if(StringUtils.isNotBlank(configuration.getXmlPath()))
+				reloadSourceObjects(configuration.getXmlPath());
 		} catch (Exception e) {
-			logger.error("",e);
+			logger.error("", e);
 		}
-		
 	}
 	
-	private void reloadSourceObjects(){
-		
+	private void reloadSourceObjects(String xmlUrl) {
+
 		try {
-			productServiceImpl.saveSourceProductPath();
-			
-			apiService.saveSourceCategories();
-			
-			apiService.saveSourceProductOptionColors();
-			
-			apiService.saveSourceProductOptionSizes();
-			
+			productServiceImpl.saveSourceProductPath(xmlUrl, true);
+
+			apiService.saveSourceCategories(xmlUrl, true);
+			apiService.saveSourceProductOptionColors(xmlUrl, true);
+			apiService.saveSourceProductOptionSizes(xmlUrl, true);
 		} catch (Exception e) {
-			
 		}
-			
 	}
 
 	@Override
