@@ -286,7 +286,7 @@ public class TomatoServiceImpl {
 		boolean isUrl = true;
 		String inputPath = xmlUrl;
 
-		if(StringUtils.isNotBlank(inputPath)) {
+		if(StringUtils.isNotBlank(xmlPath)) {
 			isUrl = false;
 			inputPath = xmlPath;
 		}

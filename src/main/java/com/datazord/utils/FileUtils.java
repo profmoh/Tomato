@@ -35,7 +35,7 @@ public class FileUtils {
 		List<JsonObject> jsonObjectList = null;
 
 		try {
-			jsonObjectList = readJsonObjectsFormXML("C:\\Users\\Mohamed\\Desktop\\Items.xml", true);
+			jsonObjectList = readJsonObjectsFormXML("C:\\Users\\Mohamed\\Desktop\\items.xml", false);
 		} catch (SAXException | IOException | ParserConfigurationException | XPathExpressionException e) {
 			e.printStackTrace();
 			return;
