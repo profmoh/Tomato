@@ -22,7 +22,7 @@ public class LoginController {
 	public ResponseEntity<?> login(@RequestBody LoginForm loginForm) {
 		try {
 
-			if (loginForm.getUsername().equals("admintomato"))
+			if (loginForm.getUsername().equals("tomato") && loginForm.getPassword().equals("T0M@T0"))
 				loginForm.setErrorCode(TomatoConstants.ERROR_CODE_SUCCESS);
 
 			return new ResponseEntity<LoginForm>(loginForm, HttpStatus.OK);
