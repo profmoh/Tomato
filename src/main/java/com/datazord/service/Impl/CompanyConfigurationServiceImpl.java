@@ -17,29 +17,30 @@ import com.datazord.service.CompanyConfigurationService;
 import com.datazord.utils.Utils;
 
 @Component
-public class CompanyConfigurationServiceImpl implements CompanyConfigurationService{
+public class CompanyConfigurationServiceImpl implements CompanyConfigurationService {
 
 	private static final Logger logger = LoggerFactory.getLogger(CompanyConfigurationServiceImpl.class);
-			
+
 	@Autowired
 	private CompanyConfigurationRepository configurationRepository;
-	
+
 	@Autowired
 	private TomatoServiceImpl apiService;
-	
+
 	@Autowired
 	private ProductServiceImpl productServiceImpl;
 
 	@Override
 	public CompanyConfigurationDto getCompanyConfig() {
 		try {
-		CompanyConfiguration configuration=configurationRepository.findByCompanyId(TomatoConstants.TOMATO_COMPANY_ID).blockFirst();
-	    CompanyConfigurationDto configurationDto=new CompanyConfigurationDto();
-	    if(Utils.isNotEmpty(configuration))
-		 BeanUtils.copyProperties(configuration, configurationDto);
-	    return configurationDto;
+			CompanyConfiguration configuration = configurationRepository
+					.findByCompanyId(TomatoConstants.TOMATO_COMPANY_ID).blockFirst();
+			CompanyConfigurationDto configurationDto = new CompanyConfigurationDto();
+			if (Utils.isNotEmpty(configuration))
+				BeanUtils.copyProperties(configuration, configurationDto);
+			return configurationDto;
 		} catch (Exception e) {
-			logger.error("",e);
+			logger.error("", e);
 			return null;
 		}
 	}
@@ -55,13 +56,13 @@ public class CompanyConfigurationServiceImpl implements CompanyConfigurationServ
 
 			configurationRepository.save(configuration).subscribe();
 
-			if(StringUtils.isNotBlank(configuration.getXmlPath()))
+			if (StringUtils.isNotBlank(configuration.getXmlPath()))
 				reloadSourceObjects(configuration.getXmlPath());
 		} catch (Exception e) {
 			logger.error("", e);
 		}
 	}
-	
+
 	private void reloadSourceObjects(String xmlUrl) {
 
 		try {
@@ -78,12 +79,12 @@ public class CompanyConfigurationServiceImpl implements CompanyConfigurationServ
 	public void addProduct(CompanyConfigurationDto companyConfigurationDto) {
 		try {
 			apiService.saveProductListToAPI(companyConfigurationDto.getFilePath(), companyConfigurationDto.getXmlPath());
-		}catch(MissedMappingException me){
+		} catch (MissedMappingException me) {
 			throw new MissedMappingException(me.getErrMsg());
 		} catch (Exception e) {
-			logger.error("",e);
+			logger.error("", e);
 		}
-		
+
 	}
 
 }

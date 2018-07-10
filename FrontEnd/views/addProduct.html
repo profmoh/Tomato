@@ -30,5 +30,9 @@
                 </div>
             </div>
         </form>
+	    <div class="alert notificationMessage" ng-show="statusMessage.code != 0" ng-class="{success: statusMessage.code == '200', error: statusMessage.code == '250'}">
+	        <a class="notificationMessage_close close" ng-click="statusClose()"><i class="fa fa-times"></i></a>
+	        <span class="notificationMessage_content">{{statusMessage.message}}</span>
+	    </div>
     </div>
 </div>
