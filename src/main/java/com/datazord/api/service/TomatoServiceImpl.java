@@ -428,7 +428,7 @@ public class TomatoServiceImpl {
 			CompanyConfigurationDto companyConfig = companyConfigurationService.getCompanyConfig();
 
 			if(companyConfig != null && StringUtils.isNotBlank(companyConfig.getImagePath())) {
-				if(StringUtils.isNotBlank(product.getImage()) && product.getImage().startsWith("http://")) {
+				if(StringUtils.isNotBlank(product.getImage()) && Utils.isValidUrl(product.getImage())) {
 					String imageName = UrlUtils.getNameFromUrl(product.getImage());
 
 					try {
@@ -442,7 +442,7 @@ public class TomatoServiceImpl {
 				List<String> otherImagesList = new ArrayList<>();
 
 				for(String imageUrl : product.getOther_images()) {
-					if(StringUtils.isBlank(product.getImage()) || ! product.getImage().startsWith("http://"))
+					if(StringUtils.isBlank(product.getImage()) || ! Utils.isValidUrl(product.getImage()))
 						continue;
 
 					String imageName = UrlUtils.getNameFromUrl(imageUrl);
@@ -460,7 +460,7 @@ public class TomatoServiceImpl {
 				for(productCustomOption productCustomOption : product.getProduct_custom_option()) {
 					String imageUrl = productCustomOption.getImage();
 
-					if(StringUtils.isBlank(imageUrl) || ! imageUrl.startsWith("http://"))
+					if(StringUtils.isBlank(imageUrl) || ! Utils.isValidUrl(imageUrl))
 						continue;
 
 					String imageName = UrlUtils.getNameFromUrl(imageUrl);
