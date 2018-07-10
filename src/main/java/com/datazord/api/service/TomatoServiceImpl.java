@@ -137,11 +137,12 @@ public class TomatoServiceImpl {
 		try {
 			logger.info("Insert Product Into Tomato ");
 
-			String addOrUpdateproductUrl ;
-			
-			if(checkIfProductIsExsit(product.getModel()))
-			addOrUpdateproductUrl= baseUrl.concat("/rest_admin/products/"+product.getModel());
-			else addOrUpdateproductUrl= baseUrl.concat("/rest_admin/products");
+			String addOrUpdateproductUrl;
+
+			if (checkIfProductIsExsit(product.getModel()))
+				addOrUpdateproductUrl = baseUrl.concat("/rest_admin/products/" + product.getModel());
+			else
+				addOrUpdateproductUrl = baseUrl.concat("/rest_admin/products");
 
 			String bodyJson;
 			API_Reply api_Reply = new API_Reply();
@@ -149,8 +150,8 @@ public class TomatoServiceImpl {
 
 			bodyJson = mapper.writeValueAsString(product);
 
-			ResponseEntity<API_Reply> responseEntity = ApiUtils.doRequest(
-					headerName, this.authorization, bodyJson, null, addOrUpdateproductUrl, HttpMethod.POST, API_Reply.class);
+			ResponseEntity<API_Reply> responseEntity =
+					ApiUtils.doRequest(headerName, this.authorization, bodyJson, null, addOrUpdateproductUrl, HttpMethod.POST, API_Reply.class);
 
 			api_Reply = responseEntity.getBody();
 
