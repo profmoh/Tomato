@@ -17,7 +17,7 @@ import com.datazord.utils.ScheduleJob;
 public class TomatoApplication implements CommandLineRunner {
 
 	@Value("${job.timeInterval:5000}")
-	private static Long timeInterval;
+	private Long timeInterval;
 
 	public static void main(String[] args) {
 		SpringApplication.run(TomatoApplication.class, args);
