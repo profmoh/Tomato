@@ -7,28 +7,30 @@ import java.util.Date;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ScheduleJob {	
-	
+public class ScheduleJob {
+
 	private static final Logger logger = LoggerFactory.getLogger(ScheduleJob.class);
+
+	long timeInterval;
 
 	public static void main(String[] args) {
 		validateJobDate();
 	}
-	
-	public ScheduleJob() {
+
+	public ScheduleJob(long timeInterval) {
+		this.timeInterval = timeInterval;
+
 		doJob();
 	}
 
 	private void doJob() {
-		long timeInterval = 5 * 1000; // add to config.xml
-
 		Runnable runnable = new Runnable() {
 			public void run() {
 				while (true) {
-	
 					System.out.println("Start Job");
-					if(validateJobDate()){
-						//put code here 
+
+					if (validateJobDate()) {
+						// put code here
 					}
 
 					try {
@@ -39,6 +41,7 @@ public class ScheduleJob {
 				}
 			}
 		};
+
 		Thread thread = new Thread(runnable);
 		thread.start();
 	}
@@ -50,13 +53,13 @@ public class ScheduleJob {
 
 			Date lastRunDate = dateFormat.parse("08/07/2018  0"); // get from DB
 			Date currentDate = new Date();
-			
+
 			Calendar now = Calendar.getInstance();
 
-			logger.info("Last Run Date >>",lastRunDate);
-			
+			logger.info("Last Run Date >>", lastRunDate);
+
 			String currentDateStr = dateFormat.format(currentDate);
-			logger.info("Current Date >>",currentDateStr);
+			logger.info("Current Date >>", currentDateStr);
 
 			Integer scheduleInterval = 5;// get from DB
 			Calendar c = Calendar.getInstance();
@@ -64,12 +67,12 @@ public class ScheduleJob {
 			c.add(Calendar.HOUR, scheduleInterval);
 			Date runDate = c.getTime();
 			String runDateStr = dateFormat.format(runDate);
-			logger.info("RunDate >>"+runDateStr);
-			
+			logger.info("RunDate >>" + runDateStr);
+
 			if (runDateStr.equals(currentDateStr)) {
 				logger.info("Job should Start Now");
 				return true;
-			} else{
+			} else {
 				logger.info("Job shouldn't Start Now");
 				return false;
 			}

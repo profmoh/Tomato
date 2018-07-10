@@ -1,5 +1,6 @@
 package com.datazord;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -14,6 +15,9 @@ import com.datazord.utils.ScheduleJob;
 @EnableReactiveMongoRepositories
 @SpringBootApplication(scanBasePackages = { "com.datazord.*" })
 public class TomatoApplication implements CommandLineRunner {
+
+	@Value("${job.timeInterval:5000}")
+	private static Long timeInterval;
 
 	public static void main(String[] args) {
 		SpringApplication.run(TomatoApplication.class, args);
@@ -31,8 +35,7 @@ public class TomatoApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-
-		new ScheduleJob();
+		new ScheduleJob(timeInterval.longValue());
 
 //		log.info("start data initialization  ...");
 //		this.userRepository
