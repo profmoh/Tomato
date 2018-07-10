@@ -9,6 +9,8 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.client.RestTemplate;
 
+import com.datazord.utils.ScheduleJob;
+
 @EnableReactiveMongoRepositories
 @SpringBootApplication(scanBasePackages = { "com.datazord.*" })
 public class TomatoApplication implements CommandLineRunner {
@@ -29,6 +31,9 @@ public class TomatoApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
+
+		new ScheduleJob();
+
 //		log.info("start data initialization  ...");
 //		this.userRepository
 //		.deleteAll().thenMany(Flux.just("user", "admin").flatMap(username -> {
