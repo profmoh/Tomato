@@ -1,5 +1,6 @@
 package com.datazord.utils;
 
+import java.net.URL;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -111,5 +112,16 @@ public class Utils {
 				}
 			}
 		}));
+	}
+
+	public static boolean isValidUrl(String url) {
+		try {
+			new URL(url).toURI();
+			return true;
+		}
+
+		catch (Exception e) {
+			return false;
+		}
 	}
 }

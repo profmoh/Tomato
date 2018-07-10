@@ -1,5 +1,7 @@
 package com.datazord.model;
 
+import java.util.Date;
+
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import lombok.AllArgsConstructor;
@@ -15,16 +17,14 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-@Document(collection ="company_configuration")
-public class CompanyConfiguration extends BaseModel  {
+@Document(collection = "company_configuration")
+public class CompanyConfiguration extends BaseModel {
 
-	
-	private String imagePath;
-	
 	private String xmlPath;
-	
-	private Integer scheduleRunTime;
+	private String imagePath;
+
 	private String companyId;
-	
-	
+	private Integer scheduleRunTime;
+
+	private Date lastRunDate;
 }
