@@ -40,12 +40,17 @@ public class ConfigurationController {
 	
 	@PostMapping("/saveCompanySetting")
 	public ResponseEntity<?> saveCompanySetting(@RequestBody ConfigurationForm form){
-		
-		CompanyConfigurationDto configurationDto=new CompanyConfigurationDto();
-		BeanUtils.copyProperties(form, configurationDto);
-		configurationService.saveCompanyConfiguration(configurationDto);
-		form.setErrorCode(TomatoConstants.ERROR_CODE_SUCCESS);
-		return new ResponseEntity<ConfigurationForm>(form, HttpStatus.OK);
+		try {
+			CompanyConfigurationDto configurationDto = new CompanyConfigurationDto();
+			BeanUtils.copyProperties(form, configurationDto);
+			configurationService.saveCompanyConfiguration(configurationDto);
+			form.setErrorCode(TomatoConstants.ERROR_CODE_SUCCESS);
+			return new ResponseEntity<ConfigurationForm>(form, HttpStatus.OK);
+		} catch (MissedMappingException me) {
+			form.setErrorCode(TomatoConstants.ERROR_CODE_FAILED);
+			form.setErrorMessage(me.getErrMsg());
+			return new ResponseEntity<ConfigurationForm>(form, HttpStatus.OK);
+		}
 	}
 	
 	@PostMapping("/updateXmlPath")

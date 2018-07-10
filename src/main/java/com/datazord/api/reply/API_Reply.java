@@ -17,8 +17,8 @@ public class API_Reply implements Serializable {
 	private Integer success;
 
 	@JsonProperty("error")
-	private List<Object> error = new ArrayList<>();
+	private Object error ;
 
 	@JsonProperty("data")
-	private List<Object> data = new ArrayList<>();
+	private com.datazord.api.reply.Data data ;
 }

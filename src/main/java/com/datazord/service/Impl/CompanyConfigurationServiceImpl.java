@@ -11,6 +11,7 @@ import com.datazord.api.service.TomatoServiceImpl;
 import com.datazord.constants.TomatoConstants;
 import com.datazord.dto.CompanyConfigurationDto;
 import com.datazord.exceptions.MissedMappingException;
+import com.datazord.json.tomato.pojo.product.Product;
 import com.datazord.model.CompanyConfiguration;
 import com.datazord.repositories.CompanyConfigurationRepository;
 import com.datazord.service.CompanyConfigurationService;
@@ -58,21 +59,22 @@ public class CompanyConfigurationServiceImpl implements CompanyConfigurationServ
 
 			if (StringUtils.isNotBlank(configuration.getXmlPath()))
 				reloadSourceObjects(configuration.getXmlPath());
-		} catch (Exception e) {
+		}catch(MissedMappingException me){
+			logger.error("", me);
+			throw new MissedMappingException(me.getErrMsg());
+		}
+		catch (Exception e) {
 			logger.error("", e);
 		}
 	}
 
-	private void reloadSourceObjects(String xmlUrl) {
+	private void reloadSourceObjects(String xmlUrl) throws MissedMappingException, IllegalArgumentException, IllegalAccessException, SecurityException, NoSuchFieldException {
 
-		try {
-			productServiceImpl.saveSourceProductPath(xmlUrl, true);
+		productServiceImpl.saveSourceProductPath(xmlUrl, true);
 
-			apiService.saveSourceCategories(xmlUrl, true);
-			apiService.saveSourceProductOptionColors(xmlUrl, true);
-			apiService.saveSourceProductOptionSizes(xmlUrl, true);
-		} catch (Exception e) {
-		}
+		apiService.saveSourceCategories(xmlUrl, true);
+		apiService.saveSourceProductOptionColors(xmlUrl, true);
+		apiService.saveSourceProductOptionSizes(xmlUrl, true);
 	}
 
 	@Override
@@ -80,6 +82,7 @@ public class CompanyConfigurationServiceImpl implements CompanyConfigurationServ
 		try {
 			apiService.saveProductListToAPI(companyConfigurationDto.getFilePath(), companyConfigurationDto.getXmlPath());
 		} catch (MissedMappingException me) {
+			logger.error("", me);
 			throw new MissedMappingException(me.getErrMsg());
 		} catch (Exception e) {
 			logger.error("", e);

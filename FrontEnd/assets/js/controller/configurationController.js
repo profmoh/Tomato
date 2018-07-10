@@ -18,7 +18,7 @@ mapping.controller('configurationController', function ($scope, configurationSer
     $scope.saveCompanySetting=function(){
         configurationService.saveConfiguration($scope.configurationForm).then(function(result){
             if(result.errorCode !=200){
-                $scope.statusMessage.message = "failed";
+                $scope.statusMessage.message = result.errorMessage;
                 $scope.statusMessage.code = '250';
             }else {
                 $scope.configurationForm=result;
@@ -31,7 +31,7 @@ mapping.controller('configurationController', function ($scope, configurationSer
     $scope.updateXmlPath=function(){
         configurationService.updateXmlPath($scope.configurationForm).then(function(result){
             if(result.errorCode !=200){
-                $scope.statusMessage.message = "failed";
+                $scope.statusMessage.message = "failed to update xml";
                 $scope.statusMessage.code = '250';
             }else {
                 $scope.configurationForm=result;

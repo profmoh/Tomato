@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.context.support.UiApplicationContextUtils;
 import org.xml.sax.SAXException;
 
 import com.datazord.api.reply.API_Reply;
@@ -36,6 +37,7 @@ import com.datazord.json.tomato.pojo.product.Product;
 import com.datazord.json.tomato.pojo.product.ProductDescription;
 import com.datazord.json.tomato.pojo.product.productCustomOption;
 import com.datazord.model.MappingResult;
+import com.datazord.model.TomatoProduct;
 import com.datazord.model.destination.DestinationProduct;
 import com.datazord.model.source.SourceProduct;
 import com.datazord.service.CategoriesService;
@@ -43,6 +45,8 @@ import com.datazord.service.CompanyConfigurationService;
 import com.datazord.service.MappingService;
 import com.datazord.service.ProductOptionsService;
 import com.datazord.service.ProductService;
+import com.datazord.service.TomatoProductService;
+import com.datazord.service.Impl.TomatoProductServiceImpl;
 import com.datazord.utils.ApiUtils;
 import com.datazord.utils.FileUtils;
 import com.datazord.utils.ImageUtils;
@@ -74,6 +78,9 @@ public class TomatoServiceImpl {
 
 	@Autowired
 	private CompanyConfigurationService companyConfigurationService;
+	
+	@Autowired
+	private TomatoProductService tomatoProductService; 
 
 	@Value("${resource.url}")
 	private String baseUrl;
@@ -138,11 +145,23 @@ public class TomatoServiceImpl {
 			logger.info("Insert Product Into Tomato ");
 
 			String addOrUpdateproductUrl;
-
-			if (checkIfProductIsExsit(product.getModel()))
-				addOrUpdateproductUrl = baseUrl.concat("/rest_admin/products/" + product.getModel());
-			else
-				addOrUpdateproductUrl = baseUrl.concat("/rest_admin/products");
+			boolean inDB=false;
+			
+			Long productIDFromDB = checkIfProductInDB(product.getSku());
+			if (Utils.isNotEmpty(productIDFromDB)){
+				addOrUpdateproductUrl = baseUrl.concat("/rest_admin/products/" + productIDFromDB);
+				inDB=true;
+			}
+			else {
+				inDB=false;
+				
+				Long productIDFromApi = checkIfProductInApi(product.getSku());
+				if (Utils.isNotEmpty(productIDFromApi)){
+					addOrUpdateproductUrl = baseUrl.concat("/rest_admin/products/" + productIDFromApi);
+					
+				}else
+					addOrUpdateproductUrl = baseUrl.concat("/rest_admin/products");
+			}
 
 			String bodyJson;
 			API_Reply api_Reply = new API_Reply();
@@ -154,6 +173,20 @@ public class TomatoServiceImpl {
 					ApiUtils.doRequest(headerName, this.authorization, bodyJson, null, addOrUpdateproductUrl, HttpMethod.POST, API_Reply.class);
 
 			api_Reply = responseEntity.getBody();
+			api_Reply.setSuccess(0);
+			if(api_Reply.getSuccess().equals(0) && !inDB){
+				
+				Long productId=checkIfProductInApi(product.getSku());
+				if(Utils.isNotEmpty(productId)){
+					
+					TomatoProduct tomatoProduct=new TomatoProduct();
+					tomatoProduct.setProductId(productId);
+					tomatoProduct.setSku(product.getSku());
+					
+					tomatoProductService.saveTomatoProduct(tomatoProduct);
+				}
+				
+			}
 
 			return api_Reply;
 		} catch (JsonProcessingException e) {
@@ -492,25 +525,25 @@ public class TomatoServiceImpl {
 		
 	}
 	
-	private boolean checkIfProductIsExsit(String productId){
+	public Long checkIfProductInApi(String productSKU){
 		try {
-			String productDetailsUrl = baseUrl.concat("/rest_admin/products/").concat(productId);
+			String getproductSKU_Url = baseUrl.concat("/rest_admin/products/getproductbysku/").concat(productSKU);
 			API_Reply api_Reply = new API_Reply();
 			ResponseEntity<API_Reply> responseEntity = ApiUtils.doRequest(headerName, this.authorization, null, null,
-					productDetailsUrl, HttpMethod.GET, API_Reply.class);
+					getproductSKU_Url, HttpMethod.GET, API_Reply.class);
 			api_Reply = responseEntity.getBody();
 
-			logger.debug("productId:" + productId + ">>> Success:" + api_Reply.getSuccess() + " , Error:"
-					+ api_Reply.getError() + " ,Data:" + api_Reply.getData());
+			logger.debug("productSKU:" + productSKU + ">>> Success:" + api_Reply.getSuccess() + " , Error:"
+					+ api_Reply.getError());
 
-			if (api_Reply.getSuccess().equals(0))
-				return true;
+			if (api_Reply.getSuccess().equals(1))
+				return api_Reply.getData().getId();
 			else
-				return false;
+				return null;
 
 		} catch (Exception e) {
 			logger.error("", e);
-			return false;
+			return null;
 		}
 	}
 
@@ -537,5 +570,17 @@ public class TomatoServiceImpl {
 			return false;
 
 		return true;
+	} 
+	
+	public Long checkIfProductInDB(String productSKU){
+		try {
+			TomatoProduct product=tomatoProductService.getProductBySku(productSKU);
+			if(Utils.isNotEmpty(product))
+				return product.getProductId();
+			
+		} catch (Exception e) {
+			logger.error("",e);
+		}
+		return null;
 	}
 }
