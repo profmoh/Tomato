@@ -6,7 +6,9 @@ import java.util.Date;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
+@Service
 public class ScheduleJob {
 
 	private static final Logger logger = LoggerFactory.getLogger(ScheduleJob.class);
@@ -51,7 +53,7 @@ public class ScheduleJob {
 		try {
 			SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy hh");
 
-			Date lastRunDate = dateFormat.parse("08/07/2018  0"); // get from DB
+			Date lastRunDate = dateFormat.parse("26/07/2018  1"); // get from DB
 			Date currentDate = new Date();
 
 			Calendar now = Calendar.getInstance();

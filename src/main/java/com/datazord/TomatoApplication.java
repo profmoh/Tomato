@@ -35,7 +35,7 @@ public class TomatoApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		new ScheduleJob(timeInterval.longValue());
+		//new ScheduleJob(timeInterval.longValue());
 
 //		log.info("start data initialization  ...");
 //		this.userRepository

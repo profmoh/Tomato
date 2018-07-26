@@ -1,5 +1,12 @@
 package com.datazord.controllers;
 
+import java.io.IOException;
+import java.io.StringReader;
+
+
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -10,6 +17,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.w3c.dom.Document;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 import com.datazord.constants.TomatoConstants;
 import com.datazord.dto.CompanyConfigurationDto;
@@ -68,6 +78,10 @@ public class ConfigurationController {
 		try{
 		CompanyConfigurationDto configurationDto=new CompanyConfigurationDto();
 		BeanUtils.copyProperties(form, configurationDto);
+		Document doc = DocumentBuilderFactory.newInstance()
+                .newDocumentBuilder()
+                .parse(new InputSource(new StringReader(form.getFilePath())));
+		doc.getChildNodes();
 		configurationService.addProduct(configurationDto);
 		form.setErrorCode(TomatoConstants.ERROR_CODE_SUCCESS);
 		return new ResponseEntity<ConfigurationForm>(form, HttpStatus.OK);
@@ -75,6 +89,18 @@ public class ConfigurationController {
 			form.setErrorCode(TomatoConstants.ERROR_CODE_FAILED);
 			form.setErrorMessage(me.getErrMsg());
 			return new ResponseEntity<ConfigurationForm>(form, HttpStatus.OK);
+		} catch (SAXException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		} catch (ParserConfigurationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
 		}
 	}
 }

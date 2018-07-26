@@ -21,7 +21,7 @@
                 
                 <div class="col-sm-3 inputFile">
                     <button class="btn btn-default btn-block">Browse</button>
-                    <input type="file" accept="text/xml" class="xmlPath" ng-model="fileInputPath"  onchange="angular.element(this).scope().fileInputchange()">
+                    <input type="file" accept="text/xml" class="xmlPath" id="importFile" ng-model="fileInputPath"  onchange="angular.element(this).scope().uploadXmlFile()">
                 </div>
             </div>
             <div class="form-group">

@@ -43,6 +43,16 @@ mapping.controller('configurationController', function ($scope, configurationSer
     
     
     }
+    $scope.uploadXmlFile = function(){
+        $('.inputXml').val($('.xmlPath').val().replace(/C:\\fakepath\\/i, ''));
+        var file = document.getElementById('importFile').files[0],
+        reader = new FileReader();
+        reader.onloadend = function(e){
+            $scope.data = e.target.result;
+        };
+        reader.readAsBinaryString(file);
+
+      };
 
     $scope.fileInputchange=function(){
         $scope.fileInput = $('.xmlPath').val();
@@ -51,7 +61,7 @@ mapping.controller('configurationController', function ($scope, configurationSer
 
     $scope.submit=function(){
 
-        $scope.configurationForm.filePath=$scope.fileInput;
+        $scope.configurationForm.filePath=$scope.data;
         configurationService.addProduct($scope.configurationForm).then(function(result){
             if(result.errorCode !=200){
                 $scope.statusMessage.message = result.errorMessage;
