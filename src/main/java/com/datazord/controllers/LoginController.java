@@ -1,5 +1,6 @@
 package com.datazord.controllers;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.datazord.constants.TomatoConstants;
 import com.datazord.form.LoginForm;
+import com.datazord.utils.ScheduleJob;
 
 @CrossOrigin()
 @RestController
@@ -17,11 +19,13 @@ import com.datazord.form.LoginForm;
 public class LoginController {
 
 //	private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
+	@Autowired
+	private ScheduleJob scheduleJob;
 
 	@PostMapping("/login")
 	public ResponseEntity<?> login(@RequestBody LoginForm loginForm) {
 		try {
-
+			scheduleJob.doJob(5000);
 			if (loginForm.getUsername().equals("tomato") && loginForm.getPassword().equals("T0M@T0"))
 				loginForm.setErrorCode(TomatoConstants.ERROR_CODE_SUCCESS);
 
