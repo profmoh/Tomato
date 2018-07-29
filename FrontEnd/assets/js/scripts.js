@@ -1,6 +1,6 @@
 var mapping = angular.module('mapping', ['ui.router', 'ngDragDrop']);
-
-
+var URLRoot = window.location.origin;
+mapping.constant("URLRoot",URLRoot)
 mapping.config(function ($stateProvider, $urlRouterProvider, $qProvider) {
    
     $qProvider.errorOnUnhandledRejections(false);
