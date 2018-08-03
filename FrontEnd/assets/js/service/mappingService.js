@@ -1,6 +1,6 @@
 mapping.service('mappingService', ["$q", "$http", function ($q, $http) {
     this.getMappingLists = function (mappingType) {
-        return $http.get("http://localhost:8080/mappingController/getMappingForm/"+mappingType).then(
+        return $http.get(URLRoot+"/mappingController/getMappingForm/"+mappingType).then(
             function (response) {
                 return response.data;
             }, function (response) {
@@ -11,7 +11,7 @@ mapping.service('mappingService', ["$q", "$http", function ($q, $http) {
 
     this.mappingSave = function (mappingForm) {
         var d = $q.defer();
-        $http.post("http://localhost:8080/mappingController/saveMappingResult", mappingForm)
+        $http.post(URLRoot+"/mappingController/saveMappingResult", mappingForm)
             .then(function (response) {
                 d.resolve(response.data);
             }, function (response) {
@@ -21,7 +21,7 @@ mapping.service('mappingService', ["$q", "$http", function ($q, $http) {
     }
 
     this.reloadObjects = function (mappingType) {
-        return $http.get("http://localhost:8080/mappingController/reloadObjects/"+mappingType).then(
+        return $http.get(URLRoot+"/mappingController/reloadObjects/"+mappingType).then(
             function (response) {
                 return response.data;
             }, function (response) {

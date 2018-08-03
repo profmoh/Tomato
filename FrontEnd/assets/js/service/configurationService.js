@@ -1,7 +1,7 @@
 mapping.service('configurationService', ["$q", "$http", function ($q, $http) {
 
     this.getCopmanyConfiguration = function (mappingType) {
-        return $http.get("http://localhost:8080/configurationController/CompanySetting").then(
+        return $http.get(URLRoot+"/configurationController/CompanySetting").then(
             function (response) {
                 return response.data;
             }, function (response) {
@@ -13,7 +13,7 @@ mapping.service('configurationService', ["$q", "$http", function ($q, $http) {
 
     this.saveConfiguration = function (configurationForm) {
         var d = $q.defer();
-        $http.post("http://localhost:8080/configurationController/saveCompanySetting", configurationForm)
+        $http.post(URLRoot+"/configurationController/saveCompanySetting", configurationForm)
             .then(function (response) {
                 d.resolve(response.data);
             }, function (response) {
@@ -25,7 +25,7 @@ mapping.service('configurationService', ["$q", "$http", function ($q, $http) {
     
     this.updateXmlPath = function (configurationForm) {
         var d = $q.defer();
-        $http.post("http://localhost:8080/configurationController/updateXmlPath", configurationForm)
+        $http.post(URLRoot+"/configurationController/updateXmlPath", configurationForm)
             .then(function (response) {
                 d.resolve(response.data);
             }, function (response) {
@@ -36,7 +36,7 @@ mapping.service('configurationService', ["$q", "$http", function ($q, $http) {
 
     this.addProduct = function (configurationForm) {
         var d = $q.defer();
-        $http.post("http://localhost:8080/configurationController/addProduct", configurationForm)
+        $http.post(URLRoot+"/configurationController/addProduct", configurationForm)
             .then(function (response) {
                 d.resolve(response.data);
             }, function (response) {

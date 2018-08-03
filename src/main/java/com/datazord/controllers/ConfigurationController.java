@@ -78,10 +78,6 @@ public class ConfigurationController {
 		try{
 		CompanyConfigurationDto configurationDto=new CompanyConfigurationDto();
 		BeanUtils.copyProperties(form, configurationDto);
-		Document doc = DocumentBuilderFactory.newInstance()
-                .newDocumentBuilder()
-                .parse(new InputSource(new StringReader(form.getFilePath())));
-		doc.getChildNodes();
 		configurationService.addProduct(configurationDto);
 		form.setErrorCode(TomatoConstants.ERROR_CODE_SUCCESS);
 		return new ResponseEntity<ConfigurationForm>(form, HttpStatus.OK);
@@ -89,18 +85,6 @@ public class ConfigurationController {
 			form.setErrorCode(TomatoConstants.ERROR_CODE_FAILED);
 			form.setErrorMessage(me.getErrMsg());
 			return new ResponseEntity<ConfigurationForm>(form, HttpStatus.OK);
-		} catch (SAXException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return null;
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return null;
-		} catch (ParserConfigurationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return null;
 		}
 	}
 }
