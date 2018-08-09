@@ -10,8 +10,6 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.client.RestTemplate;
 
-import com.datazord.utils.ScheduleJob;
-
 @EnableReactiveMongoRepositories
 @SpringBootApplication(scanBasePackages = { "com.datazord.*" })
 public class TomatoApplication implements CommandLineRunner {

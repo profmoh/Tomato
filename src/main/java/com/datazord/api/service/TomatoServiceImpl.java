@@ -20,7 +20,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.context.support.UiApplicationContextUtils;
 import org.xml.sax.SAXException;
 
 import com.datazord.api.reply.API_Reply;
@@ -46,7 +45,6 @@ import com.datazord.service.MappingService;
 import com.datazord.service.ProductOptionsService;
 import com.datazord.service.ProductService;
 import com.datazord.service.TomatoProductService;
-import com.datazord.service.Impl.TomatoProductServiceImpl;
 import com.datazord.utils.ApiUtils;
 import com.datazord.utils.FileUtils;
 import com.datazord.utils.ImageUtils;

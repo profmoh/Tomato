@@ -1,9 +1,8 @@
 package com.datazord.utils;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.StringReader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -22,6 +21,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import com.datazord.comparators.JpathComparator;
@@ -83,18 +83,34 @@ public class FileUtils {
 
 			doc = factory.newDocumentBuilder().parse(new URL(path).openStream());
 		} else {
-			File file = new File(path);
-			
-			if (!file.exists())
-				return null;
-			
-			factory.setValidating(false);
-			
-			DocumentBuilder docBuilder = factory.newDocumentBuilder();
-			doc = docBuilder.parse(new FileInputStream(file));
+			doc = convertStringToDocument(path);
+//			File file = new File(path);
+//
+//			if (!file.exists())
+//				return null;
+//			
+//			factory.setValidating(false);
+//			
+//			DocumentBuilder docBuilder = factory.newDocumentBuilder();
+//			doc = docBuilder.parse(new FileInputStream(file));
 		}
 
 		return doc;
+	}
+
+	private static Document convertStringToDocument(String xmlStr) {
+		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder builder;
+
+		try {
+			builder = factory.newDocumentBuilder();
+			Document doc = builder.parse(new InputSource(new StringReader(xmlStr)));
+			return doc;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
 	}
 
 	public static List<String> extractXPathList(Document doc) throws XPathExpressionException {
