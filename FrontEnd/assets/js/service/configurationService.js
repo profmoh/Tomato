@@ -1,6 +1,6 @@
 mapping.service('configurationService', ["$q", "$http", function ($q, $http) {
 
-    this.getCopmanyConfiguration = function (mappingType) {
+    this.getCopmanyConfiguration = function () {
         return $http.get(URLRoot+"/configurationController/CompanySetting").then(
             function (response) {
                 return response.data;

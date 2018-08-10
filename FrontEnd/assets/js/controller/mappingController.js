@@ -1,4 +1,4 @@
-mapping.controller('mappingController_multi', function ($scope, mappingService,$state) {
+mapping.controller('mappingController_multi', function ($scope, mappingService,$state,$timeout) {
     var i;
     $scope.statusMessage = {};
     $scope.statusMessage.code = 0 ;
@@ -13,12 +13,15 @@ mapping.controller('mappingController_multi', function ($scope, mappingService,$
     $scope.loadMappingList = function () {
         mappingService.getMappingLists($scope.mappingType).then(function (result) {
             if(result.errorCode !=200){
-
+                $scope.statusMessage.message = "Faild To Load Mapping List ";
+                $scope.statusMessage.code = '250'; 
             }else {
                 $scope.mappingForm=result;
                 $scope.destinationList=$scope.mappingForm.destinationList;
                 $scope.sourceList=$scope.mappingForm.sourceList;
-            }
+            } $timeout(function(){
+                $('.notificationMessage').addClass('ng-hide');
+            },5000)
         });
     }
     $scope.loadMappingList();
@@ -49,11 +52,16 @@ mapping.controller('mappingController_multi', function ($scope, mappingService,$
         $scope.mappingForm.mappingType=$scope.mappingType;
         mappingService.mappingSave($scope.mappingForm).then(function (result) {
             if(result.errorCode !=200){
-               // alert("Failed to Save");
+                $scope.statusMessage.message = "Faild To Save Mapping ";
+                $scope.statusMessage.code = '250'; 
             }else {
                 $scope.statusMessage.message = "Mapping Saved Successfully";
                 $scope.statusMessage.code = '200';           
             }
+            $timeout(function(){
+                $('.notificationMessage').addClass('ng-hide');
+            },5000)
+
         });
     }
 
@@ -63,11 +71,17 @@ mapping.controller('mappingController_multi', function ($scope, mappingService,$
             if(result.errorCode !=200){
                 $scope.statusMessage.message = result.errorMessage;
                 $scope.statusMessage.code = '250'; 
+                
 
             }else {
                 $scope.statusMessage.message = "Reload Done Successfully";
-                $scope.statusMessage.code = '200'; 
+                $scope.statusMessage.code = '200';
+                $scope.loadMappingList(); 
             }
+            $timeout(function(){
+                $('.notificationMessage').addClass('ng-hide');
+            },5000)
+
         });
 
 
@@ -78,7 +92,7 @@ mapping.controller('mappingController_multi', function ($scope, mappingService,$
     }
 });
 
-mapping.controller('mappingController_single', function ($scope, mappingService,$state) {
+mapping.controller('mappingController_single', function ($scope, mappingService,$state,$timeout) {
     var i;
     $scope.statusMessage = {};
     $scope.statusMessage.code = 0 ;
@@ -126,12 +140,17 @@ mapping.controller('mappingController_single', function ($scope, mappingService,
         $scope.mappingForm.mappingType=$scope.mappingType;
         mappingService.mappingSave($scope.mappingForm).then(function (result) {
             if(result.errorCode !=200){
-                //alert("Failed to Save");
+                $scope.statusMessage.message = "Faild To Save Mapping ";
+                $scope.statusMessage.code = '250'
             }else {
                 $scope.statusMessage.message = "Mapping Saved Successfully";
                 $scope.statusMessage.code = '200';
                
             }
+            $timeout(function(){
+                $('.notificationMessage').addClass('ng-hide');
+            },5000)
+            
         });
     }
 
@@ -144,7 +163,11 @@ mapping.controller('mappingController_single', function ($scope, mappingService,
             }else {
                 $scope.statusMessage.message = "Reload Done Successfully";
                 $scope.statusMessage.code = '200'; 
+                $scope.loadMappingList();
             }
+            $timeout(function(){
+                $('.notificationMessage').addClass('ng-hide');
+            },5000)
         });
 
 

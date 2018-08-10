@@ -1,5 +1,6 @@
 var mapping = angular.module('mapping', ['ui.router', 'ngDragDrop']);
-var URLRoot = window.location.origin +":8080";
+var URLRoot = "http://localhost:8080";
+//var URLRoot = window.location.origin +":8080";
 mapping.constant("URLRoot",URLRoot)
 mapping.config(function ($stateProvider, $urlRouterProvider, $qProvider) {
    

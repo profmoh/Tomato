@@ -1,4 +1,4 @@
-mapping.controller('configurationController', function ($scope, configurationService,$state) {
+mapping.controller('configurationController', function ($scope, configurationService,$state,$timeout) {
     $scope.configurationForm={};
     $scope.statusMessage = {};
     $scope.statusMessage.code = 0 ;
@@ -6,11 +6,14 @@ mapping.controller('configurationController', function ($scope, configurationSer
     $scope.loadCompanySetting = function () {
         configurationService.getCopmanyConfiguration().then(function (result) {
             if(result.errorCode !=200){
-                $scope.statusMessage.message = "failed";
+                $scope.statusMessage.message = "Faild To Load Company Setting";
                 $scope.statusMessage.code = '250';
             }else {
                 $scope.configurationForm=result;
             }
+            $timeout(function(){
+                $('.notificationMessage').addClass('ng-hide');
+            },5000)
         });
     }
     $scope.loadCompanySetting();
@@ -25,19 +28,26 @@ mapping.controller('configurationController', function ($scope, configurationSer
                 $scope.statusMessage.message = "Configuration Saved Successfully";
                 $scope.statusMessage.code = '200';
             }
+            $timeout(function(){
+                $('.notificationMessage').addClass('ng-hide');
+            },5000)
         });
     }
 
     $scope.updateXmlPath=function(){
+        $scope.configurationForm.filePath=$scope.data;
         configurationService.updateXmlPath($scope.configurationForm).then(function(result){
             if(result.errorCode !=200){
-                $scope.statusMessage.message = "failed to update xml";
+                $scope.statusMessage.message = "Failed To Update XML";
                 $scope.statusMessage.code = '250';
             }else {
                 $scope.configurationForm=result;
-                $scope.statusMessage.message = "XmlPath updated Successfully";
+                $scope.statusMessage.message = "XmlPath Updated Successfully";
                 $scope.statusMessage.code = '200';
             }
+            $timeout(function(){
+                $('.notificationMessage').addClass('ng-hide');
+            },5000)
         });
 
     
@@ -68,11 +78,16 @@ mapping.controller('configurationController', function ($scope, configurationSer
                 $scope.statusMessage.code = '250';
             }else {
                 $scope.configurationForm=result;
-                $scope.statusMessage.message = "Product added Successfully";
+                $scope.statusMessage.message = "Product Added Successfully";
                 $scope.statusMessage.code = '200';
-            }
+            } 
+            $timeout(function(){
+                $('.notificationMessage').addClass('ng-hide');
+            },5000)
         });
 
     }
-
+    $scope.statusClose = function(){
+        $('.notificationMessage').addClass('ng-hide');
+    }
 });  
