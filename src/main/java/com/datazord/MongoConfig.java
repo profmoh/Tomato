@@ -22,7 +22,7 @@ public class MongoConfig extends AbstractReactiveMongoConfiguration {
 
 	@Override
 	protected String getDatabaseName() {
-		return "tomato";
+		return "tomato_tomato-api";
 	}
 
 	@Bean

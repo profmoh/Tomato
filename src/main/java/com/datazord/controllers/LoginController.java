@@ -25,8 +25,9 @@ public class LoginController {
 	@PostMapping("/login")
 	public ResponseEntity<?> login(@RequestBody LoginForm loginForm) {
 		try {
-			scheduleJob.doJob(5000);
-			if (loginForm.getUsername().equals("tomato") && loginForm.getPassword().equals("T0M@T0"))
+			scheduleJob.doJob();
+
+			if (loginForm.getUsername().equals("tomato") && loginForm.getPassword().equals("tomato123"))
 				loginForm.setErrorCode(TomatoConstants.ERROR_CODE_SUCCESS);
 
 			return new ResponseEntity<LoginForm>(loginForm, HttpStatus.OK);

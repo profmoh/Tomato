@@ -11,10 +11,10 @@ import com.datazord.api.service.TomatoServiceImpl;
 import com.datazord.constants.TomatoConstants;
 import com.datazord.dto.CompanyConfigurationDto;
 import com.datazord.exceptions.MissedMappingException;
-import com.datazord.json.tomato.pojo.product.Product;
 import com.datazord.model.CompanyConfiguration;
 import com.datazord.repositories.CompanyConfigurationRepository;
 import com.datazord.service.CompanyConfigurationService;
+import com.datazord.utils.ScheduleJob;
 import com.datazord.utils.Utils;
 
 @Component
@@ -59,6 +59,8 @@ public class CompanyConfigurationServiceImpl implements CompanyConfigurationServ
 
 			if (StringUtils.isNotBlank(configuration.getXmlPath()))
 				reloadSourceObjects(configuration.getXmlPath());
+
+			ScheduleJob.timeInterval = configuration.getScheduleRunTime();
 		}catch(MissedMappingException me){
 			logger.error("", me);
 			throw new MissedMappingException(me.getErrMsg());
