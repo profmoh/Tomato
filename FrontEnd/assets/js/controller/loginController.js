@@ -1,5 +1,8 @@
 mapping.controller('loginController', function ($scope, loginService,$state,$timeout) {
     $scope.loginForm = {};
+    $scope.statusMessage = {};
+    $scope.statusMessage.code = 0 ;
+    $scope.statusMessage.message = "";
     $scope.submitForm = function () {
         $scope.loginForm.username = $scope.username;
         $scope.loginForm.password = $scope.password;
