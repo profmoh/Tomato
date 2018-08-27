@@ -39,6 +39,9 @@ public class Reconciliation {
 			for (T t : mainGroup) {
 				reconcileResultField.set(t, ReconciliationResult.removed);
 
+				Object recid = idField.get(t);
+				mainIdField.set(t, recid);
+
 				resultList.add(t);
 			}
 

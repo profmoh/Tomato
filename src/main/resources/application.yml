@@ -23,3 +23,6 @@ logging:
 
 job:
   timeInterval: 5000
+
+xml:
+  pathKey: ':: record ::'

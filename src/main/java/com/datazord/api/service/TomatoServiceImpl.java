@@ -95,6 +95,9 @@ public class TomatoServiceImpl {
 	@Value("${resource.headerName}")
 	private String headerName;
 
+	@Value("${xml.pathKey}")
+	private String fullPathKey;
+
 	public List<Category> findCategories() {
 		logger.info("Getting Catigories ...");
 
@@ -218,7 +221,7 @@ public class TomatoServiceImpl {
 		List<JsonObject> jsonObjectList = null;
 
 		try {
-			jsonObjectList = FileUtils.readJsonObjectsFormXML(inputPath, isUrl);
+			jsonObjectList = FileUtils.readJsonObjectsFormXML(inputPath, isUrl, fullPathKey);
 		} catch (SAXException | IOException | ParserConfigurationException | XPathExpressionException e) {
 			e.printStackTrace();
 			return null;
@@ -254,7 +257,7 @@ public class TomatoServiceImpl {
 		List<JsonObject> jsonObjectList = null;
 
 		try {
-			jsonObjectList = FileUtils.readJsonObjectsFormXML(inputPath, isUrl);
+			jsonObjectList = FileUtils.readJsonObjectsFormXML(inputPath, isUrl, fullPathKey);
 		} catch (SAXException | IOException | ParserConfigurationException | XPathExpressionException e) {
 			e.printStackTrace();
 			return null;
@@ -294,7 +297,7 @@ public class TomatoServiceImpl {
 		List<JsonObject> jsonObjectList = null;
 
 		try {
-			jsonObjectList = FileUtils.readJsonObjectsFormXML(inputPath, isUrl);
+			jsonObjectList = FileUtils.readJsonObjectsFormXML(inputPath, isUrl, fullPathKey);
 		} catch (SAXException | IOException | ParserConfigurationException | XPathExpressionException e) {
 			e.printStackTrace();
 			return null;
@@ -347,7 +350,7 @@ public class TomatoServiceImpl {
 		List<JsonObject> jsonObjectList = null;
 
 		try {
-			jsonObjectList = FileUtils.readJsonObjectsFormXML(inputPath, isUrl);
+			jsonObjectList = FileUtils.readJsonObjectsFormXML(inputPath, isUrl, fullPathKey);
 		} catch (SAXException | IOException | ParserConfigurationException | XPathExpressionException e) {
 			e.printStackTrace();
 			return;

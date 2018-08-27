@@ -35,7 +35,7 @@ public class FileUtils {
 		List<JsonObject> jsonObjectList = null;
 
 		try {
-			jsonObjectList = readJsonObjectsFormXML("C:\\Users\\Mohamed\\Desktop\\items.xml", false);
+			jsonObjectList = readJsonObjectsFormXML("C:\\Users\\Mohamed\\Desktop\\items.xml", false, ":: Items ::");
 		} catch (SAXException | IOException | ParserConfigurationException | XPathExpressionException e) {
 			e.printStackTrace();
 			return;
@@ -57,11 +57,11 @@ public class FileUtils {
 			System.out.println("\n\n" + new GsonBuilder().setPrettyPrinting().create().toJson(jsonObject));
 	}
 
-	public static List<JsonObject> readJsonObjectsFormXML(String path, boolean isUrl)
+	public static List<JsonObject> readJsonObjectsFormXML(String path, boolean isUrl, String fullPathKey)
 			throws FileNotFoundException, SAXException, IOException, ParserConfigurationException, XPathExpressionException {
 		Document doc = readXMLfileToDocument(path, isUrl);
 
-		List<String> xpathList = extractXPathList(doc);
+		List<String> xpathList = extractXPathList(doc, fullPathKey);
 		xpathList.forEach(System.out::println);
 
 		// String objectMainPath = getXPathIntersection(xpathList);
@@ -113,7 +113,7 @@ public class FileUtils {
 		return null;
 	}
 
-	public static List<String> extractXPathList(Document doc) throws XPathExpressionException {
+	public static List<String> extractXPathList(Document doc, String fullPathKey) throws XPathExpressionException {
 		Set<String> resultList = new HashSet<>();
 
 //		try {
@@ -122,10 +122,10 @@ public class FileUtils {
 		NodeList nodeList = (NodeList) xPath.evaluate("//*", doc, XPathConstants.NODESET);
 
 		for (int i = 0; i < nodeList.getLength(); i++)
-			if (!nodeList.item(i).hasChildNodes() || nodeList.item(i).getFirstChild().getNodeType() == Node.TEXT_NODE) {
+			if (! nodeList.item(i).hasChildNodes() || nodeList.item(i).getFirstChild().getNodeType() == Node.TEXT_NODE) {
 				String fullXPath = getFullPath(nodeList.item(i))/* + " :: " + nodeList.item(i).getTextContent()) */;
 
-				if (fullXPath.contains(":: Items ::"))
+				if (fullXPath.contains(fullPathKey)) // :: Items ::
 					resultList.add(fullXPath);
 			}
 //		} catch (Exception err) {
