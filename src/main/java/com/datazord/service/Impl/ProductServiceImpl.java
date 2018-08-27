@@ -14,6 +14,7 @@ import javax.xml.xpath.XPathExpressionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.xml.sax.SAXException;
 
@@ -54,6 +55,9 @@ public class ProductServiceImpl implements ProductService {
 
 	@Autowired
 	private MappingService mappingService;
+
+	@Value("${xml.pathKey}")
+	private String fullPathKey;
 
 	private List<String> getParamterPathFromObject() {
 		try {
@@ -209,7 +213,7 @@ public class ProductServiceImpl implements ProductService {
 		List<String> xpathList = null;
 
 		try {
-			xpathList = FileUtils.extractXPathList(FileUtils.readXMLfileToDocument(inputPath, isUrl));
+			xpathList = FileUtils.extractXPathList(FileUtils.readXMLfileToDocument(inputPath, isUrl), fullPathKey);
 		} catch (SAXException | IOException | ParserConfigurationException | XPathExpressionException e) {
 			e.printStackTrace();
 			return;
