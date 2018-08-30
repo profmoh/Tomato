@@ -28,7 +28,7 @@
                 <li ng-repeat='item in destinationList' ng-show="item.name" data-drag="true"
                     data-jqyoui-options="{revert: 'invalid', helper: 'clone'}"
                     ng-model="destinationList" data-id="{{item.id}}"
-                    jqyoui-draggable="{index: {{$index}}, animate: false}">
+                    jqyoui-draggable="{index: {{$index}}, animate: false,placeholder:'keep'}">
                     {{item.name}}
                 </li>
             </ul>
