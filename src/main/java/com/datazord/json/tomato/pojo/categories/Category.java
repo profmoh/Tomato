@@ -2,14 +2,16 @@
 package com.datazord.json.tomato.pojo.categories;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+
+import com.datazord.deserializers.CustomDataDeserializer;
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({ "category_id", "name", "description", "sort_order", "meta_title", "meta_description",
@@ -17,7 +19,10 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 public class Category {
 
 	@JsonProperty("category_id")
-	private String categoryId;
+	private Long categoryId;
+
+	@JsonProperty("parent_id")
+	private Long parentId;
 
 	@JsonProperty("name")
 	private String name;
@@ -38,7 +43,7 @@ public class Category {
 	private String metaKeyword;
 
 	@JsonProperty("language_id")
-	private String languageId;
+	private Integer languageId;
 
 	@JsonProperty("image")
 	private String image;
@@ -47,15 +52,12 @@ public class Category {
 	private String originalImage;
 
 	@JsonProperty("categories")
-	private List<Object> categories = null;
+	@JsonDeserialize(using = CustomDataDeserializer.class)
+	private Data categories;
 
 	@JsonIgnore
 	private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
-	/**
-	 * No args constructor for use in serialization
-	 * 
-	 */
 	public Category() {
 	}
 
@@ -73,12 +75,13 @@ public class Category {
 	 * @param metaTitle
 	 * @param languageId
 	 */
-	public Category(String categoryId, String name, String description, String sortOrder, String metaTitle,
-			String metaDescription, String metaKeyword, String languageId, String image, String originalImage,
-			List<Object> categories) {
+	public Category(Long categoryId, Long parentId, String name, String description, String sortOrder, String metaTitle,
+			String metaDescription, String metaKeyword, Integer languageId, String image, String originalImage,
+			Data categories) {
 		super();
 
 		this.categoryId = categoryId;
+		this.parentId = parentId;
 		this.name = name;
 		this.description = description;
 		this.sortOrder = sortOrder;
@@ -92,12 +95,12 @@ public class Category {
 	}
 
 	@JsonProperty("category_id")
-	public String getCategoryId() {
+	public Long getCategoryId() {
 		return categoryId;
 	}
 
 	@JsonProperty("category_id")
-	public void setCategoryId(String categoryId) {
+	public void setCategoryId(Long categoryId) {
 		this.categoryId = categoryId;
 	}
 
@@ -161,19 +164,25 @@ public class Category {
 		this.metaKeyword = metaKeyword;
 	}
 
-	@JsonProperty("language_id")
-	public String getLanguageId() {
-		return languageId;
-	}
-
-	@JsonProperty("language_id")
-	public void setLanguageId(String languageId) {
-		this.languageId = languageId;
-	}
-
 	@JsonProperty("image")
 	public String getImage() {
 		return image;
+	}
+
+	public Long getParentId() {
+		return parentId;
+	}
+
+	public void setParentId(Long parentId) {
+		this.parentId = parentId;
+	}
+
+	public Integer getLanguageId() {
+		return languageId;
+	}
+
+	public void setLanguageId(Integer languageId) {
+		this.languageId = languageId;
 	}
 
 	@JsonProperty("image")
@@ -192,12 +201,12 @@ public class Category {
 	}
 
 	@JsonProperty("categories")
-	public List<Object> getCategories() {
+	public Data getCategories() {
 		return categories;
 	}
 
 	@JsonProperty("categories")
-	public void setCategories(List<Object> categories) {
+	public void setCategories(Data categories) {
 		this.categories = categories;
 	}
 

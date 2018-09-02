@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
@@ -98,10 +97,13 @@ public class TomatoServiceImpl {
 	@Value("${xml.pathKey}")
 	private String fullPathKey;
 
+	@Value("${api.categories.maxLevel}")
+	private Integer categoriesMaxLevel;
+
 	public List<Category> findCategories() {
 		logger.info("Getting Catigories ...");
 
-		String categoriesUrl = baseUrl.concat("/rest_admin/categories");
+		String categoriesUrl = baseUrl.concat("/rest_admin/categories/level/" + categoriesMaxLevel);
 
 		try {
 			ResponseEntity<Categories> categoriesResult = ApiUtils.doRequest(
@@ -109,13 +111,54 @@ public class TomatoServiceImpl {
 
 			logger.info("Categories : " + categoriesResult.getBody().getData().getCategoriesMap().keySet());
 
-			List<Category> categoriesList = categoriesResult.getBody().getData().getCategoriesMap().values()
-					.stream()
-					.flatMap(List::stream)
-					.collect(Collectors.toList());
+			List<Category> categoriesList = new ArrayList<>();
+
+			//level 1
+			categoriesResult.getBody().getData().getCategoriesMap().values().forEach(level1CategoryList -> {
+				level1CategoryList.forEach(level1Category -> {
+					String level1CategoryName = level1Category.getName();
+
+					categoriesList.add(level1Category);
+
+					// level 2
+					if(level1Category.getCategories().getCategoriesMap().size() > 0) {
+						level1Category.getCategories().getCategoriesMap().values().forEach(level2CategoryList -> {
+							level2CategoryList.forEach(level2Category -> {
+								String level2CategoryName = level1CategoryName + "." + level2Category.getName();
+
+								level2Category.setName(level2CategoryName);
+
+								categoriesList.add(level2Category);
+
+								// level 3
+								if(level2Category.getCategories().getCategoriesMap().size() > 0) {
+									level2Category.getCategories().getCategoriesMap().values().forEach(level3CategoryList -> {
+										level3CategoryList.forEach(level3Category -> {
+											String level3CategoryName = level2CategoryName + "." + level3Category.getName();
+
+											level3Category.setName(level3CategoryName);
+
+											categoriesList.add(level3Category);
+										});
+									});
+								}
+								// level 3
+							});
+						});
+					}
+					// level 2
+				});
+			});
+			//level 1
+
+//			List<Category> categoriesList = categoriesResult.getBody().getData().getCategoriesMap().values()
+//					.stream()
+//					.flatMap(List::stream)
+//					.collect(Collectors.toList());
 
 			return categoriesList;
 		} catch (Exception e) {
+			e.printStackTrace();
 			logger.error("Categories Read Error");
 			return null;
 		}
@@ -345,7 +388,7 @@ public class TomatoServiceImpl {
 		}
 
 		if(Utils.isEmptyMap(mappingMap) || ! isMappingMapValid(mappingMap))
-			throw new MissedMappingException(TomatoConstants.MissedMappingExceptionMessage);
+			throw new MissedMappingException(TomatoConstants.MissedMappingExceptionMessage + "missed Product mapping");
 
 		List<JsonObject> jsonObjectList = null;
 
@@ -365,7 +408,7 @@ public class TomatoServiceImpl {
 			String destinationSize = mappingMap.get(MappingType.size).get(sourceSize);
 
 			if(StringUtils.isBlank(destinationSize))
-				throw new MissedMappingException(TomatoConstants.MissedMappingExceptionMessage);
+				throw new MissedMappingException(TomatoConstants.MissedMappingExceptionMessage + ", missed Size mapping: " + sourceSize);
 
 			String sourceColor = JsonUtils.getStringValueFromJsonByPath(
 					jsonObject, mappingMap.get(MappingType.productPath).get(TomatoConstants.DESTINATION_COLOR_JSON_PATH));
@@ -373,7 +416,7 @@ public class TomatoServiceImpl {
 			String destinationColor = mappingMap.get(MappingType.color).get(sourceColor);
 
 			if(StringUtils.isBlank(destinationColor))
-				throw new MissedMappingException(TomatoConstants.MissedMappingExceptionMessage);
+				throw new MissedMappingException(TomatoConstants.MissedMappingExceptionMessage + ", missed Color mapping: " + sourceColor);
 
 			String sourceCategory = JsonUtils.getStringValueFromJsonByPath(
 					jsonObject, mappingMap.get(MappingType.productPath).get(TomatoConstants.DESTINATION_CATEGORY_JSON_PATH));
@@ -381,7 +424,7 @@ public class TomatoServiceImpl {
 			String destinationCategory = mappingMap.get(MappingType.category).get(sourceCategory);
 
 			if(StringUtils.isBlank(destinationCategory))
-				throw new MissedMappingException(TomatoConstants.MissedMappingExceptionMessage);
+				throw new MissedMappingException(TomatoConstants.MissedMappingExceptionMessage + ", missed Category mapping: " + sourceCategory);
 
 			if(! jsonObjectMap.containsKey(destinationCategory))
 				jsonObjectMap.put(destinationCategory, new HashMap<>());

@@ -108,7 +108,7 @@ public class CategoriesServiceImpl implements CategoriesService {
 			DestinationCategories destinationCategory = new DestinationCategories();
 
 			destinationCategory.setName(category.getName());
-			destinationCategory.setLanguageId(Language.valueOf(Integer.parseInt(category.getLanguageId())).name());
+			destinationCategory.setLanguageId(Language.valueOf(category.getLanguageId()).name());
 			destinationCategory.setId(sequenceRepositorys.getNextSequenceId(TOMATO_CATEGORIES_SEQ_KEY));
 
 			categoryMapResult.put(destinationCategory.getName() + "." + destinationCategory.getLanguageId(), destinationCategory);
