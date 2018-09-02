@@ -1,6 +1,7 @@
 package com.datazord.service.Impl;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.datazord.api.service.TomatoServiceImpl;
+import com.datazord.comparators.DestinationDtoComparator;
+import com.datazord.comparators.SourceDtoComparator;
 import com.datazord.constants.TomatoConstants;
 import com.datazord.dto.DestinationDto;
 import com.datazord.dto.SourceDto;
@@ -85,7 +88,12 @@ public class MappingServiceImpl implements MappingService {
 				destinationDtoList = copyDestinationProperties(productService.getDestinationProductList());
 				break;
 			}
-			removeduplication(sourceDtosList, destinationDtoList);
+
+//			removeduplication(sourceDtosList, destinationDtoList);
+
+			Collections.sort(sourceDtosList, new SourceDtoComparator());
+			Collections.sort(destinationDtoList, new DestinationDtoComparator());
+
 			mappingForm.setSourceList(sourceDtosList);
 			mappingForm.setDestinationList(destinationDtoList);
 		} catch (Exception e) {
@@ -94,31 +102,30 @@ public class MappingServiceImpl implements MappingService {
 
 		return mappingForm;
 	}
-	
-	
-	private List<DestinationDto> removeduplication(List<SourceDto> sourceDtosList, List<DestinationDto> destinationDtoList) {
-		try {
 
-			for (SourceDto sourceDto : sourceDtosList) {
-				if (Utils.isNotEmpty(sourceDto.getChildren()))
-					destinationDtoList.removeIf(p -> {
-						return p.getId().equals(sourceDto.getChildren().getId());
-					});
-				else if (Utils.isNotEmpty(sourceDto.getChildrenList())) {
-					for (DestinationDto childDto : sourceDto.getChildrenList()) {
-						destinationDtoList.removeIf(p -> {
-							return p.getId().equals(childDto.getId());
-						});
-					}
-				}
-			}
-
-			return destinationDtoList;
-		} catch (Exception e) {
-			logger.error("", e);
-			return null;
-		}
-	}
+//	private List<DestinationDto> removeduplication(List<SourceDto> sourceDtosList, List<DestinationDto> destinationDtoList) {
+//		try {
+//
+//			for (SourceDto sourceDto : sourceDtosList) {
+//				if (Utils.isNotEmpty(sourceDto.getChildren()))
+//					destinationDtoList.removeIf(p -> {
+//						return p.getId().equals(sourceDto.getChildren().getId());
+//					});
+//				else if (Utils.isNotEmpty(sourceDto.getChildrenList())) {
+//					for (DestinationDto childDto : sourceDto.getChildrenList()) {
+//						destinationDtoList.removeIf(p -> {
+//							return p.getId().equals(childDto.getId());
+//						});
+//					}
+//				}
+//			}
+//
+//			return destinationDtoList;
+//		} catch (Exception e) {
+//			logger.error("", e);
+//			return null;
+//		}
+//	}
 
 	private List<DestinationDto> copyDestinationProperties(List<?> ObjectList) {
 		DestinationDto dto;

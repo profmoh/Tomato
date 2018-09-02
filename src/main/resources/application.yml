@@ -26,3 +26,7 @@ job:
 
 xml:
   pathKey: ':: record ::'
+
+api:
+  categories:
+    maxLevel: 3
