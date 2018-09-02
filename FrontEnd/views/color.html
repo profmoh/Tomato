@@ -5,6 +5,21 @@
     </div>
     <div class="col-md-6">
         <div class="mappingContent_list">
+            <h3>Destination</h3>
+            <ul class="dragList_content">
+                <li ng-repeat='item in destinationList' ng-show="item.name" data-drag="true"
+                    data-jqyoui-options="{revert: 'invalid', helper: 'clone'}"
+                    ng-model="destinationList" data-id="{{item.id}}"
+                    jqyoui-draggable="{index: {{$index}}, animate: false,placeholder:'keep'}">
+                    {{item.name}}
+                </li>
+            </ul>
+
+        </div>
+
+    </div>
+    <div class="col-md-6">
+        <div class="mappingContent_list">
             <h3>Source</h3>
             <ul class="dragList_content">
                 <li ng-repeat='item in sourceList' data-drop="true"
@@ -18,21 +33,6 @@
                     </ul>
                 </li>
             </ul>
-        </div>
-
-    </div>
-    <div class="col-md-6">
-        <div class="mappingContent_list">
-            <h3>Destination</h3>
-            <ul class="dragList_content">
-                <li ng-repeat='item in destinationList' ng-show="item.name" data-drag="true"
-                    data-jqyoui-options="{revert: 'invalid', helper: 'clone'}"
-                    ng-model="destinationList" data-id="{{item.id}}"
-                    jqyoui-draggable="{index: {{$index}}, animate: false,placeholder:'keep'}">
-                    {{item.name}}
-                </li>
-            </ul>
-
         </div>
 
     </div>
