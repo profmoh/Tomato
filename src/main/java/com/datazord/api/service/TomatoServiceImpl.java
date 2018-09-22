@@ -561,10 +561,22 @@ public class TomatoServiceImpl {
 
 		// call the API
 		for (Map.Entry<String, Product> entry : resultedProductMap.entrySet()) {
+			System.out.println(entry.getKey());
+			
+			System.out.println("sku : " + entry.getValue().getSku() + ", " + "quantity : " + entry.getValue().getQuantity() + ", " + "price : " + entry.getValue().getPrice());
+
+			for(productCustomOption p : entry.getValue().getProduct_custom_option()) {
+				System.out.println("\t\t\tcolor : " + p.getColor_id() + " --> ");
+
+				for(Child c : p.getChild()) {
+					System.out.println("\t\t\t\t\t\tsize : " + c.getSize_id() + ", " + "quantity : " + c.getQuantity() + ", " + "price : " + c.getPrice());
+				}
+			}
+
 			API_Reply api_Reply = addProduct(entry.getValue());
 
 			logger.debug("DestinationCategory:" + entry.getKey() +
-					">>> Success:" + api_Reply.getSuccess() + " , Error:" + api_Reply.getError() + " ,Data:" + api_Reply.getData());
+					">>> Success:" + api_Reply.getSuccess() + " , Error:" + api_Reply.getError() + " , Data:" + api_Reply.getData());
 		}
 		
 	}
